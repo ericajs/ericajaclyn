@@ -19,7 +19,7 @@ const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
         {sorted.map((entry) => (
           <li>
             {entry.data.treatment === "full" ? (
-              <a href={`/work/${entry.id}`} class="group block space-y-3">
+              <a href={`/uxdesign/${entry.id}`} class="group block space-y-3">
                 {entry.data.coverImage && (
                   <div class="aspect-video overflow-hidden rounded-md bg-muted">
                     <img

@@ -1,13 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
-    { "source": "/naacpldf", "destination": "/work/naacpldf", "permanent": true },
-    { "source": "/morganstanley", "destination": "/work/morganstanley", "permanent": true },
-    { "source": "/footlocker", "destination": "/work/footlocker", "permanent": true },
-    { "source": "/berluti", "destination": "/work/berluti", "permanent": true },
-    { "source": "/mariandynus", "destination": "/work/mariandynus", "permanent": true },
-    { "source": "/dynamic-solar", "destination": "/work/dynasol", "permanent": true },
-    { "source": "/milestonepod", "destination": "/work/milestonepod", "permanent": true },
-    { "source": "/kudos", "destination": "/work/kudos", "permanent": true }
+    { "source": "/naacpldf", "destination": "/uxdesign/naacpldf", "permanent": true },
+    { "source": "/morganstanley", "destination": "/uxdesign/morganstanley", "permanent": true },
+    { "source": "/footlocker", "destination": "/uxdesign/footlocker", "permanent": true },
+    { "source": "/berluti", "destination": "/uxdesign/berluti", "permanent": true },
+    { "source": "/mariandynus", "destination": "/uxdesign/mariandynus", "permanent": true },
+    { "source": "/dynamic-solar", "destination": "/uxdesign/dynasol", "permanent": true },
+    { "source": "/milestonepod", "destination": "/uxdesign/milestonepod", "permanent": true },
+    { "source": "/kudos", "destination": "/uxdesign/kudos", "permanent": true },
+    { "source": "/jwst", "destination": "/astrophotography", "permanent": true },
+    { "source": "/work", "destination": "/uxdesign", "permanent": true }
   ]
 }
