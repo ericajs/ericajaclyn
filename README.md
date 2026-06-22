@@ -1,6 +1,6 @@
-# Astro + React + TypeScript + shadcn/ui
+# Erica Jaclyn Portfolio Website
 
-This is a template for a new Astro project with React, TypeScript, and shadcn/ui.
+This is a production-deployed Astro project with React, TypeScript + shadcn/ui (Maia preset) + Tailwind + RTL portfolio, on Vercel, auto-deploying from GitHub, with cursor-pointer patched on Button.
 
 ## Adding components
 

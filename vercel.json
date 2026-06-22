@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/naacpldf", "destination": "/work/naacpldf", "permanent": true },
+    { "source": "/morganstanley", "destination": "/work/morganstanley", "permanent": true },
+    { "source": "/footlocker", "destination": "/work/footlocker", "permanent": true },
+    { "source": "/berluti", "destination": "/work/berluti", "permanent": true },
+    { "source": "/mariandynus", "destination": "/work/mariandynus", "permanent": true },
+    { "source": "/dynamic-solar", "destination": "/work/dynasol", "permanent": true },
+    { "source": "/milestonepod", "destination": "/work/milestonepod", "permanent": true },
+    { "source": "/kudos", "destination": "/work/kudos", "permanent": true }
+  ]
+}
