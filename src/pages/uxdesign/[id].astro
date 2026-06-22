@@ -16,7 +16,7 @@ const allWork = await getCollection("work", ({ data }) =>
 const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
 const entry = sorted.find((e) => e.id === id)
 
-if (!entry) return Astro.redirect("/work")
+if (!entry) return Astro.redirect("/uxdesign")
 
 const { Content } = await render(entry)
 
@@ -135,7 +135,7 @@ const { title, description, year, role, scope, client, disciplines,
     <nav aria-label="Case study navigation" class="border-t border-border pt-8 flex justify-between gap-4 text-sm">
       <div>
         {prev && (
-          <a href={`/work/${prev.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
+          <a href={`/uxdesign/${prev.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
             <span class="text-xs text-muted-foreground">← Previous</span>
             <span class="font-medium">{prev.data.title}</span>
           </a>
@@ -143,7 +143,7 @@ const { title, description, year, role, scope, client, disciplines,
       </div>
       <div class="text-right">
         {next && (
-          <a href={`/work/${next.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
+          <a href={`/uxdesign/${next.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
             <span class="text-xs text-muted-foreground">Next →</span>
             <span class="font-medium">{next.data.title}</span>
           </a>
