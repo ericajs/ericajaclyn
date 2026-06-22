@@ -1,0 +1,155 @@
+---
+import { getCollection, render } from "astro:content"
+import Layout from "@/layouts/main.astro"
+
+export async function getStaticPaths() {
+  const allWork = await getCollection("work", ({ data }) =>
+    !data.draft && data.treatment === "full"
+  )
+  return allWork.map((entry) => ({ params: { id: entry.id } }))
+}
+
+const { id } = Astro.params
+const allWork = await getCollection("work", ({ data }) =>
+  !data.draft && data.treatment === "full"
+)
+const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
+const entry = sorted.find((e) => e.id === id)
+
+if (!entry) return Astro.redirect("/work")
+
+const { Content } = await render(entry)
+
+const currentIndex = sorted.indexOf(entry)
+const prev = currentIndex > 0 ? sorted[currentIndex - 1] : null
+const next = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null
+
+const { title, description, year, role, scope, client, disciplines,
+        accessibility, designSystem, outcome, intro, coverImage, coverAlt, ogImage } = entry.data
+---
+<Layout
+  title={`${title} — Erica Jaclyn Stein`}
+  description={description}
+  ogImage={ogImage}
+>
+  <article class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
+
+    {/* ── Header ──────────────────────────────────────────────── */}
+    <header class="mb-12 space-y-5 max-w-3xl">
+      <div class="flex flex-wrap gap-2">
+        {disciplines.map((d) => (
+          <span class="text-xs px-2 py-1 rounded-sm border border-border text-muted-foreground">
+            {d}
+          </span>
+        ))}
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-medium tracking-tight">{title}</h1>
+
+      {intro && <p class="text-muted-foreground">{intro}</p>}
+
+      {/* Metadata block */}
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm border-t border-border pt-6">
+        <div>
+          <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Year</dt>
+          <dd>{year}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Role</dt>
+          <dd>{role}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Scope</dt>
+          <dd>{scope}</dd>
+        </div>
+        {client && (
+          <div>
+            <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Client</dt>
+            <dd>{client}</dd>
+          </div>
+        )}
+      </dl>
+    </header>
+
+    {/* ── Cover image ─────────────────────────────────────────── */}
+    {coverImage && (
+      <div class="mb-16 aspect-video overflow-hidden rounded-md bg-muted">
+        <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
+      </div>
+    )}
+
+    {/* ── Signature module ────────────────────────────────────── */}
+    <section
+      aria-label="Accessibility & Design System"
+      class="mb-16 grid sm:grid-cols-2 gap-8 border-y border-border py-10"
+    >
+      <div>
+        <h2 class="text-xs uppercase tracking-widest text-muted-foreground mb-4">
+          Accessibility Decisions
+        </h2>
+        <ul class="space-y-2 text-sm">
+          {accessibility.filter(Boolean).map((item) => (
+            <li class="flex gap-2">
+              <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+              <span>{item}</span>
+            </li>
+          ))}
+          {accessibility.filter(Boolean).length === 0 && (
+            <li class="text-muted-foreground italic">Coming soon.</li>
+          )}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xs uppercase tracking-widest text-muted-foreground mb-4">
+          Design System
+        </h2>
+        <ul class="space-y-2 text-sm">
+          {designSystem.filter(Boolean).map((item) => (
+            <li class="flex gap-2">
+              <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+              <span>{item}</span>
+            </li>
+          ))}
+          {designSystem.filter(Boolean).length === 0 && (
+            <li class="text-muted-foreground italic">Coming soon.</li>
+          )}
+        </ul>
+      </div>
+    </section>
+
+    {/* ── Image stack (MDX body) ───────────────────────────────── */}
+    <div class="prose prose-neutral dark:prose-invert max-w-none mb-16
+                prose-img:rounded-md prose-img:w-full">
+      <Content />
+    </div>
+
+    {/* ── Outcome ─────────────────────────────────────────────── */}
+    {outcome && (
+      <p class="mb-16 text-sm text-muted-foreground border-l-2 border-border pl-4">
+        {outcome}
+      </p>
+    )}
+
+    {/* ── Next / Prev nav ─────────────────────────────────────── */}
+    <nav aria-label="Case study navigation" class="border-t border-border pt-8 flex justify-between gap-4 text-sm">
+      <div>
+        {prev && (
+          <a href={`/work/${prev.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
+            <span class="text-xs text-muted-foreground">← Previous</span>
+            <span class="font-medium">{prev.data.title}</span>
+          </a>
+        )}
+      </div>
+      <div class="text-right">
+        {next && (
+          <a href={`/work/${next.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
+            <span class="text-xs text-muted-foreground">Next →</span>
+            <span class="font-medium">{next.data.title}</span>
+          </a>
+        )}
+      </div>
+    </nav>
+
+  </article>
+</Layout>

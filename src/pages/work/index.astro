@@ -1,0 +1,61 @@
+---
+import { getCollection } from "astro:content"
+import Layout from "@/layouts/main.astro"
+
+const allWork = await getCollection("work", ({ data }) => !data.draft)
+const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
+---
+<Layout
+  title="Work — Erica Jaclyn Stein"
+  description="Selected case studies in digital product design, design systems, and accessible UX."
+>
+  <section class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
+    <h1 class="text-2xl sm:text-3xl font-medium tracking-tight">Work</h1>
+
+    {sorted.length === 0 ? (
+      <p class="mt-4 text-muted-foreground">Case studies coming soon.</p>
+    ) : (
+      <ul class="mt-10 grid gap-8 sm:grid-cols-2" role="list">
+        {sorted.map((entry) => (
+          <li>
+            {entry.data.treatment === "full" ? (
+              <a href={`/work/${entry.id}`} class="group block space-y-3">
+                {entry.data.coverImage && (
+                  <div class="aspect-video overflow-hidden rounded-md bg-muted">
+                    <img
+                      src={entry.data.coverImage}
+                      alt={entry.data.coverAlt ?? ""}
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                )}
+                <div class="space-y-1">
+                  <p class="text-xs text-muted-foreground">{entry.data.year} · {entry.data.scope}</p>
+                  <h2 class="font-medium group-hover:underline underline-offset-4">{entry.data.title}</h2>
+                  <p class="text-sm text-muted-foreground">{entry.data.description}</p>
+                </div>
+              </a>
+            ) : (
+              <div class="space-y-3">
+                {entry.data.coverImage && (
+                  <div class="aspect-video overflow-hidden rounded-md bg-muted">
+                    <img
+                      src={entry.data.coverImage}
+                      alt={entry.data.coverAlt ?? ""}
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+                )}
+                <div class="space-y-1">
+                  <p class="text-xs text-muted-foreground">{entry.data.year} · {entry.data.scope}</p>
+                  <h2 class="font-medium">{entry.data.title}</h2>
+                  <p class="text-sm text-muted-foreground">{entry.data.description}</p>
+                </div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Layout>

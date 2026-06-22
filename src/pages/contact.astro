@@ -1,0 +1,91 @@
+---
+import Layout from "@/layouts/main.astro"
+
+// Replace YOUR_FORM_ID with the ID from formspree.io after creating your form
+const FORMSPREE_ID = "YOUR_FORM_ID"
+---
+<Layout
+  title="Contact — Erica Jaclyn Stein"
+  description="Get in touch with Erica Jaclyn Stein."
+>
+  <section class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
+    <div class="max-w-lg">
+      <h1 class="text-2xl sm:text-3xl font-medium tracking-tight">Contact</h1>
+      <p class="mt-4 text-muted-foreground">
+        If you'd like to get in touch, pleasse send a quick message along with your name and contact.
+      </p>
+
+      <form
+        action={`https://formspree.io/f/${FORMSPREE_ID}`}
+        method="POST"
+        class="mt-10 space-y-6"
+        novalidate
+      >
+        <div class="space-y-2">
+          <label for="name" class="block text-sm font-medium">
+            Name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+                   placeholder:text-muted-foreground
+                   focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                   disabled:opacity-50"
+            placeholder="Your name"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+                   placeholder:text-muted-foreground
+                   focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                   disabled:opacity-50"
+            placeholder="you@example.com"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="message" class="block text-sm font-medium">
+            Message
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows={6}
+            class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+                   placeholder:text-muted-foreground
+                   focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                   disabled:opacity-50 resize-y"
+            placeholder="Tell me about your project or opportunity."
+          ></textarea>
+        </div>
+
+        {/* Honeypot — hidden from real users, catches bots */}
+        <input type="text" name="_gotcha" class="hidden" aria-hidden="true" tabindex="-1" />
+
+        <button
+          type="submit"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-foreground text-background
+                 text-sm font-medium hover:opacity-90 transition-opacity focus:outline-none
+                 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        >
+          Send message
+        </button>
+      </form>
+    </div>
+  </section>
+</Layout>
