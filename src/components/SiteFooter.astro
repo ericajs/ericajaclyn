@@ -1,0 +1,30 @@
+---
+const socials = [
+  { href: "https://www.behance.net/ericajaclyn", label: "Behance" },
+  { href: "https://www.linkedin.com/in/ericajaclyn/", label: "LinkedIn" },
+  { href: "https://medium.com/@ericajaclyn", label: "Medium" },
+]
+const year = new Date().getFullYear()
+---
+<footer class="border-t border-border mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
+    <p class="leading-relaxed">
+      Digital Product Design · Agentic Design Systems · Accessible and Inclusive UX
+    </p>
+    <ul class="flex flex-wrap items-center gap-5">
+      {socials.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-foreground transition-colors cursor-pointer"
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+      <li>© {year} Erica Jaclyn Stein</li>
+    </ul>
+  </div>
+</footer>

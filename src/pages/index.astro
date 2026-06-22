@@ -1,17 +1,19 @@
 ---
 import Layout from "@/layouts/main.astro"
-import { Button } from "@/components/ui/button"
 ---
-
 <Layout>
-  <div class="flex min-h-svh p-6">
-    <div class="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-      <div>
-        <h1 class="font-medium">Project ready!</h1>
-        <p>You may now add components and start building.</p>
-        <p>We've already added the button component for you.</p>
-        <Button client:load className="mt-2">Button</Button>
-      </div>
+  <section class="max-w-6xl mx-auto px-6 py-24 sm:py-32 md:py-40">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-medium leading-tight tracking-tight max-w-3xl">
+      Digital Product Design · Agentic Design Systems · Accessible and Inclusive UX
+    </h1>
+    <div class="mt-10">
+      <a
+        href="/work"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+      >
+        View Work
+        <span aria-hidden="true" class="rtl:rotate-180 inline-block">→</span>
+      </a>
     </div>
-  </div>
+  </section>
 </Layout>
