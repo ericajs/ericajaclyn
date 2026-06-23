@@ -1,19 +1,75 @@
 ---
+import { getCollection } from "astro:content"
 import Layout from "@/layouts/main.astro"
+
+// Pre-launch ideation — at launch, add the draft filter:
+//   await getCollection("work", ({ data }) => !data.draft)
+const allWork = await getCollection("work")
+const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
+
+// Single composed feature — the lead project
+const feature = sorted.find((e) => e.data.treatment === "full") ?? sorted[0]
 ---
 <Layout>
-  <section class="max-w-6xl mx-auto px-6 py-24 sm:py-32 md:py-40">
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-medium leading-tight tracking-tight max-w-3xl">
-      Digital Product Design · Agentic Design Systems · Accessible and Inclusive UX
-    </h1>
-    <div class="mt-10">
-      <a
-        href="/work"
-        class="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
-      >
-        View Work
-        <span aria-hidden="true" class="rtl:rotate-180 inline-block">→</span>
-      </a>
+  {/* ── Editorial split hero ──────────────────────────────────── */}
+  <section aria-label="Introduction" class="w-full">
+    <div class="grid lg:grid-cols-2 items-stretch min-h-[82svh]">
+
+      {/* Text column */}
+      <div class="flex items-center order-2 lg:order-1">
+        <div class="w-full max-w-xl mx-auto px-6 py-16 lg:py-0 lg:pr-16">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-medium leading-tight tracking-tight">
+            Digital Product Design · Agentic Design Systems · Accessible and Inclusive UX
+          </h1>
+          <p class="mt-6 text-muted-foreground max-w-md">
+            {/* TODO: replace with your concise one-line intro copy */}
+            A one-line intro goes here — what you do and who it’s for.
+          </p>
+          <div class="mt-8">
+            <a
+              href="/uxdesign"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+            >
+              View Work
+              <span aria-hidden="true" class="rtl:rotate-180 inline-block">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Image column */}
+      <figure class="relative order-1 lg:order-2 min-h-[48svh] lg:min-h-0 overflow-hidden bg-neutral-900 m-0">
+        {feature?.data.coverImage ? (
+          <img
+            src={feature.data.coverImage}
+            alt={feature.data.coverAlt ?? ""}
+            class="hero-img h-full w-full object-cover"
+          />
+        ) : (
+          <div class="hero-img h-full w-full flex items-center justify-center bg-neutral-900">
+            <span class="text-white/20 text-2xl tracking-widest uppercase">{feature?.data.title}</span>
+          </div>
+        )}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <figcaption class="absolute bottom-5 left-5 text-xs uppercase tracking-widest text-white/70">
+          {feature?.data.title}<span class="text-white/40"> · {feature?.data.scope}</span>
+        </figcaption>
+      </figure>
+
     </div>
   </section>
 </Layout>
+
+<style>
+  /* Subtle, slow ken-burns — disabled for reduced-motion users */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-img {
+      animation: kenburns 24s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+  }
+  @keyframes kenburns {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+</style>
