@@ -1,5 +1,5 @@
 ---
-title: "Dynasol"
+title: "Dynamic Solar"
 description: "Brand identity for a dynamic client — website design work coming soon."
 year: 2024
 role: "Brand & Product Designer"

@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string
+  scope: string
+  isFull: boolean
+  class?: string
+}
+const { title, scope, isFull, class: className = "" } = Astro.props
+---
+<div class:list={["max-w-md", className]}>
+  <h2 class:list={["text-base font-semibold", isFull && "group-hover:underline underline-offset-4"]}>
+    {title}
+  </h2>
+  <p class="mt-1.5 text-sm text-muted-foreground">{scope}</p>
+</div>
