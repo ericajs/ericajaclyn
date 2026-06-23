@@ -9,6 +9,11 @@ const navItems = [
 const currentPath = Astro.url.pathname
 const isActive = (href: string) =>
   href === "/" ? currentPath === "/" : currentPath.startsWith(href)
+
+// Per the Figma handoff, the overlay surfaces the section links as ghost
+// buttons and elevates Contact to a primary action.
+const menuLinks = navItems.filter((n) => n.href !== "/contact")
+const contactLink = navItems.find((n) => n.href === "/contact")
 ---
 <header class="border-b border-border">
   <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -19,7 +24,9 @@ const isActive = (href: string) =>
     >
       Erica Jaclyn Stein
     </a>
-    <nav aria-label="Primary">
+
+    {/* Desktop nav */}
+    <nav aria-label="Primary" class="hidden md:block">
       <ul class="flex items-center gap-6 text-sm">
         {navItems.map(({ href, label }) => (
           <li>
@@ -37,5 +44,178 @@ const isActive = (href: string) =>
         ))}
       </ul>
     </nav>
+
+    {/* Mobile hamburger */}
+    <button
+      type="button"
+      id="menu-open"
+      aria-label="Open menu"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      class="md:hidden flex items-center justify-center size-9 rounded-md hover:bg-muted transition-colors cursor-pointer"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
   </div>
 </header>
+
+{/* ── Mobile menu overlay ─────────────────────────────────────── */}
+<div
+  id="mobile-menu"
+  class="mobile-overlay md:hidden fixed inset-0 z-50 bg-background/35 backdrop-blur-2xl"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu"
+>
+  <div class="panel bg-background border-b border-border">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
+      {/* Top row: logo + close */}
+      <div class="flex items-center justify-between">
+        <a
+          href="/"
+          class="font-medium tracking-tight text-base hover:opacity-70 transition-opacity cursor-pointer"
+          aria-label="Home"
+        >
+          Erica Jaclyn Stein
+        </a>
+        <button
+          type="button"
+          id="menu-close"
+          aria-label="Close menu"
+          class="flex items-center justify-center size-9 rounded-md hover:bg-muted transition-colors cursor-pointer"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Links */}
+      <div class="flex flex-col gap-5 pb-2.5">
+        <div class="flex flex-col gap-1">
+          {menuLinks.map(({ href, label }) => (
+            <a
+              href={href}
+              aria-current={isActive(href) ? "page" : undefined}
+              class:list={[
+                "flex h-9 w-full items-center justify-center rounded-full px-4 text-sm font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer",
+                isActive(href) && "bg-muted",
+              ]}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+        {contactLink && (
+          <a
+            href={contactLink.href}
+            aria-current={isActive(contactLink.href) ? "page" : undefined}
+            class="flex h-9 w-full items-center justify-center rounded-full px-4 text-sm font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            {contactLink.label}
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Gentle bounce-in / bounce-out per design spec */
+  .mobile-overlay {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+  .mobile-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .mobile-overlay .panel {
+    transform: translateY(-14px);
+    opacity: 0;
+    transition:
+      transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.22s ease;
+  }
+  .mobile-overlay.is-open .panel {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-overlay,
+    .mobile-overlay .panel {
+      transition-duration: 0.01ms;
+    }
+    .mobile-overlay .panel {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const overlay = document.getElementById("mobile-menu")
+  const openBtn = document.getElementById("menu-open")
+  const closeBtn = document.getElementById("menu-close")
+
+  if (overlay && openBtn && closeBtn) {
+    const focusable = () =>
+      Array.from(
+        overlay.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+      )
+
+    function open() {
+      overlay!.classList.add("is-open")
+      openBtn!.setAttribute("aria-expanded", "true")
+      document.documentElement.style.overflow = "hidden"
+      closeBtn!.focus()
+      document.addEventListener("keydown", onKeydown)
+    }
+
+    function close() {
+      overlay!.classList.remove("is-open")
+      openBtn!.setAttribute("aria-expanded", "false")
+      document.documentElement.style.overflow = ""
+      document.removeEventListener("keydown", onKeydown)
+      openBtn!.focus()
+    }
+
+    function onKeydown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        close()
+        return
+      }
+      // Focus trap
+      if (e.key === "Tab") {
+        const items = focusable()
+        if (items.length === 0) return
+        const first = items[0]
+        const last = items[items.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+
+    openBtn.addEventListener("click", open)
+    closeBtn.addEventListener("click", close)
+    // Tapping the blurred backdrop (outside the panel) closes
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) close()
+    })
+    // Close after navigating to a link
+    focusable().forEach((el) => {
+      if (el.tagName === "A") el.addEventListener("click", close)
+    })
+  }
+</script>
