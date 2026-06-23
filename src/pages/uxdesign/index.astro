@@ -1,61 +1,89 @@
 ---
 import { getCollection } from "astro:content"
 import Layout from "@/layouts/main.astro"
+import WorkTile from "@/components/work/WorkTile.astro"
+import WorkCard from "@/components/work/WorkCard.astro"
 
-const allWork = await getCollection("work", ({ data }) => !data.draft)
-const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
+// Pre-launch ideation — showing all entries (incl. drafts) so the full set
+// renders. At launch, add the draft filter:
+//   await getCollection("work", ({ data }) => !data.draft)
+const allWork = await getCollection("work")
+const projects = allWork.sort((a, b) => a.data.order - b.data.order)
+
+// Collection-row templates from the Figma, assigned by position:
+//   a = [ wide image | card ]
+//   b = [ tall image | (square image + card) | spacer ]
+//   c = [ card / wide image ]            (stacked)
+//   d = [ card | wide image ]
+//   e = [ spacer | (square image + card) | tall image ]
+const sequence = ["a", "b", "c", "d", "e", "a", "c", "d"]
 ---
 <Layout
-  title="Work — Erica Jaclyn Stein"
+  title="UX Design — Erica Jaclyn Stein"
   description="Selected case studies in digital product design, design systems, and accessible UX."
 >
-  <section class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
-    <h1 class="text-2xl sm:text-3xl font-medium tracking-tight">Work</h1>
-
-    {sorted.length === 0 ? (
-      <p class="mt-4 text-muted-foreground">Case studies coming soon.</p>
-    ) : (
-      <ul class="mt-10 grid gap-8 sm:grid-cols-2" role="list">
-        {sorted.map((entry) => (
-          <li>
-            {entry.data.treatment === "full" ? (
-              <a href={`/uxdesign/${entry.id}`} class="group block space-y-3">
-                {entry.data.coverImage && (
-                  <div class="aspect-video overflow-hidden rounded-md bg-muted">
-                    <img
-                      src={entry.data.coverImage}
-                      alt={entry.data.coverAlt ?? ""}
-                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                )}
-                <div class="space-y-1">
-                  <p class="text-xs text-muted-foreground">{entry.data.year} · {entry.data.scope}</p>
-                  <h2 class="font-medium group-hover:underline underline-offset-4">{entry.data.title}</h2>
-                  <p class="text-sm text-muted-foreground">{entry.data.description}</p>
-                </div>
-              </a>
-            ) : (
-              <div class="space-y-3">
-                {entry.data.coverImage && (
-                  <div class="aspect-video overflow-hidden rounded-md bg-muted">
-                    <img
-                      src={entry.data.coverImage}
-                      alt={entry.data.coverAlt ?? ""}
-                      class="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-                <div class="space-y-1">
-                  <p class="text-xs text-muted-foreground">{entry.data.year} · {entry.data.scope}</p>
-                  <h2 class="font-medium">{entry.data.title}</h2>
-                  <p class="text-sm text-muted-foreground">{entry.data.description}</p>
-                </div>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
+  {/* ── Hero ──────────────────────────────────────────────────── */}
+  <section class="max-w-3xl mx-auto px-6 pt-20 sm:pt-28 pb-12 sm:pb-20 text-center">
+    <p class="text-sm font-semibold text-muted-foreground mb-4">Case Studies</p>
+    <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">UX Design</h1>
   </section>
+
+  {/* ── Collection rows ───────────────────────────────────────── */}
+  <div class="max-w-6xl mx-auto px-6 pb-24 space-y-20 sm:space-y-28">
+    {projects.map((entry, i) => {
+      const tpl = sequence[i % sequence.length]
+      const isFull = entry.data.treatment === "full"
+      const Tag = isFull ? "a" : "div"
+      const linkProps = isFull ? { href: `/uxdesign/${entry.id}` } : {}
+      const cover = entry.data.coverImage
+      const alt = entry.data.coverAlt
+      const { title, scope } = entry.data
+      return (
+        <article>
+          {tpl === "a" && (
+            <Tag {...linkProps} class:list={["group grid md:grid-cols-2 gap-6 sm:gap-10 items-end", isFull && "cursor-pointer"]}>
+              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/1]" />
+              <WorkCard title={title} scope={scope} isFull={isFull} />
+            </Tag>
+          )}
+
+          {tpl === "b" && (
+            <Tag {...linkProps} class:list={["group grid md:grid-cols-3 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
+              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/3]" />
+              <div class="flex flex-col gap-6">
+                <WorkTile title={title} aspect="aspect-square" />
+                <WorkCard title={title} scope={scope} isFull={isFull} />
+              </div>
+              <div class="hidden md:block" aria-hidden="true"></div>
+            </Tag>
+          )}
+
+          {tpl === "c" && (
+            <Tag {...linkProps} class:list={["group flex flex-col gap-6", isFull && "cursor-pointer"]}>
+              <WorkCard title={title} scope={scope} isFull={isFull} />
+              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/1]" />
+            </Tag>
+          )}
+
+          {tpl === "d" && (
+            <Tag {...linkProps} class:list={["group grid md:grid-cols-2 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
+              <WorkCard title={title} scope={scope} isFull={isFull} class="order-2 md:order-1" />
+              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/1]" class="order-1 md:order-2" />
+            </Tag>
+          )}
+
+          {tpl === "e" && (
+            <Tag {...linkProps} class:list={["group grid md:grid-cols-3 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
+              <div class="hidden md:block" aria-hidden="true"></div>
+              <div class="flex flex-col gap-6">
+                <WorkTile title={title} aspect="aspect-square" />
+                <WorkCard title={title} scope={scope} isFull={isFull} />
+              </div>
+              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/3]" />
+            </Tag>
+          )}
+        </article>
+      )
+    })}
+  </div>
 </Layout>

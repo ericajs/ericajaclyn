@@ -1,0 +1,31 @@
+---
+interface Props {
+  title: string
+  src?: string
+  alt?: string
+  aspect: string // e.g. "aspect-[2/1]"
+  class?: string
+}
+const { title, src, alt = "", aspect, class: className = "" } = Astro.props
+---
+{src ? (
+  <div class:list={[aspect, "overflow-hidden rounded-md bg-muted", className]}>
+    <img
+      src={src}
+      alt={alt}
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+  </div>
+) : (
+  <div
+    class:list={[
+      aspect,
+      "rounded-md border border-border bg-muted/40 flex items-center justify-center transition-colors group-hover:bg-muted",
+      className,
+    ]}
+  >
+    <span class="text-muted-foreground text-xs sm:text-sm uppercase tracking-widest text-center px-2">
+      {title}
+    </span>
+  </div>
+)}

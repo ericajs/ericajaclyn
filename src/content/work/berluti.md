@@ -16,6 +16,6 @@ coverImage: ""
 coverAlt: ""
 ogImage: ""
 treatment: "card"
-order: 4
+order: 3
 draft: true
 ---
