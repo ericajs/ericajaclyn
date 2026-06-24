@@ -11,11 +11,16 @@ const work = defineCollection({
     role: z.string(),
     scope: z.string(),
     client: z.string().optional(),
+    // Subtitle shown under the case study title (e.g. "Digital Historical Archives Design")
+    subtitle: z.string().optional(),
     // Discipline chips shown at scan-time on the work index and case study header
     disciplines: z.array(z.string()),
-    // Signature module — appears on every case study
+    // Thematic tags shown in the case study metadata block
+    tags: z.array(z.string()).default([]),
+    // Signature module ("About" accordion) — appears on every case study
     accessibility: z.array(z.string()).default([]),
     designSystem: z.array(z.string()).default([]),
+    tools: z.array(z.string()).default([]),
     // One-line outcome (where available)
     outcome: z.string().optional(),
     // Short intro paragraph (~30 words max)

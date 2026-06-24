@@ -3,136 +3,152 @@ import { getCollection, render } from "astro:content"
 import Layout from "@/layouts/main.astro"
 
 export async function getStaticPaths() {
-  const allWork = await getCollection("work", ({ data }) =>
-    !data.draft && data.treatment === "full"
-  )
-  return allWork.map((entry) => ({ params: { id: entry.id } }))
+  // Pre-launch: include drafts so case study pages render for preview.
+  // At launch, add: && !data.draft
+  const all = await getCollection("work", ({ data }) => data.treatment === "full")
+  const sorted = all.sort((a, b) => a.data.order - b.data.order)
+  return sorted.map((entry, i) => ({
+    params: { id: entry.id },
+    props: {
+      entry,
+      prev: i > 0 ? sorted[i - 1] : null,
+      next: i < sorted.length - 1 ? sorted[i + 1] : null,
+    },
+  }))
 }
 
-const { id } = Astro.params
-const allWork = await getCollection("work", ({ data }) =>
-  !data.draft && data.treatment === "full"
-)
-const sorted = allWork.sort((a, b) => a.data.order - b.data.order)
-const entry = sorted.find((e) => e.id === id)
-
-if (!entry) return Astro.redirect("/uxdesign")
-
+const { entry, prev, next } = Astro.props
 const { Content } = await render(entry)
 
-const currentIndex = sorted.indexOf(entry)
-const prev = currentIndex > 0 ? sorted[currentIndex - 1] : null
-const next = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null
+const {
+  title, subtitle, description, year, role, scope, client,
+  tags, accessibility, designSystem, tools, outcome, intro,
+  coverImage, coverAlt, ogImage,
+} = entry.data
 
-const { title, description, year, role, scope, client, disciplines,
-        accessibility, designSystem, outcome, intro, coverImage, coverAlt, ogImage } = entry.data
+const meta = [
+  { label: "Year", value: String(year) },
+  { label: "Role", value: role },
+  { label: "Scope", value: scope },
+  ...(client ? [{ label: "Client", value: client }] : []),
+  ...(tags.length ? [{ label: "Tags", value: tags.join(", ") }] : []),
+]
+
+const aboutItems = [
+  { label: "Accessibility", items: accessibility.filter(Boolean) },
+  { label: "Design System", items: designSystem.filter(Boolean) },
+  { label: "Tools", items: tools.filter(Boolean) },
+].filter((a) => a.items.length)
 ---
-<Layout
-  title={`${title} — Erica Jaclyn Stein`}
-  description={description}
-  ogImage={ogImage}
->
-  <article class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
+<Layout title={`${title} — Erica Jaclyn Stein`} description={description} ogImage={ogImage}>
+  <article class="pb-24">
 
-    {/* ── Header ──────────────────────────────────────────────── */}
-    <header class="mb-12 space-y-5 max-w-3xl">
-      <div class="flex flex-wrap gap-2">
-        {disciplines.map((d) => (
-          <span class="text-xs px-2 py-1 rounded-sm border border-border text-muted-foreground">
-            {d}
-          </span>
-        ))}
+    {/* ── Top pagination ──────────────────────────────────────── */}
+    <nav aria-label="Case study" class="border-b border-border">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between text-sm gap-4">
+        <div class="flex-1">
+          {prev && (
+            <a href={`/uxdesign/${prev.id}`} class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+              <span aria-hidden="true">←</span><span class="hidden sm:inline">{prev.data.title}</span><span class="sm:hidden">Prev</span>
+            </a>
+          )}
+        </div>
+        <a href="/uxdesign" class="shrink-0 font-medium hover:opacity-70 transition-opacity">Back to UX Design</a>
+        <div class="flex-1 flex justify-end">
+          {next && (
+            <a href={`/uxdesign/${next.id}`} class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+              <span class="hidden sm:inline">{next.data.title}</span><span class="sm:hidden">Next</span><span aria-hidden="true">→</span>
+            </a>
+          )}
+        </div>
       </div>
+    </nav>
 
-      <h1 class="text-2xl sm:text-3xl font-medium tracking-tight">{title}</h1>
-
-      {intro && <p class="text-muted-foreground">{intro}</p>}
-
-      {/* Metadata block */}
-      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm border-t border-border pt-6">
-        <div>
-          <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Year</dt>
-          <dd>{year}</dd>
-        </div>
-        <div>
-          <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Role</dt>
-          <dd>{role}</dd>
-        </div>
-        <div>
-          <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Scope</dt>
-          <dd>{scope}</dd>
-        </div>
-        {client && (
-          <div>
-            <dt class="text-xs text-muted-foreground uppercase tracking-wide mb-1">Client</dt>
-            <dd>{client}</dd>
-          </div>
-        )}
-      </dl>
+    {/* ── Hero ────────────────────────────────────────────────── */}
+    <header class="max-w-3xl mx-auto px-6 pt-16 sm:pt-24 pb-10 text-center">
+      <p class="text-sm font-semibold text-muted-foreground mb-4">Case Study</p>
+      <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">{title}</h1>
+      {subtitle && <p class="mt-4 text-lg text-muted-foreground">{subtitle}</p>}
     </header>
 
     {/* ── Cover image ─────────────────────────────────────────── */}
-    {coverImage && (
-      <div class="mb-16 aspect-video overflow-hidden rounded-md bg-muted">
-        <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
-      </div>
-    )}
+    <div class="max-w-6xl mx-auto px-6">
+      {coverImage ? (
+        <div class="aspect-video overflow-hidden rounded-md bg-muted">
+          <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
+        </div>
+      ) : (
+        <div class="aspect-video rounded-md border border-border bg-muted/40 flex items-center justify-center">
+          <span class="text-muted-foreground text-sm uppercase tracking-widest">{title}</span>
+        </div>
+      )}
+    </div>
 
-    {/* ── Signature module ────────────────────────────────────── */}
-    <section
-      aria-label="Accessibility & Design System"
-      class="mb-16 grid sm:grid-cols-2 gap-8 border-y border-border py-10"
-    >
-      <div>
-        <h2 class="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-          Accessibility Decisions
-        </h2>
-        <ul class="space-y-2 text-sm">
-          {accessibility.filter(Boolean).map((item) => (
-            <li class="flex gap-2">
-              <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
-              <span>{item}</span>
-            </li>
-          ))}
-          {accessibility.filter(Boolean).length === 0 && (
-            <li class="text-muted-foreground italic">Coming soon.</li>
-          )}
-        </ul>
-      </div>
-
-      <div>
-        <h2 class="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-          Design System
-        </h2>
-        <ul class="space-y-2 text-sm">
-          {designSystem.filter(Boolean).map((item) => (
-            <li class="flex gap-2">
-              <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
-              <span>{item}</span>
-            </li>
-          ))}
-          {designSystem.filter(Boolean).length === 0 && (
-            <li class="text-muted-foreground italic">Coming soon.</li>
-          )}
-        </ul>
-      </div>
+    {/* ── Intro + metadata ────────────────────────────────────── */}
+    <section class="max-w-6xl mx-auto px-6 py-12 sm:py-16 grid md:grid-cols-2 gap-8 md:gap-16 items-start">
+      {intro && <p class="text-muted-foreground leading-relaxed max-w-md">{intro}</p>}
+      <dl class="rounded-md bg-muted/50 p-6 grid grid-cols-[5rem_1fr] gap-x-4 gap-y-3 text-sm">
+        {meta.map(({ label, value }) => (
+          <>
+            <dt class="text-muted-foreground">{label}</dt>
+            <dd>{value}</dd>
+          </>
+        ))}
+      </dl>
     </section>
 
-    {/* ── Image stack (MDX body) ───────────────────────────────── */}
-    <div class="prose prose-neutral dark:prose-invert max-w-none mb-16
-                prose-img:rounded-md prose-img:w-full">
+    {/* ── Narrative + image stack (MDX body) ──────────────────── */}
+    <div class="case-body max-w-3xl mx-auto px-6">
       <Content />
     </div>
 
+    {/* ── About [Project] — signature module accordion ────────── */}
+    {aboutItems.length > 0 && (
+      <section class="max-w-3xl mx-auto px-6 mt-16">
+        <h2 class="text-2xl font-medium tracking-tight mb-6">About {title}</h2>
+        <div class="border-t border-border">
+          {aboutItems.map(({ label, items }) => (
+            <details class="group border-b border-border">
+              <summary class="flex items-center justify-between py-5 cursor-pointer list-none">
+                <span class="text-base font-medium">{label}</span>
+                <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
+                  <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </span>
+              </summary>
+              <div class="pb-6">
+                {label === "Tools" ? (
+                  <ul class="flex flex-wrap gap-2">
+                    {items.map((t) => (
+                      <li class="text-xs px-2 py-1 rounded-md border border-border text-muted-foreground">{t}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <ul class="space-y-2 text-sm">
+                    {items.map((it) => (
+                      <li class="flex gap-2">
+                        <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+                        <span>{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
     {/* ── Outcome ─────────────────────────────────────────────── */}
     {outcome && (
-      <p class="mb-16 text-sm text-muted-foreground border-l-2 border-border pl-4">
+      <p class="max-w-3xl mx-auto px-6 mt-12 text-sm text-muted-foreground border-l-2 border-border pl-4">
         {outcome}
       </p>
     )}
 
-    {/* ── Next / Prev nav ─────────────────────────────────────── */}
-    <nav aria-label="Case study navigation" class="border-t border-border pt-8 flex justify-between gap-4 text-sm">
+    {/* ── Bottom pagination ───────────────────────────────────── */}
+    <nav aria-label="More case studies" class="max-w-6xl mx-auto px-6 mt-20 pt-8 border-t border-border flex justify-between gap-4 text-sm">
       <div>
         {prev && (
           <a href={`/uxdesign/${prev.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
@@ -153,3 +169,24 @@ const { title, description, year, role, scope, client, disciplines,
 
   </article>
 </Layout>
+
+<style is:global>
+  /* Narrative body styling (no typography plugin) */
+  .case-body { line-height: 1.7; }
+  .case-body > * + * { margin-top: 1.25rem; }
+  .case-body h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-top: 3rem;
+  }
+  .case-body h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 2rem;
+  }
+  .case-body p { color: var(--muted-foreground); }
+  .case-body ul { list-style: disc; padding-inline-start: 1.25rem; }
+  .case-body li { margin-top: 0.5rem; }
+  .case-body img { border-radius: var(--radius-md); width: 100%; }
+</style>
