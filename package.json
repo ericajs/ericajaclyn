@@ -19,6 +19,7 @@
     "@astrojs/mdx": "^6.0.3",
     "@astrojs/react": "^5.0.7",
     "@fontsource-variable/figtree": "^5.2.10",
+    "@fontsource-variable/tasa-explorer": "^5.2.2",
     "@hugeicons/core-free-icons": "^4.2.1",
     "@hugeicons/react": "^1.1.7",
     "@tailwindcss/vite": "^4",

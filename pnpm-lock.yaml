@@ -17,6 +17,9 @@ importers:
       '@fontsource-variable/figtree':
         specifier: ^5.2.10
         version: 5.2.10
+      '@fontsource-variable/tasa-explorer':
+        specifier: ^5.2.2
+        version: 5.2.2
       '@hugeicons/core-free-icons':
         specifier: ^4.2.1
         version: 4.2.1
@@ -558,6 +561,9 @@ packages:
 
   '@fontsource-variable/figtree@5.2.10':
     resolution: {integrity: sha512-a5Gumbpy3mdd+Yg31g6Qb7CmjYbrfyutJa3bWfP5q8A4GclIOwX7mI+ZuSHsJnw/mHvW6r9oh1AHJcJTIxK4JA==}
+
+  '@fontsource-variable/tasa-explorer@5.2.2':
+    resolution: {integrity: sha512-AL36qT/EJfQQtdlsewKaAvgxePSok6A0mffaA1mza83MWck4LEi8EnQTIkmxZ1+Jy7mJDcXARtDiwUoqubPRpQ==}
 
   '@hono/node-server@1.19.14':
     resolution: {integrity: sha512-GwtvgtXxnWsucXvbQXkRgqksiH2Qed37H9xHZocE5sA3N8O8O8/8FA3uclQXxXVzc9XBZuEOMK7+r02FmSpHtw==}
@@ -5088,6 +5094,8 @@ snapshots:
   '@floating-ui/utils@0.2.11': {}
 
   '@fontsource-variable/figtree@5.2.10': {}
+
+  '@fontsource-variable/tasa-explorer@5.2.2': {}
 
   '@hono/node-server@1.19.14(hono@4.12.26)':
     dependencies:
