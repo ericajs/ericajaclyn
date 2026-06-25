@@ -1,30 +1,46 @@
 ---
+import Logo from "@/components/Logo.astro"
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/uxdesign", label: "UX Design" },
+  { href: "/astrophotography", label: "Astrophotography" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+]
 const socials = [
-  { href: "https://www.behance.net/ericajaclyn", label: "Behance" },
   { href: "https://www.linkedin.com/in/ericajaclyn/", label: "LinkedIn" },
-  { href: "https://medium.com/@ericajaclyn", label: "Medium" },
+  { href: "https://www.behance.net/ericajaclyn", label: "Behance" },
 ]
 const year = new Date().getFullYear()
 ---
-<footer class="border-t border-border mt-16">
-  <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between text-sm text-muted-foreground">
-    <p class="leading-relaxed">
-      Digital Product Design · Agentic Design Systems · Accessible and Inclusive UX
-    </p>
-    <ul class="flex flex-wrap items-center gap-5">
-      {socials.map(({ href, label }) => (
-        <li>
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hover:text-foreground transition-colors cursor-pointer"
-          >
-            {label}
-          </a>
-        </li>
-      ))}
-      <li>© {year} Erica Jaclyn Stein</li>
-    </ul>
+<footer>
+  <div class="mx-auto max-w-[1920px] px-6 py-16 sm:py-24 flex flex-col gap-12">
+    <hr class="border-t border-border" />
+
+    <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+      {/* Nav links */}
+      <nav aria-label="Footer" class="flex flex-col items-start gap-0 md:flex-1">
+        {navLinks.map(({ href, label }) => (
+          <a href={href} class="pill pill-ghost pill-sm">{label}</a>
+        ))}
+      </nav>
+
+      {/* Logo */}
+      <div class="md:flex-1 flex justify-start md:justify-center">
+        <a href="/" class="hover:opacity-70 transition-opacity" aria-label="Home">
+          <Logo class="size-8" />
+        </a>
+      </div>
+
+      {/* Socials */}
+      <nav aria-label="Social" class="flex flex-col items-start md:items-end gap-0 md:flex-1">
+        {socials.map(({ href, label }) => (
+          <a href={href} target="_blank" rel="noopener noreferrer" class="pill pill-ghost pill-sm">{label}</a>
+        ))}
+      </nav>
+    </div>
+
+    <p class="text-xs text-muted-foreground">Copyright © {year} ericajaclyn.com</p>
   </div>
 </footer>
