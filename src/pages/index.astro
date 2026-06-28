@@ -19,16 +19,16 @@ const first = slides[0]
 <Layout>
   <section class="grid lg:grid-cols-[2fr_3fr] min-h-[600px] lg:min-h-[calc(100svh-66px)]">
 
-    {/* ── Left dark panel ─────────────────────────────────────── */}
-    <div class="bg-[#0e0e0f] text-white flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-16 text-center lg:text-left">
+    {/* ── Left panel (theme-aware) ────────────────────────────── */}
+    <div class="bg-background text-foreground flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-16 text-center lg:text-left">
       <h1 class="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.05]">
         Digital Product Design
       </h1>
-      <p class="mt-6 text-white/70 max-w-md mx-auto lg:mx-0">
+      <p class="mt-6 text-muted-foreground max-w-md mx-auto lg:mx-0">
         Accessible and Inclusive User Experiences, Adaptive Design Systems, Agentic Automation
       </p>
       <div class="mt-8 flex flex-col items-center lg:items-start gap-4">
-        <a href="/uxdesign" class="pill pill-md bg-white text-neutral-900 hover:opacity-90">
+        <a href="/uxdesign" class="pill pill-primary pill-md">
           View work
         </a>
         <a href="/contact" class="text-sm font-medium underline underline-offset-4 hover:opacity-70 transition-opacity">
