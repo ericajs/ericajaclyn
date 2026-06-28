@@ -1,74 +1,96 @@
 ---
 import Layout from "@/layouts/main.astro"
+
+const bio = [
+  "Three areas shape most of what I do: mature design systems, accessible and inclusive UX, and agentic, AI-native interfaces. These threads run through recent projects spanning agentic legal workspaces, financial applications, interactive data visualization, and large-scale design system architecture—for B2B and B2C clients across legal, government, finance, fashion, food service, and consumer healthcare.",
+  "Outside client work, I process imagery from the James Webb Space Telescope—a slower kind of design problem, but one that scratches the same itch: rendering complexity into something a person can take in at a glance.",
+]
+
+const accordions = [
+  {
+    label: "Capabilities",
+    items: [
+      "Agile Project Management",
+      "Agentic Rapid Prototyping",
+      "Advanced Data Visualization",
+      "Responsive Web Design",
+      "Mobile Applications",
+    ],
+  },
+  {
+    label: "Specializations",
+    items: [
+      "Design Systems Architecture",
+      "Agentic Design Systems",
+      "Design Engineering",
+      "Agentic Front-End Development",
+      "AI-Assisted UX Design",
+      "Advanced Data Visualization",
+    ],
+  },
+  {
+    label: "Accessibility Expertise & Credentials",
+    items: [
+      "Certified Professional in Accessibility Core Competencies (CPACC), IAAP",
+      "WCAG 2.1, 2.2 Accessibility Compliance",
+    ],
+  },
+]
 ---
 <Layout
   title="About — Erica Jaclyn Stein"
-  description="About Erica Jaclyn Stein: digital product designer specializing in agentic design systems and accessibility."
+  description="About Erica Jaclyn Stein: digital product designer specializing in design systems, accessible UX, and agentic AI-native interfaces."
 >
-  <section class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
-    <div class="max-w-2xl space-y-16">
+  <section id="about-top" class="max-w-2xl mx-auto px-6 py-16 sm:py-24">
 
-      {/* ── Bio ──────────────────────────────────────────────── */}
-      <div class="space-y-4">
-        <h1 class="text-2xl sm:text-3xl font-medium tracking-tight">About</h1>
-        <p class="text-muted-foreground">
-          {/* Replace with your bio — keep it tight, 2–4 sentences max */}
-          In progress.
-        </p>
+    {/* ── Hero ──────────────────────────────────────────────── */}
+    <div class="text-center">
+      <p class="text-sm font-semibold text-muted-foreground mb-4">Anything is Possible</p>
+      <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">About</h1>
+
+      {/* Profile photo — placeholder until the real image is added */}
+      <div class="mt-10 size-32 mx-auto rounded-full bg-muted border border-border flex items-center justify-center overflow-hidden">
+        <span class="text-muted-foreground text-sm uppercase tracking-widest">EJS</span>
       </div>
 
-      {/* ── Approach ─────────────────────────────────────────── */}
-      <div class="space-y-6">
-        <h2 class="text-xs uppercase tracking-widest text-muted-foreground">Approach</h2>
+      <p class="mt-6 text-lg font-semibold">Erica Jaclyn Stein</p>
+      <p class="text-sm text-muted-foreground">Digital Product Designer</p>
+    </div>
 
-        <div class="space-y-8">
-          <div class="space-y-2">
-            <h3 class="font-medium">Accessibility is not a checklist.</h3>
-            <p class="text-sm text-muted-foreground">
-              {/* Draft your accessibility philosophy here — how it shapes decisions from the start, CPACC context, specific practices */}
-              In progress.
-            </p>
-          </div>
+    {/* ── Bio ───────────────────────────────────────────────── */}
+    <div class="mt-12 space-y-5 leading-relaxed text-muted-foreground">
+      {bio.map((p) => <p>{p}</p>)}
+    </div>
 
-          <div class="space-y-2">
-            <h3 class="font-medium">Design systems as shared language.</h3>
-            <p class="text-sm text-muted-foreground">
-              {/* Draft your design systems philosophy here — how you think about components, tokens, governance, collaboration with eng */}
-              In progress.
-            </p>
-          </div>
+    {/* ── Accordions (collapsed by default) ─────────────────── */}
+    <div class="mt-16 border-t border-border">
+      {accordions.map(({ label, items }) => (
+        <details class="group border-b border-border">
+          <summary class="flex items-center justify-between py-5 cursor-pointer list-none">
+            <span class="text-base font-medium">{label}</span>
+            <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
+              <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </summary>
+          <ul class="pb-6 space-y-2 text-sm">
+            {items.map((it) => (
+              <li class="flex gap-2">
+                <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+                <span>{it}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))}
+    </div>
 
-          <div class="space-y-2">
-            <h3 class="font-medium">Visual work that speaks for itself.</h3>
-            <p class="text-sm text-muted-foreground">
-              {/* Your editorial philosophy — image-led portfolio, what you choose to show vs. withhold, and why */}
-              In progress.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Credentials ──────────────────────────────────────── */}
-      <div class="space-y-4">
-        <h2 class="text-xs uppercase tracking-widest text-muted-foreground">Credentials</h2>
-        <ul class="space-y-3 text-sm">
-          <li class="flex gap-4">
-            <span class="text-muted-foreground shrink-0 w-16">2024</span>
-            <span>CPACC — Certified Professional in Accessibility Core Competencies, IAAP</span>
-          </li>
-          {/* Add additional credentials, education, recognitions here */}
-        </ul>
-      </div>
-
-      {/* ── Currently ────────────────────────────────────────── */}
-      <div class="space-y-4">
-        <h2 class="text-xs uppercase tracking-widest text-muted-foreground">Currently</h2>
-        <p class="text-sm text-muted-foreground">
-          {/* What you're working on, available for, or interested in right now */}
-          In progress.
-        </p>
-      </div>
-
+    {/* ── Back to top ───────────────────────────────────────── */}
+    <div class="mt-12 text-center">
+      <a href="#about-top" class="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        Back to Top
+      </a>
     </div>
   </section>
 </Layout>
