@@ -1,5 +1,6 @@
 ---
 import Logo from "@/components/Logo.astro"
+import ThemeToggle from "@/components/ThemeToggle.astro"
 
 const leftNav = [
   { href: "/uxdesign", label: "UX Design" },
@@ -35,17 +36,20 @@ const isActive = (href: string) =>
         <Logo class="size-8" />
       </a>
 
-      <nav aria-label="Secondary" class="flex items-center gap-1 justify-self-end">
-        {rightNav.map(({ href, label }) => (
-          <a
-            href={href}
-            aria-current={isActive(href) ? "page" : undefined}
-            class:list={["pill pill-ghost pill-md", isActive(href) && "bg-accent"]}
-          >
-            {label}
-          </a>
-        ))}
-      </nav>
+      <div class="flex items-center gap-2 justify-self-end">
+        <nav aria-label="Secondary" class="flex items-center gap-1">
+          {rightNav.map(({ href, label }) => (
+            <a
+              href={href}
+              aria-current={isActive(href) ? "page" : undefined}
+              class:list={["pill pill-ghost pill-md", isActive(href) && "bg-accent"]}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <ThemeToggle class="w-[88px]" />
+      </div>
     </div>
 
     {/* Mobile — logo + hamburger */}
@@ -123,6 +127,7 @@ const isActive = (href: string) =>
             </a>
           ))}
         </div>
+        <ThemeToggle class="w-full mt-2" />
       </nav>
     </div>
   </div>
@@ -206,4 +211,25 @@ const isActive = (href: string) =>
       if (el.tagName === "A") el.addEventListener("click", close)
     })
   }
+
+  // ── Theme toggle (default light) ──────────────────────────────
+  function syncToggles() {
+    const dark = document.documentElement.classList.contains("dark")
+    document.querySelectorAll<HTMLElement>("[data-theme-set]").forEach((b) => {
+      const active = (b.dataset.themeSet === "dark") === dark
+      b.classList.toggle("bg-accent", active)
+      b.setAttribute("aria-pressed", String(active))
+    })
+  }
+  function applyTheme(theme: string) {
+    document.documentElement.classList.toggle("dark", theme === "dark")
+    try {
+      localStorage.setItem("theme", theme)
+    } catch (e) {}
+    syncToggles()
+  }
+  document.querySelectorAll<HTMLElement>("[data-theme-set]").forEach((b) => {
+    b.addEventListener("click", () => applyTheme(b.dataset.themeSet!))
+  })
+  syncToggles()
 </script>
