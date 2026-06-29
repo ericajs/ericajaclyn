@@ -22,7 +22,7 @@ const { Content } = await render(entry)
 
 const {
   title, subtitle, description, year, role, scope, client,
-  tags, accessibility, designSystem, tools, outcome, intro,
+  tags, accessibility, designSystem, tools, aboutProject, outcome, intro,
   coverImage, coverAlt, ogImage,
 } = entry.data
 
@@ -102,10 +102,21 @@ const aboutItems = [
       <Content />
     </div>
 
-    {/* ── About [Project] — signature module accordion ────────── */}
-    {aboutItems.length > 0 && (
+    {/* ── About [Project] — description, outcome, signature module ─ */}
+    {(aboutProject.length > 0 || outcome || aboutItems.length > 0) && (
       <section class="max-w-3xl mx-auto px-6 mt-16">
         <h2 class="text-2xl font-medium tracking-tight mb-6">About {title}</h2>
+
+        {aboutProject.length > 0 && (
+          <div class="space-y-4 leading-relaxed mb-8">
+            {aboutProject.map((p) => <p>{p}</p>)}
+          </div>
+        )}
+
+        {outcome && (
+          <p class="mb-8 text-sm text-muted-foreground border-l-2 border-border pl-4">{outcome}</p>
+        )}
+
         <div class="border-t border-border">
           {aboutItems.map(({ label, items }) => (
             <details class="group border-b border-border">
@@ -140,12 +151,6 @@ const aboutItems = [
       </section>
     )}
 
-    {/* ── Outcome ─────────────────────────────────────────────── */}
-    {outcome && (
-      <p class="max-w-3xl mx-auto px-6 mt-12 text-sm text-muted-foreground border-l-2 border-border pl-4">
-        {outcome}
-      </p>
-    )}
 
     {/* ── Bottom pagination ───────────────────────────────────── */}
     <nav aria-label="More case studies" class="max-w-6xl mx-auto px-6 mt-20 pt-8 border-t border-border flex justify-between gap-4 text-sm">
