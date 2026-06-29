@@ -21,6 +21,8 @@ const work = defineCollection({
     accessibility: z.array(z.string()).default([]),
     designSystem: z.array(z.string()).default([]),
     tools: z.array(z.string()).default([]),
+    // "About [Project]" description paragraphs shown above the accordions
+    aboutProject: z.array(z.string()).default([]),
     // One-line outcome (where available)
     outcome: z.string().optional(),
     // Short intro paragraph (~30 words max)
