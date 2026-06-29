@@ -8,12 +8,15 @@ const hero = {
     "These composites begin with the Stage 3 mosaics released through MAST and end with a chain of interpretive choices: filter-to-filter registration, continuum subtraction, non-linear intensity transformations, and the assignment of invisible-wavelength channels to visible color.",
 }
 
+type GalleryItem = { name: string; formula?: string }
 type Nebula = {
   id: string
   nav: string
   title: string
   subtitle: string
-  filters: string[]
+  gallery: GalleryItem[]
+  galleryCols: number
+  mainCaption?: string
   description: string[]
   meta: [string, string][]
   note?: string
@@ -26,10 +29,16 @@ const nebulae: Nebula[] = [
     title: "Carina Nebula H II Region Stellar Jets",
     subtitle:
       "Uncovering the full spectrum of accretion and outflow in the heart of the Carina Nebula",
-    filters: ["F150W2+F164N", "F150W2+F162M", "F444W+F470N", "F444W"],
+    gallery: [
+      { name: "HE Fe II Emission", formula: "F164N − k₂ × F162M" },
+      { name: "H2 Emission", formula: "F470N − k₁ × F444W" },
+      { name: "F470N" },
+    ],
+    galleryCols: 3,
+    mainCaption: "Bicolor FE II + H2 Emission",
     description: [
       "This image shows a collimated atomic [Fe II] jet at ~10,000 K piercing through a surrounding molecular H₂ cocoon, with the spatial geometry of the embedded protostar's outflow made visible through an orange + cyan emission-line composite.",
-      "This is just one of Megan Reiter's six-target survey of the Carina Nebula's Herbig-Haro objects, each with a uniform four-filter NIRCam program. The targets fall under “Molecular Cloud / SFR with strong H II region overlap.”",
+      "This is just one of Megan Reiter's six-target survey of the Carina Nebula's Herbig-Haro objects, each with a uniform four-filter NIRCam program. The targets fall under “Molecular Cloud / SFR” with strong H II region overlap.",
     ],
     meta: [
       ["Proposal", "5408"],
@@ -44,7 +53,15 @@ const nebulae: Nebula[] = [
     nav: "Cat's Paw Nebula",
     title: "Cat's Paw Nebula",
     subtitle: "NIRCam Observations of a Star-Forming Nebula",
-    filters: ["F090W", "F187N", "F200W", "F277N", "F356M", "F470N"],
+    gallery: [
+      { name: "F090W" },
+      { name: "F187N" },
+      { name: "F200W" },
+      { name: "F277N" },
+      { name: "F356M" },
+      { name: "F470N" },
+    ],
+    galleryCols: 6,
     description: [
       "Proposal 6778 is a Director's Discretionary (DD) program led by Macarena García Marín (STScI), executed in a single visit, and it is the source dataset for the JWST third-anniversary public release of the Cat's Paw Nebula.",
     ],
@@ -61,7 +78,14 @@ const nebulae: Nebula[] = [
     nav: "Southern Ring Nebula",
     title: "Southern Ring Nebula",
     subtitle: "JWST Early Release Observation 7",
-    filters: ["F090W", "F187N", "F212N", "F356W", "F444W"],
+    gallery: [
+      { name: "F090W" },
+      { name: "F187N" },
+      { name: "F212N" },
+      { name: "F356W" },
+      { name: "F444W" },
+    ],
+    galleryCols: 5,
     description: [
       "The Southern Ring Nebula observations were part of the JWST's Early Release Observations (ERO) program—the telescope's first public science showcase and one of several flagship ERO targets.",
       "It's a planetary nebula: the glowing, expelled envelope of a dying star. JWST's big payoff was the central star system — the infrared view showed that the star actually shaping the nebula is a faint white dwarf, nearly lost in the glare of its brighter companion, ringed by spiral structure and a dusty disk that point to a multiple-star history (De Marco et al. 2022). The six NIRCam filters separate the ionized gas, the molecular halo, the dust, and the stars, mapping how the dying star shed its mass over time.",
@@ -79,7 +103,8 @@ const nebulae: Nebula[] = [
     nav: "Carina Nebula Cosmic Cliffs",
     title: "Cosmic Cliffs of the Carina Nebula",
     subtitle: "JWST Early Release Observation 5",
-    filters: [],
+    gallery: [],
+    galleryCols: 0,
     description: [],
     meta: [],
     note: "Description and metadata coming soon.",
@@ -89,16 +114,22 @@ const nebulae: Nebula[] = [
     nav: "Pillars of Creation",
     title: "Pillars of Creation",
     subtitle: "",
-    filters: [],
+    gallery: [],
+    galleryCols: 0,
     description: [],
     meta: [],
     note: "Imagery and details coming soon.",
   },
 ]
 
-const aboutParas = [
-  "Unlike local astrophotography data, JWST i2d.fits data is already calibrated, dark-subtracted, flat-fielded, and mostly distortion-corrected. My job is alignment, dynamic range control, noise management, flux normalization, color mapping, calibration, and detail enhancement.",
-]
+// Map a desktop column count to a safe, responsive grid class
+const galleryGrid = (cols: number) =>
+  cols <= 3
+    ? "grid grid-cols-1 sm:grid-cols-3 gap-3"
+    : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"
+
+const aboutLead =
+  "Unlike local astrophotography data, JWST i2d.fits data is already calibrated, dark-subtracted, flat-fielded, and mostly distortion-corrected. My job is alignment, dynamic range control, noise management, flux normalization, color mapping, calibration, and detail enhancement."
 
 const acknowledgments = [
   "Some/all of the data presented here were obtained from the Mikulski Archive for Space Telescopes (MAST). STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555. Support for MAST for non-HST data is provided by the NASA Office of Space Science via grant NNX13AC07G and by other grants and contracts.",
@@ -112,14 +143,13 @@ const acknowledgments = [
   <section class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
 
     {/* ── Hero ──────────────────────────────────────────────── */}
-    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-      <div>
-        <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">{hero.title}</h1>
-        <p class="mt-4 text-lg text-muted-foreground">{hero.subtitle}</p>
-        <p class="mt-6 text-muted-foreground max-w-xl leading-relaxed">{hero.description}</p>
-      </div>
+    <div class="text-center max-w-2xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">{hero.title}</h1>
+      <p class="mt-4 text-lg text-muted-foreground">{hero.subtitle}</p>
+    </div>
 
-      {/* Jump to */}
+    <div class="mt-12 grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+      <p class="text-muted-foreground leading-relaxed">{hero.description}</p>
       <nav aria-label="Jump to image" class="bg-muted/50 rounded-2xl p-6 sm:p-8">
         <p class="text-sm font-semibold text-muted-foreground mb-4">Jump to</p>
         <ul class="space-y-3">
@@ -138,45 +168,54 @@ const acknowledgments = [
     <div class="mt-20 sm:mt-28 space-y-24 sm:space-y-32">
       {nebulae.map((n) => (
         <section id={n.id} class="scroll-mt-24">
-          <header class="text-center max-w-3xl mx-auto mb-8">
+          <header class="text-center max-w-2xl mx-auto mb-8">
             <h2 class="text-2xl sm:text-3xl font-medium tracking-tight">{n.title}</h2>
             {n.subtitle && <p class="mt-3 text-muted-foreground">{n.subtitle}</p>}
           </header>
 
-          {/* Filter-channel gallery */}
-          {n.filters.length > 0 && (
-            <ul class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 mb-4">
-              {n.filters.map((f) => (
-                <li>
-                  <div class="aspect-square rounded-md border border-border bg-muted/40 flex items-center justify-center p-2 text-center">
-                    <span class="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">{f}</span>
+          {/* Channel gallery — captions overlay the image */}
+          {n.gallery.length > 0 && (
+            <ul class:list={[galleryGrid(n.galleryCols), "mb-4"]}>
+              {n.gallery.map((g) => (
+                <li class="relative aspect-video rounded-md overflow-hidden border border-border bg-neutral-900">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div class="absolute bottom-3 left-3 right-3 text-white">
+                    <p class="text-sm font-semibold leading-none">{g.name}</p>
+                    {g.formula && <p class="text-xs mt-1.5 text-white/80">{g.formula}</p>}
                   </div>
                 </li>
               ))}
             </ul>
           )}
 
-          {/* Composite image */}
-          <div class="aspect-[2/1] rounded-md border border-border bg-muted/40 flex items-center justify-center">
-            <span class="text-muted-foreground text-sm uppercase tracking-widest text-center px-4">{n.title}</span>
-          </div>
+          {/* Composite image + centered caption */}
+          <figure class="m-0">
+            <div class="aspect-[21/9] rounded-md border border-border bg-neutral-900 flex items-center justify-center">
+              <span class="text-white/30 text-sm uppercase tracking-widest text-center px-4">{n.title}</span>
+            </div>
+            {n.mainCaption && (
+              <figcaption class="mt-3 text-center text-sm font-medium">{n.mainCaption}</figcaption>
+            )}
+          </figure>
 
-          {/* Description + metadata */}
+          {/* Metadata (left) + description (right) — Data First */}
           {n.note ? (
             <p class="mt-8 text-sm text-muted-foreground italic text-center">{n.note}</p>
           ) : (
-            <div class="mt-10 grid md:grid-cols-2 gap-8 md:gap-12 items-start">
-              <div class="space-y-4 text-muted-foreground leading-relaxed">
-                {n.description.map((p) => <p>{p}</p>)}
-              </div>
-              <dl class="bg-muted/50 rounded-2xl p-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
+            <div class="mt-12 grid md:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+              <dl class="text-sm self-center">
                 {n.meta.map(([label, value]) => (
-                  <>
-                    <dt class="text-muted-foreground whitespace-nowrap">{label}</dt>
-                    <dd>{value}</dd>
-                  </>
+                  <div class="flex gap-4 justify-between items-start border-b border-border py-3">
+                    <dt class="font-semibold text-muted-foreground whitespace-nowrap">{label}</dt>
+                    <dd class="text-right">{value}</dd>
+                  </div>
                 ))}
               </dl>
+              <div class="bg-muted/50 rounded-2xl p-6 sm:p-10 flex flex-col justify-center">
+                <div class="space-y-4 leading-relaxed">
+                  {n.description.map((p) => <p>{p}</p>)}
+                </div>
+              </div>
             </div>
           )}
         </section>
@@ -188,7 +227,7 @@ const acknowledgments = [
       <h2 class="text-3xl sm:text-4xl font-medium tracking-tight">About</h2>
     </div>
     <div class="mt-10 max-w-3xl mx-auto space-y-5 leading-relaxed">
-      {aboutParas.map((p) => <p>{p}</p>)}
+      <p>{aboutLead}</p>
       <p>
         All images are public data, processed through multiple applications, and artistically
         rendered by Erica Jaclyn Stein. Full res options for print and display available. Please
