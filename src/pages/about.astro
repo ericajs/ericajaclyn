@@ -2,7 +2,10 @@
 import Layout from "@/layouts/main.astro"
 
 const bio = [
+  "Advances in technology continue to reshape how we view and use information, constantly moving digital design into new realms of exploration. This is where I work—meeting the shift between what was, what is, and what's still taking shape with a steady, empirical practice: testing assumptions, grounding decisions in research, and building things that hold up as the ground shifts beneath them.",
+  "My work centers on how people relate to the information and systems they encounter every day. I'm interested in the moments where good design makes that relationship feel clearer and more trustworthy—and in the slower work of building the foundations that let those moments happen reliably.",
   "Three areas shape most of what I do: mature design systems, accessible and inclusive UX, and agentic, AI-native interfaces. These threads run through recent projects spanning agentic legal workspaces, financial applications, interactive data visualization, and large-scale design system architecture—for B2B and B2C clients across legal, government, finance, fashion, food service, and consumer healthcare.",
+  "Across that range, the same underlying question: how to make complex systems usable and trustworthy for the people who actually depend on them. I'm convinced the best interfaces aren't the flashiest; they are the ones that earn trust quietly, surface their reasoning, evolve as the technology matures, and degrade gracefully when the model gets it wrong.",
   "Outside client work, I process imagery from the James Webb Space Telescope—a slower kind of design problem, but one that scratches the same itch: rendering complexity into something a person can take in at a glance.",
 ]
 
@@ -41,34 +44,33 @@ const accordions = [
   title="About — Erica Jaclyn Stein"
   description="About Erica Jaclyn Stein: digital product designer specializing in design systems, accessible UX, and agentic AI-native interfaces."
 >
-  <section id="about-top" class="max-w-2xl mx-auto px-6 py-16 sm:py-24">
+  <section id="about-top" class="max-w-3xl mx-auto px-6 py-16 sm:py-24">
 
     {/* ── Hero ──────────────────────────────────────────────── */}
     <div class="text-center">
-      <p class="text-sm font-semibold text-muted-foreground mb-4">Anything is Possible</p>
       <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">About</h1>
 
       {/* Profile photo — placeholder until the real image is added */}
-      <div class="mt-10 size-32 mx-auto rounded-full bg-muted border border-border flex items-center justify-center overflow-hidden">
+      <div class="mt-12 size-[200px] mx-auto rounded-full bg-muted border border-border flex items-center justify-center overflow-hidden">
         <span class="text-muted-foreground text-sm uppercase tracking-widest">EJS</span>
       </div>
 
-      <p class="mt-6 text-lg font-semibold">Erica Jaclyn Stein</p>
-      <p class="text-sm text-muted-foreground">Digital Product Designer</p>
+      <p class="mt-4 font-semibold">Erica Jaclyn Stein</p>
+      <p class="text-muted-foreground">Digital Product Designer</p>
     </div>
 
     {/* ── Bio ───────────────────────────────────────────────── */}
-    <div class="mt-12 space-y-5 leading-relaxed text-muted-foreground">
+    <div class="mt-12 space-y-6 leading-relaxed">
       {bio.map((p) => <p>{p}</p>)}
     </div>
 
     {/* ── Accordions (collapsed by default) ─────────────────── */}
-    <div class="mt-16 border-t border-border">
+    <div class="mt-12 border-t border-border">
       {accordions.map(({ label, items }) => (
         <details class="group border-b border-border">
-          <summary class="flex items-center justify-between py-5 cursor-pointer list-none">
-            <span class="text-base font-medium">{label}</span>
-            <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
+          <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
+            <span class="text-2xl font-bold tracking-tight">{label}</span>
+            <span class="relative size-6 shrink-0 text-muted-foreground" aria-hidden="true">
               <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span>
@@ -85,12 +87,9 @@ const accordions = [
       ))}
     </div>
 
-    {/* ── Back to top ───────────────────────────────────────── */}
+    {/* ── View Work CTA ─────────────────────────────────────── */}
     <div class="mt-12 text-center">
-      <a href="#about-top" class="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-        Back to Top
-      </a>
+      <a href="/uxdesign" class="pill pill-primary pill-md">View Work</a>
     </div>
   </section>
 </Layout>
