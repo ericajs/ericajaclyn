@@ -12,8 +12,8 @@ accessibility:
 designSystem:
   - ""
   - ""
-coverImage: ""
-coverAlt: ""
+coverImage: "/ux-design/berluti/21x9-Tri-Aerial-Maroon.jpg"
+coverAlt: "Aerial editorial composition of three devices displaying the BERLUTI retail site on a deep maroon surface."
 ogImage: ""
 treatment: "card"
 order: 3

@@ -13,8 +13,8 @@ designSystem:
   - ""
   - ""
 outcome: ""
-coverImage: ""
-coverAlt: ""
+coverImage: "/ux-design/dynasol/21x9-Boxes-Overhead.jpg"
+coverAlt: "Overhead product shot of Dynamic Solar's packaging system in cyan, yellow, violet, and royal blue."
 ogImage: ""
 treatment: "card"
 order: 6
