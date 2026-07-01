@@ -230,21 +230,31 @@ const acknowledgments = [
 
           {/* Channel gallery — landscape tiles with overlaid captions */}
           {n.gallery.length > 0 && (
-            <ul class:list={[galleryGrid(n.galleryCols), "mb-4"]}>
+            <ul class:list={[galleryGrid(n.galleryCols), "mb-4", idx === 0 && "hero-gallery"]}>
               {n.gallery.map((g) => (
-                <li class="relative aspect-video rounded-md overflow-hidden border border-border bg-neutral-900">
-                  <img
-                    src={g.src}
-                    alt={g.alt}
-                    loading="lazy"
-                    decoding="async"
-                    class="absolute inset-0 h-full w-full object-cover"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                  <div class="absolute bottom-3 left-3 right-3 text-white">
-                    <p class="text-sm font-semibold leading-none">{g.name}</p>
-                    {g.formula && <p class="text-xs mt-1.5 text-white/80">{g.formula}</p>}
-                  </div>
+                <li>
+                  <button
+                    type="button"
+                    class="lightbox-trigger relative block w-full aspect-video rounded-md overflow-hidden border border-border bg-neutral-900 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    data-src={g.src}
+                    data-alt={g.alt}
+                    data-title={g.name}
+                    data-subtitle={g.formula ?? ""}
+                    aria-label={`View ${g.name}${g.formula ? " — " + g.formula : ""} full screen`}
+                  >
+                    <img
+                      src={g.src}
+                      alt={g.alt}
+                      loading="lazy"
+                      decoding="async"
+                      class="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-3 left-3 right-3 text-white text-left pointer-events-none">
+                      <p class="text-sm font-semibold leading-none">{g.name}</p>
+                      {g.formula && <p class="text-xs mt-1.5 text-white/80">{g.formula}</p>}
+                    </div>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -253,14 +263,24 @@ const acknowledgments = [
           {/* Composite image + centered caption */}
           {n.composite && (
             <figure class="m-0">
-              <img
-                src={n.composite.src}
-                alt={n.composite.alt}
-                loading={idx === 0 ? "eager" : "lazy"}
-                decoding="async"
-                fetchpriority={idx === 0 ? "high" : "auto"}
-                class="w-full h-auto rounded-md border border-border bg-neutral-900"
-              />
+              <button
+                type="button"
+                class="lightbox-trigger block w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+                data-src={n.composite.src}
+                data-alt={n.composite.alt}
+                data-title={n.title}
+                data-subtitle={n.composite.caption ?? ""}
+                aria-label={`View ${n.title} composite full screen`}
+              >
+                <img
+                  src={n.composite.src}
+                  alt={n.composite.alt}
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchpriority={idx === 0 ? "high" : "auto"}
+                  class="w-full h-auto rounded-md border border-border bg-neutral-900"
+                />
+              </button>
               {n.composite.caption && (
                 <figcaption class="mt-3 text-center text-sm font-medium">{n.composite.caption}</figcaption>
               )}
@@ -325,4 +345,145 @@ const acknowledgments = [
       <a href="/uxdesign" class="pill pill-primary pill-md">View Work</a>
     </div>
   </section>
+
+  {/* ── Lightbox overlay ────────────────────────────────────── */}
+  <div
+    id="lightbox"
+    class="lightbox fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Image viewer"
+  >
+    <button
+      type="button"
+      id="lightbox-close"
+      aria-label="Close viewer"
+      class="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-center size-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <button
+      type="button"
+      id="lightbox-prev"
+      aria-label="Previous image"
+      class="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+
+    <button
+      type="button"
+      id="lightbox-next"
+      aria-label="Next image"
+      class="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+
+    <figure class="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-20 py-16 sm:py-20 m-0">
+      <img id="lightbox-img" alt="" class="max-w-full max-h-[80vh] object-contain" />
+      <figcaption class="mt-6 text-center text-white max-w-2xl">
+        <p id="lightbox-title" class="text-base sm:text-lg font-semibold"></p>
+        <p id="lightbox-subtitle" class="mt-1 text-sm text-white/70"></p>
+      </figcaption>
+    </figure>
+  </div>
 </Layout>
+
+<style>
+  /* ── Wave bounce-in for the first section's channel gallery ── */
+  .hero-gallery > li {
+    opacity: 0;
+    animation: hero-wave-in 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .hero-gallery > li:nth-child(1) { animation-delay: 0.15s; }
+  .hero-gallery > li:nth-child(2) { animation-delay: 0.30s; }
+  .hero-gallery > li:nth-child(3) { animation-delay: 0.45s; }
+  .hero-gallery > li:nth-child(4) { animation-delay: 0.60s; }
+  .hero-gallery > li:nth-child(5) { animation-delay: 0.75s; }
+  .hero-gallery > li:nth-child(6) { animation-delay: 0.90s; }
+
+  @keyframes hero-wave-in {
+    0%   { opacity: 0; transform: translateY(24px) scale(0.94); }
+    60%  { opacity: 1; transform: translateY(-8px) scale(1.02); }
+    100% { opacity: 1; transform: translateY(0)    scale(1);    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-gallery > li {
+      opacity: 1;
+      animation: none;
+    }
+  }
+
+  /* Lightbox open state — flex layout activated when .is-open is toggled */
+  .lightbox.is-open { display: block; }
+</style>
+
+<script>
+  const lightbox = document.getElementById("lightbox")
+  const imgEl = document.getElementById("lightbox-img") as HTMLImageElement | null
+  const titleEl = document.getElementById("lightbox-title")
+  const subtitleEl = document.getElementById("lightbox-subtitle")
+  const closeBtn = document.getElementById("lightbox-close")
+  const prevBtn = document.getElementById("lightbox-prev")
+  const nextBtn = document.getElementById("lightbox-next")
+
+  const triggers = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".lightbox-trigger")
+  )
+
+  let currentIndex = 0
+  let lastFocus: HTMLElement | null = null
+
+  function render(idx: number) {
+    const t = triggers[idx]
+    if (!t || !imgEl || !titleEl || !subtitleEl) return
+    imgEl.src = t.dataset.src ?? ""
+    imgEl.alt = t.dataset.alt ?? ""
+    titleEl.textContent = t.dataset.title ?? ""
+    subtitleEl.textContent = t.dataset.subtitle ?? ""
+    subtitleEl.style.display = t.dataset.subtitle ? "" : "none"
+    currentIndex = idx
+  }
+
+  function open(idx: number) {
+    if (!lightbox) return
+    lastFocus = document.activeElement as HTMLElement
+    render(idx)
+    lightbox.classList.add("is-open")
+    lightbox.classList.remove("hidden")
+    document.documentElement.style.overflow = "hidden"
+    document.addEventListener("keydown", onKeydown)
+    closeBtn?.focus()
+  }
+
+  function close() {
+    if (!lightbox) return
+    lightbox.classList.remove("is-open")
+    lightbox.classList.add("hidden")
+    document.documentElement.style.overflow = ""
+    document.removeEventListener("keydown", onKeydown)
+    lastFocus?.focus()
+  }
+
+  function step(delta: number) {
+    if (!triggers.length) return
+    render((currentIndex + delta + triggers.length) % triggers.length)
+  }
+
+  function onKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") { close(); return }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); step(-1) }
+    if (e.key === "ArrowRight") { e.preventDefault(); step(+1) }
+  }
+
+  triggers.forEach((t, i) => t.addEventListener("click", () => open(i)))
+  closeBtn?.addEventListener("click", close)
+  prevBtn?.addEventListener("click", () => step(-1))
+  nextBtn?.addEventListener("click", () => step(+1))
+  lightbox?.addEventListener("click", (e) => {
+    if (e.target === lightbox) close()
+  })
+</script>
