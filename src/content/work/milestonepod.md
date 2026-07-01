@@ -12,8 +12,8 @@ accessibility:
 designSystem:
   - ""
   - ""
-coverImage: ""
-coverAlt: ""
+coverImage: "/ux-design/milestonepod/2x1-AppStore.jpg"
+coverAlt: "App Store listing artwork for the Milestonepod wearable-tech mobile app."
 ogImage: ""
 treatment: "card"
 order: 7

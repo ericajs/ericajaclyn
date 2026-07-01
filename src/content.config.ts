@@ -29,6 +29,9 @@ const work = defineCollection({
     intro: z.string().optional(),
     coverImage: z.string().optional(),
     coverAlt: z.string().optional(),
+    // Second tile used by multi-image cluster rows on the work index
+    secondaryImage: z.string().optional(),
+    secondaryImageAlt: z.string().optional(),
     // Per-page OG image
     ogImage: z.string().optional(),
     // "full" = dedicated case study page; "card" = work index only
