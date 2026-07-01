@@ -37,6 +37,8 @@ const sequence = ["a", "b", "c", "d", "e", "a", "c", "d"]
       const linkProps = isFull ? { href: `/uxdesign/${entry.id}` } : {}
       const cover = entry.data.coverImage
       const alt = entry.data.coverAlt
+      const secondary = entry.data.secondaryImage
+      const secondaryAlt = entry.data.secondaryImageAlt
       const { title, scope } = entry.data
       return (
         <article>
@@ -51,7 +53,7 @@ const sequence = ["a", "b", "c", "d", "e", "a", "c", "d"]
             <Tag {...linkProps} class:list={["group grid md:grid-cols-3 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
               <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/3]" />
               <div class="flex flex-col gap-6">
-                <WorkTile title={title} aspect="aspect-square" />
+                <WorkTile title={title} src={secondary} alt={secondaryAlt} aspect="aspect-square" />
                 <WorkCard title={title} scope={scope} isFull={isFull} />
               </div>
               <div class="hidden md:block" aria-hidden="true"></div>
@@ -76,7 +78,7 @@ const sequence = ["a", "b", "c", "d", "e", "a", "c", "d"]
             <Tag {...linkProps} class:list={["group grid md:grid-cols-3 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
               <div class="hidden md:block" aria-hidden="true"></div>
               <div class="flex flex-col gap-6">
-                <WorkTile title={title} aspect="aspect-square" />
+                <WorkTile title={title} src={secondary} alt={secondaryAlt} aspect="aspect-square" />
                 <WorkCard title={title} scope={scope} isFull={isFull} />
               </div>
               <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/3]" />
