@@ -21,13 +21,12 @@ const { entry, prev, next } = Astro.props
 const { Content } = await render(entry)
 
 const {
-  title, subtitle, description, year, role, scope, client,
+  title, subtitle, description, role, scope, client,
   tags, accessibility, designSystem, tools, aboutProject, outcome, intro,
-  coverImage, coverAlt, ogImage,
+  coverImage, coverAlt, coverAspect, bodyWidth, ogImage,
 } = entry.data
 
 const meta = [
-  { label: "Year", value: String(year) },
   { label: "Role", value: role },
   { label: "Scope", value: scope },
   ...(client ? [{ label: "Client", value: client }] : []),
@@ -74,38 +73,45 @@ const aboutItems = [
     {/* ── Cover image ─────────────────────────────────────────── */}
     <div class="max-w-6xl mx-auto px-6">
       {coverImage ? (
-        <div class="aspect-video overflow-hidden rounded-md bg-muted">
+        <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "overflow-hidden rounded-md bg-muted"]}>
           <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
         </div>
       ) : (
-        <div class="aspect-video rounded-md border border-border bg-muted/40 flex items-center justify-center">
+        <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "rounded-md border border-border bg-muted/40 flex items-center justify-center"]}>
           <span class="text-muted-foreground text-sm uppercase tracking-widest">{title}</span>
         </div>
       )}
     </div>
 
     {/* ── Intro + metadata ────────────────────────────────────── */}
-    <section class="max-w-6xl mx-auto px-6 py-12 sm:py-16 grid md:grid-cols-2 gap-8 md:gap-16 items-start">
-      {intro && <p class="text-muted-foreground leading-relaxed max-w-md">{intro}</p>}
-      <dl class="rounded-md bg-muted/50 p-6 grid grid-cols-[5rem_1fr] gap-x-4 gap-y-3 text-sm">
+    <section class="max-w-6xl mx-auto px-6 py-12 sm:py-16 grid md:grid-cols-2 gap-6 items-stretch">
+      {intro && (
+        <div class="rounded-md bg-muted flex items-center p-8 sm:p-12 lg:p-16">
+          <p class="text-base sm:text-lg leading-relaxed">{intro}</p>
+        </div>
+      )}
+      <dl class="flex flex-col gap-3 p-2 sm:p-4">
         {meta.map(({ label, value }) => (
-          <>
-            <dt class="text-muted-foreground">{label}</dt>
-            <dd>{value}</dd>
-          </>
+          <div class="flex gap-4 text-sm">
+            <dt class="w-16 shrink-0 font-semibold text-muted-foreground">{label}</dt>
+            <dd class="flex-1">{value}</dd>
+          </div>
         ))}
       </dl>
     </section>
 
     {/* ── Narrative + image stack (MDX body) ──────────────────── */}
-    <div class="case-body max-w-3xl mx-auto px-6">
+    <div class:list={["case-body", bodyWidth === "full" ? "case-body--full" : "max-w-3xl mx-auto px-6"]}>
       <Content />
     </div>
 
     {/* ── About [Project] — description, outcome, signature module ─ */}
     {(aboutProject.length > 0 || outcome || aboutItems.length > 0) && (
-      <section class="max-w-3xl mx-auto px-6 mt-16">
-        <h2 class="text-2xl font-medium tracking-tight mb-6">About {title}</h2>
+      <section class="max-w-3xl mx-auto px-6 pt-16 sm:pt-24 mt-8">
+        <header class="text-center mb-10">
+          <p class="text-sm font-semibold text-muted-foreground mb-4">More About This Project</p>
+          <h2 class="text-4xl sm:text-5xl font-medium tracking-tight">About {title}</h2>
+        </header>
 
         {aboutProject.length > 0 && (
           <div class="space-y-4 leading-relaxed mb-8">
@@ -128,22 +134,14 @@ const aboutItems = [
                 </span>
               </summary>
               <div class="pb-6">
-                {label === "Tools" ? (
-                  <ul class="flex flex-wrap gap-2">
-                    {items.map((t) => (
-                      <li class="text-xs px-2 py-1 rounded-md border border-border text-muted-foreground">{t}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <ul class="space-y-2 text-sm">
-                    {items.map((it) => (
-                      <li class="flex gap-2">
-                        <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
-                        <span>{it}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul class="space-y-2 text-sm">
+                  {items.map((it) => (
+                    <li class="flex gap-2">
+                      <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </details>
           ))}
@@ -176,22 +174,26 @@ const aboutItems = [
 </Layout>
 
 <style is:global>
-  /* Narrative body styling (no typography plugin) */
-  .case-body { line-height: 1.7; }
-  .case-body > * + * { margin-top: 1.25rem; }
-  .case-body h2 {
+  /* Narrative body styling (no typography plugin) — narrow "prose" bodies only */
+  .case-body:not(.case-body--full) { line-height: 1.7; }
+  .case-body:not(.case-body--full) > * + * { margin-top: 1.25rem; }
+  .case-body:not(.case-body--full) h2 {
     font-size: 1.5rem;
     font-weight: 500;
     letter-spacing: -0.01em;
     margin-top: 3rem;
   }
-  .case-body h3 {
+  .case-body:not(.case-body--full) h3 {
     font-size: 1.125rem;
     font-weight: 600;
     margin-top: 2rem;
   }
-  .case-body p { color: var(--muted-foreground); }
-  .case-body ul { list-style: disc; padding-inline-start: 1.25rem; }
-  .case-body li { margin-top: 0.5rem; }
-  .case-body img { border-radius: var(--radius-md); width: 100%; }
+  .case-body:not(.case-body--full) p { color: var(--muted-foreground); }
+  .case-body:not(.case-body--full) ul { list-style: disc; padding-inline-start: 1.25rem; }
+  .case-body:not(.case-body--full) li { margin-top: 0.5rem; }
+  .case-body:not(.case-body--full) img { border-radius: var(--radius-md); width: 100%; }
+
+  /* Edge-to-edge, section-based bodies (image-led design system stories) */
+  .case-body--full { display: flex; flex-direction: column; }
+  .case-body--full img { width: 100%; height: 100%; display: block; object-fit: cover; }
 </style>
