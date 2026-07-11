@@ -29,6 +29,13 @@ const work = defineCollection({
     intro: z.string().optional(),
     coverImage: z.string().optional(),
     coverAlt: z.string().optional(),
+    // Aspect ratio of the case study cover image; most source photography is
+    // shot 21:9, but a couple of covers are portrait device stacks (2x3-ish)
+    // and read better cropped to 16:9. Defaults preserve current behavior.
+    coverAspect: z.enum(["16:9", "21:9"]).default("16:9"),
+    // "prose" = narrow long-form column (default, matches NAACP LDF);
+    // "full" = edge-to-edge sections for image-led, component-system stories.
+    bodyWidth: z.enum(["prose", "full"]).default("prose"),
     // Second tile used by multi-image cluster rows on the work index
     secondaryImage: z.string().optional(),
     secondaryImageAlt: z.string().optional(),
