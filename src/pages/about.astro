@@ -41,6 +41,10 @@ const accordions = [
       "WCAG 2.1, 2.2 Accessibility Compliance",
       "Section 508 Compliance & Standards",
     ],
+    badges: [
+      { src: "/about-iaap-cpacc.png", alt: "IAAP Certified Professional in Accessibility Core Competencies (CPACC) credential badge" },
+      { src: "/about-iaap-member.png", alt: "IAAP Professional Member badge" },
+    ],
   },
 ]
 ---
@@ -54,39 +58,65 @@ const accordions = [
     <div class="text-center">
       <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">About</h1>
 
-      {/* Profile photo — placeholder until the real image is added */}
-      <div class="mt-12 size-[200px] mx-auto rounded-full bg-muted border border-border flex items-center justify-center overflow-hidden">
-        <span class="text-muted-foreground text-sm uppercase tracking-widest">EJS</span>
+      {/* Profile card */}
+      <div class="mt-12 size-[200px] mx-auto rounded-full bg-muted overflow-hidden">
+        <img
+          src="/about-profile.png"
+          alt="Portrait of Erica Jaclyn Stein"
+          width="200"
+          height="200"
+          class="h-full w-full object-cover"
+        />
       </div>
 
       <p class="mt-4 font-semibold">Erica Jaclyn Stein</p>
-      <p class="text-muted-foreground">Digital Product Designer</p>
+      <p class="mt-0.5">
+        <a
+          href="https://www.linkedin.com/in/ericajaclyn"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
+        >
+          LinkedIn
+        </a>
+      </p>
     </div>
 
     {/* ── Bio ───────────────────────────────────────────────── */}
-    <div class="mt-12 space-y-6 leading-relaxed">
+    <div class="mt-12 space-y-6 leading-normal">
       {bio.map((p) => <p>{p}</p>)}
     </div>
 
     {/* ── Accordions (collapsed by default) ─────────────────── */}
-    <div class="mt-12 border-t border-border">
-      {accordions.map(({ label, items }) => (
+    <div class="mt-12">
+      {accordions.map(({ label, items, badges }) => (
         <details class="group border-b border-border">
           <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
-            <span class="text-2xl font-bold tracking-tight">{label}</span>
+            <span class="text-2xl font-medium tracking-tight">{label}</span>
             <span class="relative size-6 shrink-0 text-muted-foreground" aria-hidden="true">
               <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span>
           </summary>
-          <ul class="pb-6 space-y-2 text-sm">
-            {items.map((it) => (
-              <li class="flex gap-2">
-                <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
-                <span>{it}</span>
-              </li>
-            ))}
-          </ul>
+          <div class="pb-6">
+            <ul class="space-y-3">
+              {items.map((it) => (
+                <li class="flex gap-4">
+                  <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+                  <span>{it}</span>
+                </li>
+              ))}
+            </ul>
+            {badges && (
+              <ul class="mt-3 py-3 flex gap-3">
+                {badges.map(({ src, alt }) => (
+                  <li>
+                    <img src={src} alt={alt} width="80" height="80" class="size-20" loading="lazy" decoding="async" />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </details>
       ))}
     </div>
