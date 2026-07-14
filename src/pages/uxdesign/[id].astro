@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content"
 import Layout from "@/layouts/main.astro"
+import BackToTop from "@/components/BackToTop.astro"
 
 export async function getStaticPaths() {
   // Pre-launch: include drafts so case study pages render for preview.
@@ -234,6 +235,8 @@ const counter = `${index + 1} of ${total}`
     <div class="py-6 px-6 max-w-[1920px] mx-auto w-full flex justify-center mb-12">
       <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-lg sm:text-base w-full sm:w-auto">Back to UX Design</a>
     </div>
+
+    <BackToTop />
 
     {/* ── Lightbox overlay ────────────────────────────────────── */}
     <div
