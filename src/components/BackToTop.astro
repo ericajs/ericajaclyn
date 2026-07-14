@@ -1,0 +1,97 @@
+---
+// Threshold: one viewport height — NN/g Back-to-Top Button Design Guidelines
+// nngroup.com/articles/back-to-top/
+---
+
+<button
+  id="back-to-top"
+  type="button"
+  aria-label="Back to top"
+  class="back-to-top fixed bottom-6 right-6 z-40 flex items-center justify-center size-11 rounded-full bg-foreground/10 hover:bg-foreground/20 text-foreground cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="12" y1="19" x2="12" y2="5"/>
+    <polyline points="5 12 12 5 19 12"/>
+  </svg>
+</button>
+
+<style>
+  .back-to-top {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px) scale(0.85);
+    /* handles the hide transition when is-visible is removed */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .back-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    /* bounce-in overrides the transition on reveal */
+    animation: btt-bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes btt-bounce-in {
+    0%   { opacity: 0; transform: translateY(16px) scale(0.85); }
+    60%  { opacity: 1; transform: translateY(-5px) scale(1.06); }
+    80%  {             transform: translateY(2px)  scale(0.98); }
+    100% { opacity: 1; transform: translateY(0)    scale(1);    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .back-to-top.is-visible { animation: none; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById("back-to-top")
+  if (btn) {
+    const THRESHOLD = window.innerHeight  // one viewport height — NN/g heuristic
+    const INACTIVITY_MS = 2000
+    let timer: ReturnType<typeof setTimeout> | null = null
+    let visible = false
+
+    function show() {
+      if (visible) return
+      visible = true
+      btn.classList.add("is-visible")
+    }
+
+    function hide() {
+      if (!visible) return
+      visible = false
+      btn.classList.remove("is-visible")
+    }
+
+    function cancelTimer() {
+      if (timer !== null) { clearTimeout(timer); timer = null }
+    }
+
+    function scheduleShow() {
+      cancelTimer()
+      timer = setTimeout(() => {
+        if (window.scrollY > THRESHOLD) show()
+      }, INACTIVITY_MS)
+    }
+
+    function onScroll() {
+      if (window.scrollY <= THRESHOLD) {
+        hide()
+        cancelTimer()
+      } else if (!visible) {
+        scheduleShow()
+      }
+    }
+
+    function onInteraction() {
+      if (window.scrollY > THRESHOLD && !visible) scheduleShow()
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("mousemove", onInteraction, { passive: true })
+    window.addEventListener("touchstart", onInteraction, { passive: true })
+    window.addEventListener("keydown", onInteraction, { passive: true })
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    })
+  }
+</script>
