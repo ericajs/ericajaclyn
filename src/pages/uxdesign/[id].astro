@@ -13,11 +13,13 @@ export async function getStaticPaths() {
       entry,
       prev: i > 0 ? sorted[i - 1] : null,
       next: i < sorted.length - 1 ? sorted[i + 1] : null,
+      index: i,
+      total: sorted.length,
     },
   }))
 }
 
-const { entry, prev, next } = Astro.props
+const { entry, prev, next, index, total } = Astro.props
 const { Content } = await render(entry)
 
 const {
@@ -38,137 +40,240 @@ const aboutItems = [
   { label: "Design System", items: designSystem.filter(Boolean) },
   { label: "Tools", items: tools.filter(Boolean) },
 ].filter((a) => a.items.length)
+
+const counter = `${index + 1} of ${total}`
 ---
 <Layout title={`${title} — Erica Jaclyn Stein`} description={description} ogImage={ogImage}>
-  <article class="pb-24">
+  <article>
 
-    {/* ── Top pagination ──────────────────────────────────────── */}
-    <nav aria-label="Case study" class="border-b border-border">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between text-sm gap-4">
-        <div class="flex-1">
-          {prev && (
-            <a href={`/uxdesign/${prev.id}`} class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <span aria-hidden="true">←</span><span class="hidden sm:inline">{prev.data.title}</span><span class="sm:hidden">Prev</span>
-            </a>
-          )}
-        </div>
-        <a href="/uxdesign" class="shrink-0 font-medium hover:opacity-70 transition-opacity">Back to UX Design</a>
-        <div class="flex-1 flex justify-end">
-          {next && (
-            <a href={`/uxdesign/${next.id}`} class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <span class="hidden sm:inline">{next.data.title}</span><span class="sm:hidden">Next</span><span aria-hidden="true">→</span>
-            </a>
-          )}
+    {/* ── Top pagination — icon-only on mobile ────────────────── */}
+    <nav aria-label="Case study pagination" class="p-3 sm:px-0 sm:py-6">
+      <div class="max-w-[1920px] mx-auto w-full sm:px-6">
+        <div class="flex items-center gap-2 sm:px-3">
+          <div class="flex-1 min-w-0 flex items-center gap-4">
+            {prev ? (
+              <a
+                href={`/uxdesign/${prev.id}`}
+                aria-label={`Previous case study: ${prev.data.title}`}
+                class="pill pill-ghost size-11 sm:size-10 shrink-0"
+              >
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+              </a>
+            ) : (
+              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+              </span>
+            )}
+            {prev && <span class="hidden sm:block text-sm truncate">{prev.data.title}</span>}
+          </div>
+          <p class="w-[60px] sm:w-[120px] shrink-0 text-center text-sm text-muted-foreground">{counter}</p>
+          <div class="flex-1 min-w-0 flex items-center justify-end gap-4">
+            {next && <span class="hidden sm:block text-sm truncate text-right">{next.data.title}</span>}
+            {next ? (
+              <a
+                href={`/uxdesign/${next.id}`}
+                aria-label={`Next case study: ${next.data.title}`}
+                class="pill pill-ghost size-11 sm:size-10 shrink-0"
+              >
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+              </a>
+            ) : (
+              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </nav>
 
-    {/* ── Hero ────────────────────────────────────────────────── */}
-    <header class="max-w-3xl mx-auto px-6 pt-16 sm:pt-24 pb-10 text-center">
-      <p class="text-sm font-semibold text-muted-foreground mb-4">Case Study</p>
-      <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">{title}</h1>
-      {subtitle && <p class="mt-4 text-lg text-muted-foreground">{subtitle}</p>}
-    </header>
+    {/* ── Intro container ─────────────────────────────────────── */}
+    <div class="max-w-[1920px] mx-auto w-full" data-lightbox-scope>
 
-    {/* ── Cover image ─────────────────────────────────────────── */}
-    <div class="max-w-6xl mx-auto px-6">
-      {coverImage ? (
-        <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "overflow-hidden rounded-md bg-muted"]}>
-          <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
+      {/* Hero */}
+      <header class="px-6 py-12 sm:py-24">
+        <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
+          <p class="text-lg sm:text-base font-semibold text-muted-foreground">Case Study</p>
+          <h1 class="text-3xl sm:text-5xl font-medium tracking-tight">{title}</h1>
+          {subtitle && <p class="text-lg text-muted-foreground">{subtitle}</p>}
         </div>
-      ) : (
-        <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "rounded-md border border-border bg-muted/40 flex items-center justify-center"]}>
-          <span class="text-muted-foreground text-sm uppercase tracking-widest">{title}</span>
-        </div>
-      )}
-    </div>
+      </header>
 
-    {/* ── Intro + metadata ────────────────────────────────────── */}
-    <section class="max-w-6xl mx-auto px-6 py-12 sm:py-16 grid md:grid-cols-2 gap-6 items-stretch">
-      {intro && (
-        <div class="rounded-md bg-muted flex items-center p-8 sm:p-12 lg:p-16">
-          <p class="text-base sm:text-lg leading-relaxed">{intro}</p>
-        </div>
-      )}
-      <dl class="flex flex-col gap-3 p-2 sm:p-4">
-        {meta.map(({ label, value }) => (
-          <div class="flex gap-4 text-sm">
-            <dt class="w-16 shrink-0 font-semibold text-muted-foreground">{label}</dt>
-            <dd class="flex-1">{value}</dd>
+      {/* Cover image */}
+      <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
+        {coverImage ? (
+          <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "overflow-hidden bg-muted"]}>
+            <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
           </div>
-        ))}
-      </dl>
-    </section>
-
-    {/* ── Narrative + image stack (MDX body) ──────────────────── */}
-    <div class:list={["case-body", bodyWidth === "full" ? "case-body--full" : "max-w-3xl mx-auto px-6"]}>
-      <Content />
-    </div>
-
-    {/* ── About [Project] — description, outcome, signature module ─ */}
-    {(aboutProject.length > 0 || outcome || aboutItems.length > 0) && (
-      <section class="max-w-3xl mx-auto px-6 pt-16 sm:pt-24 mt-8">
-        <header class="text-center mb-10">
-          <p class="text-sm font-semibold text-muted-foreground mb-4">More About This Project</p>
-          <h2 class="text-4xl sm:text-5xl font-medium tracking-tight">About {title}</h2>
-        </header>
-
-        {aboutProject.length > 0 && (
-          <div class="space-y-4 leading-relaxed mb-8">
-            {aboutProject.map((p) => <p>{p}</p>)}
+        ) : (
+          <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "border border-border bg-muted/40 flex items-center justify-center"]}>
+            <span class="text-muted-foreground text-sm uppercase tracking-widest">{title}</span>
           </div>
         )}
+      </div>
 
-        {outcome && (
-          <p class="mb-8 text-sm text-muted-foreground border-l-2 border-border pl-4">{outcome}</p>
+      {/* Metadata row */}
+      <section class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
+        {intro && (
+          <div class="bg-muted flex items-center p-8 md:p-12 xl:p-24">
+            <p class="text-lg leading-relaxed">{intro}</p>
+          </div>
         )}
-
-        <div class="border-t border-border">
-          {aboutItems.map(({ label, items }) => (
-            <details class="group border-b border-border">
-              <summary class="flex items-center justify-between py-5 cursor-pointer list-none">
-                <span class="text-base font-medium">{label}</span>
-                <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
-                  <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </span>
-              </summary>
-              <div class="pb-6">
-                <ul class="space-y-2 text-sm">
-                  {items.map((it) => (
-                    <li class="flex gap-2">
-                      <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
-                      <span>{it}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </details>
+        <dl class="flex flex-col justify-center gap-4 sm:gap-2 p-8 md:p-12 xl:p-24">
+          {meta.map(({ label, value }) => (
+            <div class="flex flex-col gap-0.5 sm:flex-row sm:gap-1">
+              <dt class="shrink-0 font-semibold text-muted-foreground text-base sm:text-sm sm:w-16">{label}</dt>
+              <dd class="flex-1 text-base sm:text-sm">{value}</dd>
+            </div>
           ))}
-        </div>
+        </dl>
       </section>
-    )}
 
-
-    {/* ── Bottom pagination ───────────────────────────────────── */}
-    <nav aria-label="More case studies" class="max-w-6xl mx-auto px-6 mt-20 pt-8 border-t border-border flex justify-between gap-4 text-sm">
-      <div>
-        {prev && (
-          <a href={`/uxdesign/${prev.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
-            <span class="text-xs text-muted-foreground">← Previous</span>
-            <span class="font-medium">{prev.data.title}</span>
-          </a>
-        )}
+      {/* ── Narrative + image stack (MDX body) ──────────────────── */}
+      <div class:list={["case-body", bodyWidth === "full" ? "case-body--full w-full" : "max-w-3xl mx-auto px-6 py-12"]}>
+        <Content />
       </div>
-      <div class="text-right">
-        {next && (
-          <a href={`/uxdesign/${next.id}`} class="group flex flex-col gap-1 hover:opacity-70 transition-opacity">
-            <span class="text-xs text-muted-foreground">Next →</span>
-            <span class="font-medium">{next.data.title}</span>
-          </a>
-        )}
+
+      {/* ── Outro — About [Project] ─────────────────────────────── */}
+      {(aboutProject.length > 0 || outcome || aboutItems.length > 0) && (
+        <section class="w-full">
+          <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
+            <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
+              <p class="text-lg sm:text-base font-semibold text-muted-foreground">More About This Project</p>
+              <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-medium tracking-tight">About {title}</h2>
+            </div>
+          </header>
+
+          <div class="max-w-3xl mx-auto px-6 py-3 sm:py-6">
+            {aboutProject.length > 0 && (
+              <div class="space-y-6 text-lg sm:text-base leading-relaxed sm:leading-normal mb-6">
+                {aboutProject.map((p) => <p>{p}</p>)}
+              </div>
+            )}
+
+            {outcome && (
+              <p class="mb-6 text-sm text-muted-foreground border-l-2 border-border pl-4">{outcome}</p>
+            )}
+
+            {aboutItems.length > 0 && (
+              <div class="border-t border-border">
+                {aboutItems.map(({ label, items }) => (
+                  <details class="group border-b border-border">
+                    <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
+                      <span class="text-xl sm:text-2xl font-medium tracking-tight">{label}</span>
+                      <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
+                        <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      </span>
+                    </summary>
+                    <div class="pb-6">
+                      <ul class="space-y-3 text-lg sm:text-base">
+                        {items.map((it) => (
+                          <li class="flex gap-4">
+                            <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
+                            <span>{it}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+    </div>
+
+    {/* ── Bottom pagination — full design on all breakpoints ──── */}
+    <nav aria-label="More case studies" class="p-3 sm:px-0 sm:py-6 mt-8">
+      <div class="max-w-[1920px] mx-auto w-full sm:px-6">
+        <div class="flex items-start sm:items-center gap-2 sm:px-3">
+          <div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+            {prev ? (
+              <>
+                <a
+                  href={`/uxdesign/${prev.id}`}
+                  aria-label={`Previous case study: ${prev.data.title}`}
+                  class="pill pill-ghost size-11 sm:size-10 shrink-0"
+                >
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+                </a>
+                <span class="text-sm truncate px-1 sm:px-0">{prev.data.title}</span>
+              </>
+            ) : (
+              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+              </span>
+            )}
+          </div>
+          <p class="w-[60px] sm:w-[120px] shrink-0 self-stretch flex items-center justify-center text-sm text-muted-foreground">{counter}</p>
+          <div class="flex-1 min-w-0 flex flex-col items-end sm:flex-row sm:items-center sm:justify-end gap-1 sm:gap-4">
+            {next ? (
+              <>
+                <span class="order-2 sm:order-1 text-sm truncate text-right px-1 sm:px-0">{next.data.title}</span>
+                <a
+                  href={`/uxdesign/${next.id}`}
+                  aria-label={`Next case study: ${next.data.title}`}
+                  class="order-1 sm:order-2 pill pill-ghost size-11 sm:size-10 shrink-0"
+                >
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                </a>
+              </>
+            ) : (
+              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
+
+    {/* ── Back to UX Design CTA ───────────────────────────────── */}
+    <div class="py-6 px-6 max-w-[1920px] mx-auto w-full flex justify-center mb-12">
+      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-lg sm:text-base w-full sm:w-auto">Back to UX Design</a>
+    </div>
+
+    {/* ── Lightbox overlay ────────────────────────────────────── */}
+    <div
+      id="lightbox"
+      class="lightbox fixed inset-0 z-50 hidden bg-white/80 dark:bg-black/80 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image viewer"
+    >
+      <button
+        type="button"
+        id="lightbox-close"
+        aria-label="Close viewer"
+        class="absolute z-10 top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-center size-11 rounded-full bg-foreground/10 hover:bg-foreground/20 text-foreground transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <button
+        type="button"
+        id="lightbox-prev"
+        aria-label="Previous image"
+        class="absolute z-10 left-4 sm:left-6 top-1/2 -translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-foreground/10 hover:bg-foreground/20 text-foreground transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+
+      <button
+        type="button"
+        id="lightbox-next"
+        aria-label="Next image"
+        class="absolute z-10 right-4 sm:right-6 top-1/2 -translate-y-1/2 flex items-center justify-center size-11 rounded-full bg-foreground/10 hover:bg-foreground/20 text-foreground transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+
+      <figure class="absolute inset-0 flex items-center justify-center px-4 sm:px-20 py-16 sm:py-20 m-0">
+        <img id="lightbox-img" alt="" class="max-w-full max-h-full object-contain" />
+      </figure>
+    </div>
 
   </article>
 </Layout>
@@ -191,9 +296,111 @@ const aboutItems = [
   .case-body:not(.case-body--full) p { color: var(--muted-foreground); }
   .case-body:not(.case-body--full) ul { list-style: disc; padding-inline-start: 1.25rem; }
   .case-body:not(.case-body--full) li { margin-top: 0.5rem; }
-  .case-body:not(.case-body--full) img { border-radius: var(--radius-md); width: 100%; }
+  .case-body:not(.case-body--full) img { width: 100%; }
 
   /* Edge-to-edge, section-based bodies (image-led design system stories) */
   .case-body--full { display: flex; flex-direction: column; }
   .case-body--full img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+  /* Runtime lightbox trigger buttons wrap every case study image */
+  .lightbox-trigger {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+  .lightbox-trigger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+
+  .lightbox.is-open { display: block; }
 </style>
+
+<script>
+  // ── Lightbox — every case study image is click/tap-to-zoom ──
+  const lightbox = document.getElementById("lightbox")
+  const imgEl = document.getElementById("lightbox-img") as HTMLImageElement | null
+  const closeBtn = document.getElementById("lightbox-close")
+  const prevBtn = document.getElementById("lightbox-prev")
+  const nextBtn = document.getElementById("lightbox-next")
+
+  // Progressive enhancement: wrap each content image in a button trigger
+  const images = Array.from(
+    document.querySelectorAll<HTMLImageElement>("[data-lightbox-scope] img")
+  )
+  const triggers: HTMLButtonElement[] = images.map((img) => {
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.className = "lightbox-trigger"
+    btn.setAttribute("aria-label", `View image full screen: ${img.alt || "case study image"}`)
+    img.parentNode?.insertBefore(btn, img)
+    btn.appendChild(img)
+    return btn
+  })
+
+  let currentIndex = 0
+  let lastFocus: HTMLElement | null = null
+
+  function render(idx: number) {
+    const img = images[idx]
+    if (!img || !imgEl) return
+    imgEl.src = img.currentSrc || img.src
+    imgEl.alt = img.alt
+    currentIndex = idx
+  }
+
+  function open(idx: number) {
+    if (!lightbox) return
+    lastFocus = document.activeElement as HTMLElement
+    render(idx)
+    lightbox.classList.add("is-open")
+    lightbox.classList.remove("hidden")
+    document.documentElement.style.overflow = "hidden"
+    document.addEventListener("keydown", onKeydown)
+    ;(closeBtn as HTMLElement | null)?.focus()
+  }
+
+  function close() {
+    if (!lightbox) return
+    lightbox.classList.remove("is-open")
+    lightbox.classList.add("hidden")
+    document.documentElement.style.overflow = ""
+    document.removeEventListener("keydown", onKeydown)
+    lastFocus?.focus()
+  }
+
+  function step(delta: number) {
+    if (!images.length) return
+    render((currentIndex + delta + images.length) % images.length)
+  }
+
+  function onKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") { close(); return }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); step(-1); return }
+    if (e.key === "ArrowRight") { e.preventDefault(); step(+1); return }
+    if (e.key === "Tab") {
+      // Cycle focus within the dialog's three controls
+      const focusables = [closeBtn, prevBtn, nextBtn].filter(Boolean) as HTMLElement[]
+      const i = focusables.indexOf(document.activeElement as HTMLElement)
+      if (i === -1) { e.preventDefault(); focusables[0]?.focus(); return }
+      const nextIdx = (i + (e.shiftKey ? -1 : 1) + focusables.length) % focusables.length
+      e.preventDefault()
+      focusables[nextIdx]?.focus()
+    }
+  }
+
+  triggers.forEach((t, i) => t.addEventListener("click", () => open(i)))
+  closeBtn?.addEventListener("click", close)
+  prevBtn?.addEventListener("click", () => step(-1))
+  nextBtn?.addEventListener("click", () => step(+1))
+  lightbox?.addEventListener("click", (e) => {
+    // The figure stretches across the whole overlay, so any click that isn't
+    // on the image itself or a control counts as a backdrop click.
+    const t = e.target as HTMLElement
+    if (t === lightbox || t.tagName === "FIGURE" || t.tagName === "FIGCAPTION") close()
+  })
+</script>
