@@ -23,6 +23,7 @@
     --color-chart-1: var(--chart-1);
     --color-ring: var(--ring);
     --color-input: var(--input);
+    --color-input-ring: var(--input-ring);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
     --color-accent-foreground: var(--accent-foreground);
@@ -72,6 +73,7 @@
     --border: #eaeaeb;
     --input: #eaeaeb;
     --ring: #656567;
+    --input-ring: #2563eb;
     --chart-1: #1c1c1f;
     --chart-2: #656567;
     --chart-3: #3b3b3d;
@@ -107,6 +109,7 @@
     --border: #3b3b3d;
     --input: #3b3b3d;
     --ring: #f1f1f2;
+    --input-ring: #3b82f6;
     --chart-1: #ffffff;
     --chart-2: #f1f1f2;
     --chart-3: #656567;
@@ -132,6 +135,7 @@
   html {
     @apply font-sans;
     }
+
 }
 
 @layer components {
@@ -151,4 +155,14 @@
   .pill-sm {
     @apply h-8 px-3 text-sm;
     }
+}
+
+/* Blue focus ring for all text-type form inputs — site-wide standard.
+   Unlayered so it wins over @layer utilities (e.g. Tailwind's border-input). */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="image"]):not([type="file"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--input-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-ring) 20%, transparent);
 }
