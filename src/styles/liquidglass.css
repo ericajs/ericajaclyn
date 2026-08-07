@@ -1,0 +1,375 @@
+/* ─────────────────────────────────────────────────────────────
+   Liquid Glass guide — /liquidglass
+   Scoped entirely under .lg-guide so it cannot leak into the site.
+
+   Two rules kept this from fighting the design system:
+   1. Every custom property is namespaced --lg-*. Defining bare
+      --accent / --border here would silently override the shadcn
+      tokens for every descendant.
+   2. Ground and ink inherit from the site's own --background /
+      --foreground, so the guide flows out of SiteHeader instead of
+      sitting on a different colour. Only the guide-specific hues
+      (accent, code, semantic) are declared locally.
+
+   Dark mode follows the site convention: .dark on <html>, default
+   light. No prefers-color-scheme — that would put a dark guide
+   inside a light shell for anyone whose OS is set to dark.
+   ───────────────────────────────────────────────────────────── */
+
+.lg-guide {
+  /* inherited from the site so the shell matches */
+  --lg-ground:    var(--background);
+  --lg-recess:    var(--muted);
+  --lg-panel:     var(--card);
+  --lg-ink:       var(--foreground);
+  --lg-hair:      var(--border);
+
+  /* guide-specific — light */
+  --lg-ink-2:     #45454a;
+  --lg-neutral:   #656567;
+  --lg-hair-soft: #f1f1f2;
+  --lg-accent:    #0a6e7a;
+  --lg-accent-lift: #0a8797;
+  --lg-fail:      #b01e63;
+  --lg-warn:      #8a5a00;
+  --lg-code-bg:   #0b0f1a;
+  --lg-code-ink:  #d6deec;
+
+  --lg-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --lg-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+
+  --lg-s1: 4px;  --lg-s2: 8px;  --lg-s3: 12px; --lg-s4: 16px;
+  --lg-s5: 24px; --lg-s6: 36px; --lg-s7: 56px; --lg-s8: 88px;
+
+  background: var(--lg-ground);
+  color: var(--lg-ink);
+  font-family: var(--lg-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.dark .lg-guide {
+  --lg-ink-2:     #c9c9ce;
+  --lg-neutral:   #a1a1a6;
+  --lg-hair-soft: #2c2c2e;
+  --lg-accent:    #4fdcea;
+  --lg-accent-lift: #7be9f5;
+  --lg-fail:      #ff87be;
+  --lg-warn:      #f0b429;
+  --lg-code-bg:   #070a12;
+  --lg-code-ink:  #d6deec;
+}
+
+.lg-guide *,
+.lg-guide *::before,
+.lg-guide *::after { box-sizing: border-box; }
+
+.lg-guide .wrap { max-width: 1080px; margin: 0 auto; padding: var(--lg-s6) var(--lg-s5) var(--lg-s8); }
+.lg-guide .col  { max-width: 68ch; }
+
+/* ---------- type ---------- */
+.lg-guide h1 {
+  font-family: var(--lg-mono);
+  font-size: clamp(30px, 5vw, 50px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  margin: 0 0 var(--lg-s4);
+  text-wrap: balance;
+  color: var(--lg-ink);
+}
+.lg-guide h2 {
+  font-family: var(--lg-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-weight: 600;
+  color: var(--lg-accent);
+  margin: var(--lg-s8) 0 var(--lg-s4);
+  padding-bottom: var(--lg-s2);
+  border-bottom: 1px solid var(--lg-hair);
+}
+.lg-guide h3 {
+  font-family: var(--lg-mono);
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: var(--lg-s6) 0 var(--lg-s3);
+  text-wrap: balance;
+  color: var(--lg-ink);
+}
+.lg-guide h4 {
+  font-family: var(--lg-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  margin: var(--lg-s5) 0 var(--lg-s2);
+  color: var(--lg-ink-2);
+}
+.lg-guide p { margin: 0 0 var(--lg-s4); color: var(--lg-ink-2); }
+.lg-guide .lede { font-size: 19px; line-height: 1.55; color: var(--lg-ink); }
+.lg-guide strong { color: var(--lg-ink); font-weight: 600; }
+.lg-guide em { font-style: italic; }
+.lg-guide a { color: var(--lg-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+.lg-guide a:focus-visible,
+.lg-guide button:focus-visible,
+.lg-guide input:focus-visible,
+.lg-guide select:focus-visible {
+  outline: 2px solid var(--lg-accent-lift);
+  outline-offset: 2px;
+}
+
+.lg-guide .eyebrow {
+  font-family: var(--lg-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--lg-neutral);
+  margin: 0 0 var(--lg-s3);
+}
+
+.lg-guide code:not(pre code) {
+  font-family: var(--lg-mono);
+  font-size: 0.88em;
+  background: var(--lg-recess);
+  border: 1px solid var(--lg-hair-soft);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--lg-ink);
+  white-space: nowrap;
+}
+
+.lg-guide pre {
+  font-family: var(--lg-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  background: var(--lg-code-bg);
+  color: var(--lg-code-ink);
+  border-radius: 10px;
+  padding: var(--lg-s4);
+  overflow-x: auto;
+  margin: 0 0 var(--lg-s4);
+  border: 1px solid var(--lg-hair-soft);
+  -webkit-font-smoothing: auto;
+}
+.lg-guide pre .c   { color: #8494ad; font-style: italic; }
+.lg-guide pre .k   { color: #4fdcea; }
+.lg-guide pre .s   { color: #9be58b; }
+.lg-guide pre .n   { color: #ffc46b; }
+.lg-guide pre .bad { color: #ff87be; }
+
+/* Tailwind preflight strips list markers, so restore them explicitly. */
+.lg-guide ul, .lg-guide ol {
+  margin: 0 0 var(--lg-s4);
+  padding-left: 1.3em;
+  color: var(--lg-ink-2);
+}
+.lg-guide ul { list-style: disc; }
+.lg-guide ol { list-style: decimal; }
+.lg-guide li { margin-bottom: var(--lg-s2); display: list-item; }
+.lg-guide li::marker { color: var(--lg-neutral); }
+
+/* ---------- playground ---------- */
+.lg-guide .stage {
+  background: var(--lg-panel);
+  border: 1px solid var(--lg-hair);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: var(--lg-s5) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 306px;
+}
+@media (max-width: 860px) {
+  .lg-guide .stage { grid-template-columns: minmax(0, 1fr); }
+}
+
+.lg-guide .stage-canvas {
+  position: relative;
+  min-height: 380px;
+  background: var(--lg-code-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lg-guide #glass { display: block; width: 100%; height: 100%; }
+.lg-guide .stage-canvas .label {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  color: #fff;
+  font-family: var(--lg-sans);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.42);
+}
+.lg-guide .nowebgl {
+  position: absolute; inset: 0;
+  display: none;
+  align-items: center; justify-content: center;
+  text-align: center; padding: var(--lg-s5);
+  color: #c9d1de; font-family: var(--lg-mono); font-size: 13px;
+}
+
+.lg-guide .panel {
+  border-left: 1px solid var(--lg-hair);
+  padding: var(--lg-s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lg-s3);
+  max-height: 620px;
+  overflow-y: auto;
+}
+@media (max-width: 860px) {
+  .lg-guide .panel {
+    border-left: 0;
+    border-top: 1px solid var(--lg-hair);
+    /* Let the controls flow with the page instead of creating a nested
+       scroll area inside page scroll, which is miserable on touch. */
+    max-height: none;
+    overflow-y: visible;
+    /* Clear the site's fixed BackToTop button. */
+    padding-bottom: calc(var(--lg-s8) - var(--lg-s2));
+  }
+}
+
+.lg-guide .panel-group { display: flex; flex-direction: column; gap: var(--lg-s2); }
+.lg-guide .panel-group > .gt {
+  font-family: var(--lg-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--lg-neutral);
+  padding-bottom: var(--lg-s1);
+  border-bottom: 1px solid var(--lg-hair-soft);
+}
+
+.lg-guide .ctl { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 8px; }
+.lg-guide .ctl label {
+  font-family: var(--lg-mono); font-size: 11.5px; color: var(--lg-ink-2);
+  letter-spacing: 0.01em;
+}
+.lg-guide .ctl output {
+  font-family: var(--lg-mono); font-size: 11.5px; color: var(--lg-accent);
+  font-variant-numeric: tabular-nums;
+}
+.lg-guide .ctl input[type="range"] {
+  grid-column: 1 / -1; width: 100%; accent-color: var(--lg-accent); margin: 0;
+}
+.lg-guide .ctl.was-hardcoded label::after {
+  content: "★";
+  color: var(--lg-warn);
+  font-size: 9px;
+  vertical-align: super;
+  margin-left: 3px;
+}
+
+.lg-guide .row { display: flex; gap: var(--lg-s2); flex-wrap: wrap; }
+.lg-guide .btn {
+  font-family: var(--lg-mono); font-size: 11px; letter-spacing: 0.04em;
+  background: var(--lg-recess); color: var(--lg-ink);
+  border: 1px solid var(--lg-hair); border-radius: 6px;
+  padding: 6px 9px; cursor: pointer;
+  line-height: 1.4;
+}
+.lg-guide .btn:hover { border-color: var(--lg-accent); color: var(--lg-accent); }
+.lg-guide .btn.on {
+  background: var(--lg-accent); border-color: var(--lg-accent); color: var(--lg-ground);
+}
+.lg-guide select,
+.lg-guide input[type="color"] {
+  font-family: var(--lg-mono); font-size: 11px;
+  background: var(--lg-recess); color: var(--lg-ink);
+  border: 1px solid var(--lg-hair); border-radius: 6px; padding: 5px;
+}
+.lg-guide input[type="color"] { padding: 2px; height: 27px; width: 44px; cursor: pointer; }
+
+.lg-guide .starnote {
+  font-family: var(--lg-mono); font-size: 11px; color: var(--lg-neutral);
+  margin: 0 0 var(--lg-s5);
+}
+.lg-guide .starnote b { color: var(--lg-warn); }
+
+/* ---------- tables ---------- */
+.lg-guide .tscroll {
+  overflow-x: auto;
+  margin: 0 0 var(--lg-s5);
+  border: 1px solid var(--lg-hair);
+  border-radius: 10px;
+}
+.lg-guide table {
+  border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 680px;
+}
+.lg-guide th, .lg-guide td {
+  text-align: left; padding: 10px var(--lg-s3);
+  border-bottom: 1px solid var(--lg-hair-soft); vertical-align: top;
+  color: var(--lg-ink-2);
+}
+.lg-guide th {
+  font-family: var(--lg-mono); font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--lg-neutral); background: var(--lg-recess);
+  white-space: nowrap; font-weight: 600;
+}
+.lg-guide tr:last-child td { border-bottom: 0; }
+.lg-guide td:first-child {
+  font-family: var(--lg-mono); font-size: 12.5px; color: var(--lg-ink); white-space: nowrap;
+}
+.lg-guide td code { white-space: nowrap; }
+.lg-guide .num {
+  font-variant-numeric: tabular-nums; font-family: var(--lg-mono);
+  font-size: 12.5px; white-space: nowrap;
+}
+
+/* ---------- callouts ---------- */
+.lg-guide .note {
+  border-left: 2px solid var(--lg-accent);
+  background: var(--lg-recess);
+  padding: var(--lg-s3) var(--lg-s4);
+  border-radius: 0 8px 8px 0;
+  margin: 0 0 var(--lg-s4);
+}
+.lg-guide .note.bad  { border-left-color: var(--lg-fail); }
+.lg-guide .note.warn { border-left-color: var(--lg-warn); }
+.lg-guide .note p:last-child { margin-bottom: 0; }
+.lg-guide .note .tag {
+  font-family: var(--lg-mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.14em; display: block; margin-bottom: var(--lg-s1);
+  color: var(--lg-accent);
+}
+.lg-guide .note.bad .tag  { color: var(--lg-fail); }
+.lg-guide .note.warn .tag { color: var(--lg-warn); }
+
+.lg-guide .fail-list {
+  display: flex; flex-direction: column; gap: var(--lg-s3); margin-bottom: var(--lg-s5);
+}
+.lg-guide .fail {
+  border: 1px solid var(--lg-hair);
+  border-radius: 10px;
+  padding: var(--lg-s3) var(--lg-s4);
+  background: var(--lg-panel);
+}
+.lg-guide .fail .sym {
+  font-family: var(--lg-mono); font-size: 13px; font-weight: 600;
+  color: var(--lg-fail); margin-bottom: 2px;
+}
+.lg-guide .fail .fix { font-size: 14px; color: var(--lg-ink-2); }
+.lg-guide .fail .fix b { color: var(--lg-ink); }
+
+.lg-guide hr { border: 0; border-top: 1px solid var(--lg-hair); margin: var(--lg-s7) 0; }
+
+.lg-guide .copywrap { position: relative; }
+.lg-guide .copybtn {
+  position: absolute; top: 8px; right: 8px;
+  font-family: var(--lg-mono); font-size: 10.5px; letter-spacing: 0.06em;
+  background: rgba(255, 255, 255, 0.1); color: #d6deec;
+  border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 5px;
+  padding: 4px 8px; cursor: pointer;
+}
+.lg-guide .copybtn:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-guide * { animation: none !important; transition: none !important; }
+}
