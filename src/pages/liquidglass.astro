@@ -1,0 +1,24 @@
+---
+import Layout from "@/layouts/main.astro"
+import BackToTop from "@/components/BackToTop.astro"
+import "@/styles/liquidglass.css"
+
+// The guide markup lives in its own .html file and is injected with set:html
+// rather than written inline. Astro templates treat `{` as the start of a JS
+// expression, and this page is full of GLSL and JSX inside <pre> blocks —
+// inlining it would fail to compile.
+import guideBody from "@/assets/liquidglass/guide-body.html?raw"
+
+const title = "Liquid glass is a shader, not a CSS effect"
+const description =
+  "How to implement a liquid glass interface in Figma Make: the shader mechanics reverse-engineered, every glass property mapped to the line that produces it, and a live parameter playground."
+---
+
+<Layout title={title} description={description}>
+  <div class="lg-guide" set:html={guideBody} />
+  <BackToTop />
+</Layout>
+
+<!-- Served from public/ and loaded verbatim: the WebGL playground is plain ES5
+     that has been verified as-is, so it bypasses the bundler intentionally. -->
+<script is:inline defer src="/liquidglass/playground.js"></script>

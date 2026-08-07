@@ -1,0 +1,546 @@
+<div class="wrap">
+
+  <p class="eyebrow">Reverse-engineered from Liquid Glass Material Editor · Figma Make</p>
+  <h1>Liquid glass is a shader,<br>not a CSS effect.</h1>
+
+  <div class="col">
+    <p class="lede">
+      That single sentence is why Figma Make keeps failing you. Asked for glass, it reaches for
+      <code>backdrop-filter: blur()</code>, a white border, and a gradient overlay — and it will never
+      get there, because those three things cannot bend light. The prototype you sent doesn't use any
+      of them. It hands the whole job to a WebGL fragment shader.
+    </p>
+    <p>
+      Below is what that shader actually does, every property you named mapped to the exact line that
+      produces it, and a spec you can paste into Make to get it built correctly the first time.
+      Everything here has been run — I rebuilt the shader as a reusable component and diffed it against
+      the original pixel for pixel.
+    </p>
+  </div>
+
+  <h2>Why backdrop-filter can never do this</h2>
+
+  <div class="col">
+    <p>
+      <code>backdrop-filter</code> lets an element blur what's behind it. It does not let the element
+      <em>read</em> what's behind it. Refraction means sampling the backdrop at a
+      <strong>displaced coordinate</strong> — the pixel you draw at the rim comes from somewhere else
+      on the background. CSS has no mechanism to express that. Neither does SVG
+      <code>feDisplacementMap</code>, usefully, because it can't reach the live page behind the element.
+    </p>
+    <p>
+      So the backdrop has to become something the shader can address: <strong>a texture</strong>. And
+      that forces the architecture — one canvas, holding both the background and the glass, with the
+      glass composited in the fragment shader. There is no version of this where the glass is a
+      <code>&lt;div&gt;</code> sitting on top of a background.
+    </p>
+  </div>
+
+  <div class="note">
+    <span class="tag">The load-bearing idea</span>
+    <p>
+      A liquid-glass element is not a layer over the background. It is a <strong>region of the
+      background, resampled</strong>. Every technique below follows from that.
+    </p>
+  </div>
+
+  <h2>Tune it here, then paste the props</h2>
+
+  <div class="col">
+    <p>
+      This is the real shader, running live, with every property you listed wired to a slider. The
+      backdrop is generated procedurally in-page. Switch to <strong>Grid</strong> or
+      <strong>Stripes</strong> when you want to actually see the refraction — a smooth gradient has no
+      straight lines to bend, which is also why a busy photo can hide a broken shader completely.
+    </p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-canvas">
+      <canvas id="glass"></canvas>
+      <div class="label" id="glassLabel">Continue</div>
+      <div class="nowebgl" id="nowebgl">
+        WebGL unavailable in this browser.<br>The parameter reference below still applies.
+      </div>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="panel-group">
+        <div class="gt">Preset</div>
+        <div class="row" id="presets"></div>
+      </div>
+
+      <div class="panel-group">
+        <div class="gt">Backdrop</div>
+        <div class="row" id="bgs"></div>
+      </div>
+
+      <div class="panel-group">
+        <div class="gt">Glass properties</div>
+        <div id="grp-glass"></div>
+      </div>
+
+      <div class="panel-group">
+        <div class="gt">Light</div>
+        <div id="grp-light"></div>
+      </div>
+
+      <div class="panel-group">
+        <div class="gt">Color</div>
+        <div id="grp-color"></div>
+        <div class="row" style="align-items:center; margin-top:4px">
+          <label for="tint" style="font-family:var(--mono); font-size:11.5px; color:var(--ink-2)">tint</label>
+          <input type="color" id="tint" value="#f7ffe0">
+          <button class="btn" id="modeBtn" aria-pressed="false">mode: light</button>
+        </div>
+      </div>
+
+      <div class="panel-group">
+        <div class="gt">Shadow &amp; shape</div>
+        <div id="grp-shadow"></div>
+      </div>
+
+      <div class="row" style="margin-top:4px">
+        <button class="btn" id="copyProps">Copy props</button>
+        <button class="btn" id="resetAll">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="starnote">
+    <b>★</b> marks a value that is <b>hardcoded</b> in the original prototype. Six of the nine
+    properties you asked about aren't controls in that editor at all — they're magic numbers buried in
+    the GLSL. Exposing them is most of the work.
+  </p>
+
+  <h2>Your vocabulary → the actual mechanism</h2>
+
+  <div class="col">
+    <p>
+      The prototype's own sliders use different names than you do, and the properties that matter most
+      have no slider at all. This is the full translation.
+    </p>
+  </div>
+
+  <div class="tscroll">
+    <table>
+      <thead>
+        <tr>
+          <th>You say</th>
+          <th>In the prototype</th>
+          <th>What actually produces it</th>
+          <th>Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>light angle</td>
+          <td><span style="color:var(--warn)">hardcoded</span></td>
+          <td>Dot product of the rim normal against a fixed vector <code>(-0.707, 0.707)</code> — a
+              45° upper-left light. Replace with <code>vec2(cos(a), sin(a))</code>.</td>
+          <td class="num">0–360°</td>
+        </tr>
+        <tr>
+          <td>light intensity</td>
+          <td><span style="color:var(--warn)">hardcoded</span></td>
+          <td>The literal <code>0.3</code> (light mode) / <code>0.4</code> (dark) added to the rim.</td>
+          <td class="num">0–1</td>
+        </tr>
+        <tr>
+          <td>refraction</td>
+          <td><code>distortion</code></td>
+          <td>Sample offset along the rim normal: <code>grad * pow(edge, 12) * -0.05 * amount</code>.
+              This is the whole effect.</td>
+          <td class="num">0–3</td>
+        </tr>
+        <tr>
+          <td>depth</td>
+          <td><span style="color:var(--warn)">hardcoded</span></td>
+          <td>The exponent <code>12</code> on the edge falloff. Low = wide soft bevel, high = thin
+              tight rim. <strong>The most important number in the file.</strong></td>
+          <td class="num">4–24</td>
+        </tr>
+        <tr>
+          <td>dispersion</td>
+          <td><code>chromaticAberration</code></td>
+          <td>R, G, B sampled at different radial offsets — R pushed out ×1.2, B pulled in ×0.8.
+              The asymmetry is what sells it.</td>
+          <td class="num">0–4</td>
+        </tr>
+        <tr>
+          <td>frost</td>
+          <td><code>blur</code></td>
+          <td>9 stochastic taps at a jittered offset, scaled by <code>pow(2, mip)</code>. Critically,
+              it's <em>strong in the body and near-zero at the rim</em>.</td>
+          <td class="num">0.1–3</td>
+        </tr>
+        <tr>
+          <td>splay</td>
+          <td><span style="color:var(--warn)">hardcoded</span></td>
+          <td>Exponent on the highlight's falloff — <code>5.0</code> light, <code>3.0</code> dark.
+              Controls how tightly the sheen hugs the edge.</td>
+          <td class="num">1–14</td>
+        </tr>
+        <tr>
+          <td>drop shadow</td>
+          <td><code>shadow*</code></td>
+          <td>The shape's SDF, offset and blurred, multiplied into the background <em>before</em> the
+              glass composites over it.</td>
+          <td class="num">—</td>
+        </tr>
+        <tr>
+          <td>inner shadow</td>
+          <td><span style="color:var(--fail)">absent</span></td>
+          <td>Not implemented. Dark mode has an outward rim <em>light</em>, which is the opposite.
+              Add <code>glass -= amount * pow(edge, splay)</code>.</td>
+          <td class="num">0–0.6</td>
+        </tr>
+        <tr>
+          <td>luminance</td>
+          <td><span style="color:var(--warn)">partial</span></td>
+          <td>Buried as <code>mix(c, c * 1.1, 0.2)</code> — a fixed 2% lift. Promote to a real
+              multiplier.</td>
+          <td class="num">0.6–1.6</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>The five mechanisms that carry the look</h2>
+
+  <h3>1 · The shape is a distance field, not a rectangle</h3>
+  <div class="col">
+    <p>
+      Nothing is drawn. For every pixel the shader computes a signed distance to the shape's edge —
+      negative inside, zero on the boundary, positive outside. That single number drives the fill mask,
+      the refraction, the highlight, and the shadow. It's why the effect works identically on a pill,
+      a circle, or a star.
+    </p>
+  </div>
+
+<pre><span class="c">// signed distance to a rounded rectangle, in pixels</span>
+<span class="k">float</span> sdRoundRect(<span class="k">vec2</span> p, <span class="k">vec2</span> half_, <span class="k">float</span> r) {
+  <span class="k">vec2</span> q = abs(p) - half_ + r;
+  <span class="k">return</span> min(max(q.x, q.y), <span class="n">0.0</span>) + length(max(q, <span class="n">0.0</span>)) - r;
+}</pre>
+
+  <h3>2 · One normalized edge field drives everything</h3>
+  <div class="col">
+    <p>
+      The distance gets remapped to <code>0</code> at the shape's center and <code>1</code> at its rim,
+      then raised to a power. That exponent is what you experience as glass thickness — it crushes all
+      the interesting behavior into a narrow band at the edge, which is exactly where real glass does
+      its work.
+    </p>
+  </div>
+
+<pre><span class="k">float</span> edge = clamp((sdf / halfHeight) + <span class="n">1.0</span>, <span class="n">0.0</span>, <span class="n">1.0</span>);  <span class="c">// 0 center → 1 rim</span>
+<span class="k">float</span> falloff = pow(edge, u_depth);                    <span class="c">// ★ was a literal 12.0</span></pre>
+
+  <div class="note warn">
+    <span class="tag">Change one number first</span>
+    <p>
+      If you only ever expose a single parameter, expose <strong>depth</strong>. Sweeping that exponent
+      from 4 to 24 moves the material from thick pressed crystal to a thin sheet of window glass, and
+      it costs one uniform.
+    </p>
+  </div>
+
+  <h3>3 · Frost must vary across the surface</h3>
+  <div class="col">
+    <p>
+      This is the detail that separates convincing glass from frosted plastic, and it's the one an AI
+      tool will always miss. The blur is <strong>not uniform</strong>. It's heavy through the body and
+      collapses to almost nothing at the rim, so the edge stays crisp enough to refract:
+    </p>
+  </div>
+
+<pre><span class="k">float</span> mip = mix(<span class="n">3.5</span> * u_frost, <span class="n">1.5</span>, falloff);
+<span class="c">//              ^ body: heavy    ^ rim: sharp</span></pre>
+
+  <div class="col">
+    <p>
+      The blur itself is stochastic, not Gaussian: nine taps at hash-jittered offsets. Cheap, and the
+      faint grain reads as material rather than as a filter.
+    </p>
+  </div>
+
+  <h3>4 · Dispersion is asymmetric on purpose</h3>
+  <div class="col">
+    <p>
+      Splitting R/G/B by equal amounts gives you the cheap 3D-movie look. Real glass disperses
+      unevenly, and the prototype fakes that with a deliberate ×1.2 / ×0.8 imbalance along the radial
+      axis. Keep the asymmetry; it's most of the realism.
+    </p>
+  </div>
+
+<pre>r = texture2D(tex, uv + dir * amt * <span class="n">1.2</span>).r;   <span class="c">// pushed out</span>
+g = texture2D(tex, uv).g;                        <span class="c">// reference</span>
+b = texture2D(tex, uv - dir * amt * <span class="n">0.8</span>).b;   <span class="c">// pulled in</span></pre>
+
+  <h3>5 · The highlight needs a light direction — and the original's is broken</h3>
+  <div class="col">
+    <p>
+      The prototype computes its sheen as <code>abs(dot(normal, lightDir))</code>. Because of that
+      <code>abs()</code>, the highlight is an <strong>axis, not a direction</strong>: 135° and 315°
+      render identically, as do 45° and 225°. Wire a light-angle slider to it as-is and half the dial
+      does nothing — which reads as a broken control.
+    </p>
+    <p>
+      Drop the <code>abs()</code> and use the signed dot product, then add the opposite rim back at
+      reduced strength. Real glass <em>does</em> catch light where it exits, just more faintly:
+    </p>
+  </div>
+
+<pre><span class="k">float</span> d = dot(grad, lightDir);
+<span class="k">float</span> lit   = <span class="n">1.0</span> - pow(<span class="n">1.0</span> - clamp( d, <span class="n">0.0</span>, <span class="n">1.0</span>), <span class="n">0.5</span>);
+<span class="k">float</span> unlit = <span class="n">1.0</span> - pow(<span class="n">1.0</span> - clamp(-d, <span class="n">0.0</span>, <span class="n">1.0</span>), <span class="n">0.5</span>);
+spec = (lit + unlit * u_counterLight) * pow(falloff, u_splay);</pre>
+
+  <div class="col">
+    <p>
+      With that fixed, angles land in standard orientation: <strong>0° right, 90° top, 180° left,
+      270° bottom</strong>. Apple's own glass sits around 135° — upper-left — which is the vector the
+      prototype hardcoded.
+    </p>
+  </div>
+
+  <h2>What to tell Figma Make</h2>
+
+  <div class="col">
+    <p>
+      Make will not invent this correctly from a description like "add a liquid glass button," because
+      its instinct is CSS and the actual answer is 200 lines of GLSL. Two things reliably work.
+    </p>
+    <p>
+      <strong>The reliable path:</strong> paste the finished component into your project and tell Make
+      to use it rather than to build it. Prototypes accept new files; use that.
+      <strong>The second-best path</strong> is the spec below, which front-loads the architecture so
+      Make can't default to <code>backdrop-filter</code>:
+    </p>
+  </div>
+
+  <div class="copywrap">
+    <button class="copybtn" data-copy="spec">Copy</button>
+<pre id="spec">Build a liquid glass element as a WebGL fragment shader. Do NOT use
+backdrop-filter, box-shadow, borders, or gradient overlays — none of them
+can refract, and the effect depends on refraction.
+
+ARCHITECTURE (non-negotiable)
+- ONE &lt;canvas&gt; renders BOTH the background image AND the glass.
+- Load the background as a WebGL texture; the shader samples it at
+  DISPLACED coordinates to refract. The glass is a region of the
+  background, resampled — not a layer on top of it.
+- Define the glass shape as a signed distance field (SDF). Derive the
+  fill mask, refraction, highlight and shadow from that one SDF.
+- Render labels/icons as absolutely-positioned DOM ABOVE the canvas.
+  Do not draw text in the shader.
+
+REQUIRED UNIFORMS (all must be props, none hardcoded)
+  lightAngle 0-360   lightIntensity 0-1   counterLight 0-1
+  refraction 0-3     depth 4-24           dispersion 0-4
+  frost 0.1-3        splay 1-14           saturation 0-1.2
+  luminance 0.6-1.6  tint rgb             innerShadow 0-0.6
+  dropShadow {intensity, x, y, blur}      cornerRadius
+
+CRITICAL DETAILS — get these wrong and it looks like plastic
+1. Normalize the SDF to 0 at center / 1 at rim, then raise to `depth`.
+   Drive refraction AND highlight from that falloff so both are
+   confined to a rim band.
+2. Frost must VARY: mip = mix(3.5 * frost, 1.5, falloff). Heavy in the
+   body, near-zero at the rim. A uniform blur ruins it.
+3. Dispersion must be ASYMMETRIC: R at +1.2x offset, B at -0.8x.
+4. Highlight uses the SIGNED dot product of the rim normal and the
+   light vector, never abs() — abs() makes the angle 180°-periodic.
+5. Composite the drop shadow into the background BEFORE the glass.
+
+WEBGL REQUIREMENTS (silent black screen if missed)
+- Request OES_standard_derivatives AND emit
+  `#extension GL_OES_standard_derivatives : enable`. Provide a manual
+  finite-difference fallback when unavailable.
+- `precision mediump float;` at the top of the fragment shader.
+- Set crossOrigin='anonymous' on the image before texture upload.
+- Backgrounds are non-power-of-two: CLAMP_TO_EDGE + LINEAR, no mipmaps.
+- Multiply canvas.width/height by devicePixelRatio, and scale EVERY
+  pixel-valued uniform by dpr too.
+- GLSL ES 1.0 needs constant loop bounds — no `i &lt; uniform`.
+- Memoize the props/uniforms objects; an inline object literal in the
+  parent re-runs the setup effect every render and the canvas stays blank.</pre>
+  </div>
+
+  <h2>Failure catalog</h2>
+
+  <div class="col">
+    <p>
+      Every one of these produces a blank, black, or plastic result with <strong>no error message</strong>,
+      which is why this effect is so miserable to debug in a prototyping tool. I hit four of them
+      building the version above.
+    </p>
+  </div>
+
+  <div class="fail-list">
+    <div class="fail">
+      <div class="sym">Canvas renders solid white or blank</div>
+      <div class="fix">
+        The parent passes an <b>inline object</b> as props. The prototype's setup effect depends on
+        <code>backgroundMedia</code>; a fresh object each render rebuilds the texture forever, so it
+        never advances past its white placeholder. <b>Fix:</b> wrap props in <code>useMemo</code>.
+        This one bit me and produces zero console output.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Canvas renders solid black</div>
+      <div class="fix">
+        Either a missing <code>crossOrigin = 'anonymous'</code> (the texture upload throws a security
+        error), or non-power-of-two texture defaults. <b>Fix:</b> set crossOrigin before
+        <code>.src</code>, and always <code>CLAMP_TO_EDGE</code> + <code>LINEAR</code>.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Glass is flat — no rim, no bevel</div>
+      <div class="fix">
+        <code>dFdx</code>/<code>dFdy</code> used without enabling derivatives. <b>Fix:</b> call
+        <code>getExtension('OES_standard_derivatives')</code> <em>and</em> emit the
+        <code>#extension</code> pragma as the shader's first line. Make routinely writes one without
+        the other.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Shader won't compile, no visible reason</div>
+      <div class="fix">
+        A uniform used before it's declared, a loop bound by a uniform, or a missing
+        <code>precision</code> line. <b>Fix:</b> read <code>getShaderInfoLog()</code> — it gives you
+        the exact line. Always log it; silence here is the default.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Glass drifts from its label on a Retina display</div>
+      <div class="fix">
+        Position scaled by <code>devicePixelRatio</code> but size not — the original's actual bug. Its
+        <code>u_mouse</code> is dpr-multiplied while <code>u_width</code>/<code>u_height</code> aren't,
+        so the "385px" slider only looks right at exactly dpr 2. <b>Fix:</b> scale every pixel uniform
+        by dpr, consistently.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Saturation slider barely does anything</div>
+      <div class="fix">
+        Faithful to the original, and still surprising: saturation is mixed by
+        <code>edgeFalloff</code>, so it only affects the rim band while the body keeps full color.
+        <b>Fix, if you want a real control:</b> apply it to <code>glass</code> before the
+        <code>mix</code>, not inside it.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Frame rate collapses</div>
+      <div class="fix">
+        The prototype's drop shadow brute-forces a 31×31 loop — <b>961 SDF evaluations per pixel,
+        every frame.</b> <b>Fix:</b> the SDF is already a distance, so use it —
+        <code>1.0 - smoothstep(-blur, blur, shadowSDF)</code>. One evaluation, visually equivalent.
+        That's what the demo above runs.
+      </div>
+    </div>
+    <div class="fail">
+      <div class="sym">Exported project won't <code>npm install</code></div>
+      <div class="fix">
+        Not a shader issue, but it will stop you cold. Figma Make exports pin versions <em>inside</em>
+        import specifiers (<code>lucide-react@0.487.0</code>) and mirror them as
+        <code>"pkg@1.2.3": "npm:pkg@1.2.3"</code> in package.json — npm rejects those as invalid
+        package names. <b>Fix:</b> delete the aliased duplicate keys, then add a Vite
+        <code>resolveId</code> hook that strips the version suffix back to the real package name.
+      </div>
+    </div>
+  </div>
+
+  <h2>Scaling to an actual interface</h2>
+
+  <div class="col">
+    <p>
+      Here's the constraint that matters for real work, and the reason you can't just drop this
+      component next to your existing components: <strong>a canvas cannot see its DOM siblings.</strong>
+      Give every glass button its own canvas and each one refracts only its own background — a nav bar
+      over your scrolling content will refract nothing, because there's nothing in its texture.
+    </p>
+    <p>
+      So one surface owns the backdrop and draws <em>every</em> glass element into it, unioned with
+      <code>min()</code> over their distance fields. I built and ran this — four elements, one canvas,
+      DOM labels registered on top:
+    </p>
+  </div>
+
+<pre><span class="c">// union of N shapes; also track whose half-height owns this pixel,</span>
+<span class="c">// because the edge field normalizes by the OWNING shape's size</span>
+<span class="k">void</span> sceneSDF(<span class="k">vec2</span> frag, <span class="k">out</span> <span class="k">float</span> sdf, <span class="k">out</span> <span class="k">float</span> ownerHalfH) {
+  sdf = <span class="n">1e9</span>; ownerHalfH = <span class="n">1.0</span>;
+  <span class="k">for</span> (<span class="k">int</span> i = <span class="n">0</span>; i &lt; COUNT; i++) {   <span class="c">// COUNT baked in at compile time</span>
+    <span class="k">float</span> d = sdRoundRect(frag - u_rects[i].xy, u_rects[i].zw, u_radii[i]);
+    <span class="k">if</span> (d &lt; sdf) { sdf = d; ownerHalfH = max(u_rects[i].w, <span class="n">1.0</span>); }
+  }
+}</pre>
+
+  <div class="col">
+    <p>
+      Drive the SDF rects and the DOM overlay from <strong>the same array of numbers</strong>. That's
+      what keeps the glass and its content from drifting apart — there's no second source of truth to
+      get out of sync.
+    </p>
+    <p>
+      Because <code>COUNT</code> has to be a compile-time constant in GLSL ES 1.0, the shader
+      recompiles when the number of elements changes. Fine for a prototype; keep a fixed
+      <code>MAX_SHAPES</code> and pad if you'd rather not.
+    </p>
+  </div>
+
+  <h2>Where to stop</h2>
+
+  <div class="col">
+    <p>
+      Be honest about the cost. This is a full-screen fragment shader running every frame, and it
+      cannot refract live DOM — no scrolling text, no video elements, no other components behind the
+      glass unless they're in the texture.
+    </p>
+  </div>
+
+  <div class="tscroll">
+    <table>
+      <thead>
+        <tr><th>Situation</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hero moment, one or a few glass elements over an image or video</td>
+          <td>The full shader. This is what it's for, and it's genuinely convincing.</td>
+        </tr>
+        <tr>
+          <td>A composed glass UI — nav, cards, buttons over one backdrop</td>
+          <td>One <code>GlassSurface</code>, N shapes unioned, DOM content above.</td>
+        </tr>
+        <tr>
+          <td>Glass over live scrolling content or a form</td>
+          <td>Don't. Use <code>backdrop-filter: blur(20px) saturate(180%)</code> with a 1px
+              inset highlight. No refraction, but honest and cheap.</td>
+        </tr>
+        <tr>
+          <td>Presenting on unknown hardware</td>
+          <td>Keep a CSS fallback behind a <code>getContext('webgl')</code> check. Integrated GPUs
+              and low-power mode will struggle.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="tag">The short version</span>
+    <p>
+      Refraction requires resampling, resampling requires a texture, a texture requires one canvas
+      that owns the backdrop. Give Make that architecture explicitly and it can build the rest.
+      Ask it for "glass" and you'll get a blurred div every time.
+    </p>
+  </div>
+
+  <hr>
+  <p style="font-family:var(--mono); font-size:11.5px; color:var(--neutral); margin:0">
+    Source: Liquid Glass Material Editor (Community) by Daniela Muntyan, built in Figma Make.
+    Shader reverse-engineered, distilled to a reusable component, and verified against the original.
+  </p>
+</div>
