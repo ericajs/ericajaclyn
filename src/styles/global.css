@@ -63,31 +63,43 @@
     --popover-foreground: #1c1c1f;
     --primary: #0e0e0f;
     --primary-foreground: #ffffff;
-    --secondary: #f1f1f2;
+    --secondary: #e7e7ea;
     --secondary-foreground: #1c1c1f;
     --muted: #f1f1f2;
-    --muted-foreground: #656567;
+    --muted-foreground: #747478;
     --accent: #f1f1f2;
-    --accent-foreground: #1c1c1f;
+    --accent-foreground: #2c2c2e;
     --destructive: oklch(0.577 0.245 27.325);
-    --border: #eaeaeb;
-    --input: #eaeaeb;
-    --ring: #656567;
+    --border: #e7e7ea;
+    --input: #e7e7ea;
+    --ring: #747478;
     --input-ring: #2563eb;
     --chart-1: #1c1c1f;
-    --chart-2: #656567;
+    --chart-2: #747478;
     --chart-3: #3b3b3d;
     --chart-4: #f1f1f2;
-    --chart-5: #eaeaeb;
+    --chart-5: #e7e7ea;
     --radius: 0.625rem;
     --sidebar: #ffffff;
     --sidebar-foreground: #1c1c1f;
     --sidebar-primary: #0e0e0f;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #f1f1f2;
-    --sidebar-accent-foreground: #1c1c1f;
-    --sidebar-border: #eaeaeb;
-    --sidebar-ring: #656567;
+    --sidebar-accent-foreground: #2c2c2e;
+    --sidebar-border: #e7e7ea;
+    --sidebar-ring: #747478;
+
+    /* Translucent fill for outline controls (Figma: custom/background dark:input/30) */
+    --input-surface: #ffffff;
+    /* Scrim behind the mobile menu card (Figma: custom/background dark:blur) */
+    --overlay-blur: rgb(28 28 31 / 0.28);
+
+    /* ── Fluid layout rhythm ──────────────────────────────────────
+       Figma grid padding-x steps 12px (≤768) → 24px (≥1024); these
+       interpolate instead of stepping so margins track the viewport. */
+    --page-px: clamp(0.75rem, 4.6875vw - 1.5rem, 1.5rem);
+    --section-py: clamp(3.5rem, 6.25vw, 6rem);
+    --main-max-w: 2560px;
 }
 
 .dark {
@@ -102,13 +114,13 @@
     --secondary: #2c2c2e;
     --secondary-foreground: #ffffff;
     --muted: #2c2c2e;
-    --muted-foreground: #f1f1f2;
+    --muted-foreground: #f0f0f7;
     --accent: #3131f5;
     --accent-foreground: #ffffff;
     --destructive: oklch(0.704 0.191 22.216);
     --border: #3b3b3d;
     --input: #3b3b3d;
-    --ring: #f1f1f2;
+    --ring: #f0f0f7;
     --input-ring: #3b82f6;
     --chart-1: #ffffff;
     --chart-2: #f1f1f2;
@@ -122,7 +134,10 @@
     --sidebar-accent: #3131f5;
     --sidebar-accent-foreground: #ffffff;
     --sidebar-border: #3b3b3d;
-    --sidebar-ring: #f1f1f2;
+    --sidebar-ring: #f0f0f7;
+
+    --input-surface: rgb(255 255 255 / 0.043);
+    --overlay-blur: rgb(14 14 15 / 0.42);
 }
 
 @layer base {
@@ -139,21 +154,42 @@
 }
 
 @layer components {
-  /* Pill buttons — the brand's primary button shape */
+  /* Pill buttons — the brand's primary button shape.
+     Interactive surfaces (hover / selected) use --secondary, never --accent:
+     --accent is the brand blue and is reserved for accent text. */
   .pill {
-    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
     }
   .pill-ghost {
-    @apply text-foreground hover:bg-accent;
+    @apply text-foreground hover:bg-secondary;
     }
   .pill-primary {
     @apply bg-primary text-primary-foreground hover:opacity-90;
     }
+  .pill-outline {
+    @apply border border-input text-foreground hover:bg-secondary;
+    background-color: var(--input-surface);
+    }
+  /* Footer / nav link buttons render at --primary weight per the Figma link button */
+  .pill-link {
+    @apply text-primary font-normal hover:bg-secondary;
+    }
   .pill-md {
-    @apply h-9 px-4 text-sm;
+    @apply h-10 px-4 text-base;
     }
   .pill-sm {
     @apply h-8 px-3 text-sm;
+    }
+  /* Touch-sized on small viewports, 40px from lg up (Figma button/hit-area) */
+  .pill-fluid {
+    @apply h-11 px-4 text-base lg:h-10;
+    }
+
+  /* Inline text link — Figma "text-sm/leading-normal/underlined (medium)".
+     Uses --accent-foreground, not --accent: the blue accent is for accent
+     text (taglines), never for body links. */
+  .link {
+    @apply text-accent-foreground underline underline-offset-4 hover:opacity-70 transition-opacity;
     }
 }
 

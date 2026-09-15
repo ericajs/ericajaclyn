@@ -3,47 +3,70 @@ import { getCollection } from "astro:content"
 import Layout from "@/layouts/main.astro"
 
 const allWork = await getCollection("work")
-const featured = allWork
-  .filter((e) => e.data.treatment === "full")
-  .sort((a, b) => a.data.order - b.data.order)
+const workSlides = allWork
+  .filter((e) => e.data.heroOrder !== undefined)
+  .sort((a, b) => a.data.heroOrder! - b.data.heroOrder!)
+  .map((e) => ({
+    title: e.data.title,
+    // Build note lists the project descriptions as n/a — the pager shows the
+    // project name only for UX Design case studies.
+    description: "",
+    // Only `treatment: "full"` entries get a case study page; the rest
+    // land on the collection so the hero never links to a 404.
+    href: e.data.treatment === "full" ? `/uxdesign/${e.id}` : "/uxdesign",
+    cover: e.data.heroImage ?? e.data.coverImage ?? "",
+    alt: e.data.heroAlt ?? e.data.coverAlt ?? "",
+  }))
 
-const slides = featured.map((e) => ({
-  id: e.id,
-  title: e.data.title,
-  scope: e.data.scope,
-  cover: e.data.coverImage ?? "",
-  alt: e.data.coverAlt ?? "",
-}))
+// Fifth hero slide — an astrophotography piece that lives outside the work
+// collection (Build note: Project 5, Cats Paw Nebula → astrophotography).
+const astroSlide = {
+  title: "Cats Paw Nebula",
+  description: "JWST/astrophotography",
+  href: "/astrophotography",
+  cover: "/astrophotography/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFreg1-Hero.jpg",
+  alt: "Portrait hero of the Cat's Paw Nebula processed from James Webb Space Telescope imagery.",
+}
+
+const slides = [...workSlides, astroSlide]
 const first = slides[0]
 ---
 <Layout>
-  <section class="grid lg:grid-cols-[2fr_3fr] min-h-[600px] lg:min-h-[calc(100svh-66px)]">
+  <section class="hero bg-background">
 
-    {/* ── Left panel (theme-aware) ────────────────────────────── */}
-    <div class="bg-background text-foreground flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-16 text-center lg:text-left">
-      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.05]">
-        Digital Product Design
-      </h1>
-      <p class="mt-6 text-muted-foreground max-w-md mx-auto lg:mx-0">
-        Accessible and Inclusive User Experiences, Adaptive Design Systems, Agentic Automation
-      </p>
-      <div class="mt-8 flex flex-col items-center lg:items-start gap-4">
-        <a href="/uxdesign" class="pill pill-primary pill-md">
-          View work
-        </a>
-        <a href="/contact" class="text-sm font-medium underline underline-offset-4 hover:opacity-70 transition-opacity">
-          Get in touch
-        </a>
+    {/* ── Hero grid: copy + featured image ───────────────────────
+        Side by side from lg up, stacked below. Both columns are fluid;
+        the copy stays capped at 512px and centered in its column. */}
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-copy-inner">
+          <h1 class="hero-heading font-semibold leading-none">
+            Digital Product Design
+          </h1>
+          <p class="text-base leading-6">
+            Accessible and Inclusive User Experiences, Adaptive Design Systems, Agentic Automation
+          </p>
+          <div class="hero-actions">
+            <a href="/uxdesign" class="pill pill-primary pill-fluid">View Work</a>
+            <a href="/contact" class="pill pill-outline pill-fluid">Get In Touch</a>
+          </div>
+        </div>
       </div>
-    </div>
 
-    {/* ── Right featured image + pagination ───────────────────── */}
-    <div class="flex flex-col min-h-[360px] lg:min-h-0">
-      <div class="relative flex-1 bg-muted overflow-hidden">
+      <div id="hero-media" class="hero-media bg-muted" aria-live="polite">
         {slides.map((s, i) => (
-          <div class="hero-slide absolute inset-0" data-slide={i} style={i === 0 ? "" : "display:none"}>
+          <div class="hero-slide absolute inset-0" data-slide={i} hidden={i !== 0}>
             {s.cover ? (
-              <img src={s.cover} alt={s.alt} class="h-full w-full object-cover" />
+              <img
+                src={s.cover}
+                alt={s.alt}
+                width="1000"
+                height="1500"
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchpriority={i === 0 ? "high" : undefined}
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
             ) : (
               <div class="h-full w-full flex items-center justify-center bg-muted">
                 <span class="text-muted-foreground text-sm uppercase tracking-widest">{s.title}</span>
@@ -52,28 +75,148 @@ const first = slides[0]
           </div>
         ))}
       </div>
+    </div>
 
-      {/* Pagination bar */}
-      <div class="flex items-center justify-between gap-4 px-6 py-4 text-sm border-t border-border">
-        <div class="flex items-center gap-3 min-w-0">
-          <span id="hero-count" class="text-muted-foreground shrink-0">1 of {slides.length}</span>
-          <a id="hero-link" href={`/uxdesign/${first.id}`} class="font-medium underline underline-offset-4 truncate">
-            {first.title}
-          </a>
-          <span id="hero-scope" class="text-muted-foreground hidden sm:inline truncate">{first.scope}</span>
+    {/* ── Pagination — sits under the image column from lg up ───── */}
+    <div class="hero-pager-row">
+      <div class="hero-pager-spacer" aria-hidden="true"></div>
+      <div class="hero-pager">
+        <div class="flex items-center gap-4 min-w-0 flex-1">
+          <span id="hero-count" class="shrink-0 text-sm font-light leading-none text-muted-foreground">
+            1 of {slides.length}
+          </span>
+          <div class="flex items-center gap-3 min-w-0 flex-1">
+            <a
+              id="hero-link"
+              href={first.href}
+              class="shrink-0 text-sm font-medium underline underline-offset-4 text-accent-foreground hover:opacity-70 transition-opacity"
+            >
+              {first.title}
+            </a>
+            <span id="hero-scope" class="hidden md:block min-w-0 flex-1 truncate text-sm text-muted-foreground">
+              {first.description}
+            </span>
+          </div>
         </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <button id="hero-prev" type="button" aria-label="Previous project" class="flex items-center justify-center size-9 rounded-md hover:bg-accent transition-colors cursor-pointer">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <div class="flex items-center gap-4 shrink-0">
+          <button id="hero-prev" type="button" aria-label="Previous project" aria-controls="hero-media" class="pill pill-ghost size-10 shrink-0">
+            {/* Icon / MoveLeft */}
+            <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 8 2 12l4 4" /><path d="M2 12h20" />
+            </svg>
           </button>
-          <button id="hero-next" type="button" aria-label="Next project" class="flex items-center justify-center size-9 rounded-md hover:bg-accent transition-colors cursor-pointer">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <button id="hero-next" type="button" aria-label="Next project" aria-controls="hero-media" class="pill pill-ghost size-10 shrink-0">
+            {/* Icon / MoveRight */}
+            <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m18 8 4 4-4 4" /><path d="M2 12h20" />
+            </svg>
           </button>
         </div>
       </div>
     </div>
   </section>
 </Layout>
+
+<style>
+  /* Figma: heading/xl steps 36px → 48px between the md and lg breakpoints */
+  .hero-heading {
+    font-size: clamp(2.25rem, 4.6875vw, 3rem);
+  }
+
+  /* Vertical rhythm inside the copy column: 24px at md → 48px at 2xl */
+  .hero-copy-inner {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3.125vw, 3rem);
+    width: 100%;
+    max-width: 512px;
+  }
+
+  /* Grid rather than flex: with border-box padding, `flex: 1 1 0` would
+     hand the padded copy column extra width and skew the 50/50 split. */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: var(--page-px);
+    padding-top: 0.75rem;
+  }
+
+  .hero-copy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Figma space/xl/padding, scaled fluidly rather than stepped */
+    padding: clamp(2rem, 6.25vw, 6rem);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 384px;
+  }
+
+  /* Figma stacks the actions full-width below sm and lays them out in a
+     row from sm up */
+  @media (max-width: 639px) {
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+      max-width: none;
+    }
+  }
+
+  .hero-media {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    /* Stacked: 480px at 360px wide → 1020px at 768px wide */
+    height: clamp(30rem, calc(132.353vw + 3.5px), 63.75rem);
+  }
+
+  .hero-pager-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    min-height: 64px;
+    padding-inline: var(--page-px);
+  }
+
+  .hero-pager {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.75rem;
+  }
+
+  .hero-pager-spacer {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-grid,
+    .hero-pager-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hero-media {
+      /* Figma: 792px through xl, 840px at 2xl */
+      height: clamp(49.5rem, 54.6875vw, 52.5rem);
+    }
+    .hero-pager-spacer {
+      display: block;
+    }
+    .hero-pager {
+      padding-inline: 0.5rem 1.5rem;
+    }
+  }
+
+  .hero-slide[hidden] {
+    display: none;
+  }
+</style>
 
 <script define:vars={{ slides }}>
   const els = Array.from(document.querySelectorAll(".hero-slide"))
@@ -84,13 +227,13 @@ const first = slides[0]
 
   function show(n) {
     i = (n + slides.length) % slides.length
-    els.forEach((el, idx) => (el.style.display = idx === i ? "" : "none"))
+    els.forEach((el, idx) => (el.hidden = idx !== i))
     if (countEl) countEl.textContent = `${i + 1} of ${slides.length}`
     if (linkEl) {
       linkEl.textContent = slides[i].title
-      linkEl.setAttribute("href", `/uxdesign/${slides[i].id}`)
+      linkEl.setAttribute("href", slides[i].href)
     }
-    if (scopeEl) scopeEl.textContent = slides[i].scope
+    if (scopeEl) scopeEl.textContent = slides[i].description
   }
 
   document.getElementById("hero-prev")?.addEventListener("click", () => show(i - 1))

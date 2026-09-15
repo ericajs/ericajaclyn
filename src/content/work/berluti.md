@@ -12,6 +12,9 @@ accessibility:
 designSystem:
   - ""
   - ""
+heroImage: "/ux-design/berluti/2x3-Hero-Berluti.jpg"
+heroAlt: "Portrait hero artwork for the BERLUTI luxury retail web design case study."
+heroOrder: 4
 coverImage: "/ux-design/berluti/21x9-Tri-Aerial-Maroon.jpg"
 coverAlt: "Aerial editorial composition of three devices displaying the BERLUTI retail site on a deep maroon surface."
 ogImage: ""

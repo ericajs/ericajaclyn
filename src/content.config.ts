@@ -36,6 +36,12 @@ const work = defineCollection({
     // "prose" = narrow long-form column (default, matches NAACP LDF);
     // "full" = edge-to-edge sections for image-led, component-system stories.
     bodyWidth: z.enum(["prose", "full"]).default("prose"),
+    // Home hero carousel — 2:3 portrait art. `heroOrder` is what puts a
+    // project into the home rotation, and it sequences that rotation
+    // independently of `order`, which sequences the work index.
+    heroImage: z.string().optional(),
+    heroAlt: z.string().optional(),
+    heroOrder: z.number().optional(),
     // Second tile used by multi-image cluster rows on the work index
     secondaryImage: z.string().optional(),
     secondaryImageAlt: z.string().optional(),

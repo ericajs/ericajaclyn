@@ -14,33 +14,37 @@ const socials = [
 ]
 const year = new Date().getFullYear()
 ---
-<footer>
-  <div class="mx-auto max-w-[1920px] px-6 py-16 sm:py-24 flex flex-col gap-12">
-    <hr class="border-t border-border" />
-
-    <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-      {/* Nav links */}
-      <nav aria-label="Footer" class="flex flex-col items-center md:items-start gap-0 md:flex-1">
-        {navLinks.map(({ href, label }) => (
-          <a href={href} class="pill pill-ghost pill-sm">{label}</a>
-        ))}
-      </nav>
-
-      {/* Logo */}
-      <div class="md:flex-1 flex justify-center">
-        <a href="/" class="hover:opacity-70 transition-opacity" aria-label="Home">
-          <Logo class="size-8" />
-        </a>
-      </div>
-
-      {/* Socials */}
-      <nav aria-label="Social" class="flex flex-col items-center md:items-end gap-0 md:flex-1">
-        {socials.map(({ href, label }) => (
-          <a href={href} target="_blank" rel="noopener noreferrer" class="pill pill-ghost pill-sm">{label}</a>
-        ))}
-      </nav>
+{/* Footer is fluid edge-to-edge — no max-width, per the Figma build note. */}
+<footer class="w-full px-[var(--page-px)] py-[var(--section-py)]">
+  {/* ≥md: links / logo / socials in three equal columns.
+      <md: logo first, then stacked centered groups. */}
+  <div class="border-t border-border py-12 flex flex-col items-center gap-8 md:flex-row md:items-start md:gap-0">
+    <div class="order-1 flex md:hidden justify-center">
+      <a href="/" class="flex items-center justify-center size-10 hover:opacity-70 transition-opacity" aria-label="Home">
+        <Logo class="size-[26px]" />
+      </a>
     </div>
 
-    <p class="text-xs text-muted-foreground text-center md:text-left">Copyright © {year} ericajaclyn.com</p>
+    <nav aria-label="Footer" class="order-2 md:order-none flex flex-1 min-w-0 flex-col items-center md:items-start">
+      {navLinks.map(({ href, label }) => (
+        <a href={href} class="pill pill-link pill-sm">{label}</a>
+      ))}
+    </nav>
+
+    <div class="hidden md:flex flex-1 min-w-0 items-center justify-center">
+      <a href="/" class="flex items-center justify-center size-10 hover:opacity-70 transition-opacity" aria-label="Home">
+        <Logo class="size-[26px]" />
+      </a>
+    </div>
+
+    <hr class="order-3 md:hidden w-full border-t border-border" />
+
+    <nav aria-label="Social" class="order-4 md:order-none flex flex-1 min-w-0 flex-col items-center md:items-end">
+      {socials.map(({ href, label }) => (
+        <a href={href} target="_blank" rel="noopener noreferrer" class="pill pill-link pill-sm">{label}</a>
+      ))}
+    </nav>
   </div>
+
+  <p class="text-xs text-muted-foreground text-center md:text-start">Copyright © {year} ericajaclyn.com</p>
 </footer>

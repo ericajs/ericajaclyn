@@ -12,81 +12,89 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
   <section class="max-w-6xl mx-auto px-6 py-16 sm:py-24">
     <h1 class="text-4xl sm:text-5xl font-medium tracking-tight text-center mb-12 sm:mb-16">Contact</h1>
 
-    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-stretch">
 
       {/* ── Left: invitation ──────────────────────────────────── */}
-      <div class="lg:py-6">
-        <p class="text-sm font-semibold text-muted-foreground mb-3">Connect</p>
-        <h2 class="text-2xl sm:text-3xl font-medium tracking-tight">Ready to collaborate?</h2>
-        <p class="mt-4 text-muted-foreground max-w-sm">
-          I’d love to hear from you! Whether you’re ready to start a project or just want to learn
-          more about how I can help, feel free to reach out.
-        </p>
+      <div class="flex flex-col gap-12 p-6 sm:p-10 lg:p-16">
+        <div class="flex flex-col gap-8 max-w-lg">
+          <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight">Ready to collaborate?</h2>
+          <p class="text-base font-light leading-6">
+            I’d love to hear from you! Whether you’re ready to start a project or just want to learn
+            more about how I can help, feel free to reach out.
+          </p>
+        </div>
 
-        <p class="mt-8 text-sm font-semibold">Contact</p>
-        <p class="mt-3 font-medium">Erica Jaclyn Stein</p>
-        <p class="text-sm text-muted-foreground">Senior Product Designer | Agentic Design Systems | CPACC Inclusive &amp; Accessible UX</p>
-
-        <a
-          href={LINKEDIN_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="mt-6 inline-flex items-center justify-center h-9 px-4 rounded-full border border-border text-sm font-semibold hover:bg-accent transition-colors"
-        >
-          LinkedIn
-        </a>
+        <div>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="pill pill-outline pill-fluid"
+          >
+            {/* Icon / ArrowUpRight */}
+            <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14.1667 14.1667V5.83333H5.83333M14.1667 5.83333 5.83333 14.1667" />
+            </svg>
+            LinkedIn
+          </a>
+        </div>
       </div>
 
       {/* ── Right: form ───────────────────────────────────────── */}
-      <div class="bg-muted/50 rounded-2xl p-6 sm:p-10">
-        <p class="text-sm font-semibold text-muted-foreground mb-3">Contact</p>
-        <h2 class="text-2xl sm:text-3xl font-medium tracking-tight mb-8">Get in touch</h2>
+      <div class="bg-muted rounded-3xl p-6 sm:p-10 lg:p-16">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-12">Get in touch</h2>
 
         <form
           id="contact-form"
           action={`https://formspree.io/f/${FORMSPREE_ID}`}
           method="POST"
           novalidate
-          class="space-y-6"
+          class="flex flex-col gap-8 max-w-xl"
         >
-          <div>
-            <label for="name" class="block text-sm font-medium mb-2">Name</label>
+          <div class="flex flex-col gap-2">
+            <label for="name" class="text-sm font-medium">Name</label>
             <input
               id="name" name="name" type="text" required
               autocomplete="name" placeholder="Your name"
               aria-describedby="name-error"
-              class="contact-input w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+              class="contact-input h-10 w-full rounded-full border border-input px-3 text-base placeholder:text-muted-foreground focus:outline-none"
             />
-            <p id="name-error" data-error class="hidden mt-1.5 text-sm text-destructive">Name is required.</p>
+            <p id="name-error" data-error class="hidden text-base text-destructive">Please provide a name.</p>
           </div>
 
-          <div>
-            <label for="email" class="block text-sm font-medium mb-2">Email</label>
+          <div class="flex flex-col gap-2">
+            <label for="email" class="text-sm font-medium">Email</label>
             <input
               id="email" name="email" type="email" required
               autocomplete="email" placeholder="example@mail.com"
               aria-describedby="email-error"
-              class="contact-input w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+              class="contact-input h-10 w-full rounded-full border border-input px-3 text-base placeholder:text-muted-foreground focus:outline-none"
             />
-            <p id="email-error" data-error class="hidden mt-1.5 text-sm text-destructive">An email address is required.</p>
+            <p id="email-error" data-error class="hidden text-base text-destructive">Please provide an email address.</p>
           </div>
 
-          <div>
-            <label for="message" class="block text-sm font-medium mb-2">Message</label>
+          <div class="flex flex-col gap-2">
+            <label for="message" class="text-sm font-medium">Message</label>
             <textarea
-              id="message" name="message" required rows={5}
+              id="message" name="message" required rows={4}
               placeholder="Your message here"
               aria-describedby="message-error"
-              class="contact-input w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-y"
+              class="contact-input min-h-24 w-full rounded-3xl border border-input p-4 text-base placeholder:text-muted-foreground focus:outline-none resize-y"
             ></textarea>
-            <p id="message-error" data-error class="hidden mt-1.5 text-sm text-destructive">A brief message is required.</p>
+            <p id="message-error" data-error class="hidden text-base text-destructive">Please provide detail.</p>
           </div>
 
           {/* Honeypot */}
           <input type="text" name="_gotcha" class="hidden" aria-hidden="true" tabindex="-1" />
 
           <div class="flex justify-end">
-            <button type="submit" class="pill pill-primary pill-md">Send message</button>
+            <button type="submit" class="pill pill-primary pill-md">
+              {/* Icon / Send */}
+              <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9.16667 10.8333 1.66667 7.5 18.3333 1.66667 12.5 18.3333 9.16667 10.8333ZM18.3333 1.66667 9.16667 10.8333" />
+              </svg>
+              Send
+            </button>
           </div>
         </form>
       </div>
@@ -95,6 +103,10 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
 </Layout>
 
 <style>
+  /* Field surface — Figma: custom/background (light #fff, dark white @ ~4.5%) */
+  .contact-input {
+    background-color: var(--input-surface);
+  }
   /* Error border wins over the base border-input utility */
   .contact-input[aria-invalid="true"] {
     border-color: var(--destructive);
@@ -105,14 +117,14 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
   const form = document.getElementById("contact-form") as HTMLFormElement | null
   if (form) {
     const rules: { id: string; empty: string; invalid?: string; check?: (v: string) => boolean }[] = [
-      { id: "name", empty: "Name is required." },
+      { id: "name", empty: "Please provide a name." },
       {
         id: "email",
-        empty: "An email address is required.",
+        empty: "Please provide an email address.",
         invalid: "Please enter a valid email address.",
         check: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
       },
-      { id: "message", empty: "A brief message is required." },
+      { id: "message", empty: "Please provide detail." },
     ]
 
     function setError(input: HTMLElement, errorEl: HTMLElement | null, msg: string | null) {
