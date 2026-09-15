@@ -4,23 +4,26 @@ import BackToTop from "@/components/BackToTop.astro"
 
 const hero = {
   title: "Astrophotography",
-  subtitle: "James Webb Space Telescope NIRCam and MIRI imagery",
-  description:
-    "These composites begin with the Stage 3 mosaics released through MAST and end with a chain of interpretive choices: filter-to-filter registration, continuum subtraction, non-linear intensity transformations, and the assignment of invisible-wavelength channels to visible color.",
+  subtitle: "Space Telescope Data Processing",
 }
 
-type GalleryItem = { name: string; formula?: string; src: string; alt: string }
+const intro = {
+  heading: "Composite Imagery",
+  body: "These composites begin with the Stage 3 mosaics released through MAST and end with a chain of interpretive choices: filter-to-filter registration, continuum subtraction, non-linear intensity transformations, and the assignment of invisible-wavelength channels to visible color.",
+}
+
+type GalleryItem = { name: string; description: string; dot: string; src: string; alt: string }
 type Nebula = {
   id: string
   nav: string
   title: string
   subtitle: string
+  hero: { src: string; alt: string; aspect: string; overlay?: { title: string; description: string } }
   gallery: GalleryItem[]
   galleryCols: number
-  composite?: { src: string; alt: string; caption?: string }
-  description: string[]
-  meta: [string, string][]
-  note?: string
+  feature: { heading: string; body: string[] }
+  details: [string, string][]
+  footnote?: string
 }
 
 const BASE = "/astrophotography"
@@ -29,164 +32,355 @@ const nebulae: Nebula[] = [
   {
     id: "carina-stellar-jets",
     nav: "Carina Nebula Stellar Jets",
-    title: "Carina Nebula H II Region Stellar Jets",
-    subtitle:
-      "Uncovering the full spectrum of accretion and outflow in the heart of the Carina Nebula",
+    title: "Carina Nebula Protostellar Jets",
+    subtitle: "An atomic jet piercing a molecular cocoon in the Carina Nebula",
+    hero: {
+      src: `${BASE}/5408-CarinaNebula-StellarJets/5408-CarinaNebula-Stellar-Jets-HH666-Bicolor-FeII-H2.jpg`,
+      alt: "Bicolor composite of HH 666 showing the [Fe II] atomic jet in orange and the molecular H₂ cocoon in cyan.",
+      aspect: "aspect-[21/9]",
+    },
     gallery: [
       {
-        name: "HE Fe II Emission",
-        formula: "F164N − k₂ × F162M",
+        name: "[Fe II] Emission",
+        description:
+          "Continuum-subtracted 1.644 μm [Fe II] emission traces the ~10,000 K collimated atomic jet driving out of HH 666's dust pillar; spatially concentrated against the surrounding molecular gas.",
+        dot: "#0092e1",
         src: `${BASE}/5408-CarinaNebula-StellarJets/5408-CN-Stellar-Jets-HH6660-FeII-Emission-Final.jpg`,
-        alt: "Continuum-subtracted Fe II emission of HH 666 in the Carina Nebula, rendered orange.",
+        alt: "Continuum-subtracted [Fe II] emission of HH 666 in the Carina Nebula.",
       },
       {
-        name: "H2 Emission",
-        formula: "F470N − k₁ × F444W",
+        name: "H₂ Emission",
+        description:
+          "Continuum-subtracted 4.695 μm molecular hydrogen emission maps the ~2,000 K shocked H₂ cocoon and pillar structure surrounding the embedded protostar.",
+        dot: "#fb6400",
         src: `${BASE}/5408-CarinaNebula-StellarJets/5408-CarinaNebula-Stellar-Jets-HH666-H2-Emission-Final.jpg`,
-        alt: "Continuum-subtracted molecular hydrogen emission of HH 666, rendered cyan.",
-      },
-      {
-        name: "F470N",
-        src: `${BASE}/5408-CarinaNebula-StellarJets/5408-CarinaNebula-Stellar-Jets-HH666-F444W-F470N-BXT-Reg-STR.jpg`,
-        alt: "F470N narrowband image of HH 666 after BXT processing.",
+        alt: "Continuum-subtracted molecular hydrogen emission of HH 666.",
       },
     ],
-    galleryCols: 3,
-    composite: {
-      src: `${BASE}/5408-CarinaNebula-StellarJets/5408-CarinaNebula-Stellar-Jets-HH666-Bicolor-FeII-H2.jpg`,
-      alt: "Bicolor composite of HH 666 showing Fe II atomic jet in orange and molecular H₂ cocoon in cyan.",
-      caption: "Bicolor Fe II + H₂ Emission",
+    galleryCols: 2,
+    feature: {
+      heading: "Stellar Jets Bicolor [FE II] + H2 Emission",
+      body: [
+        "This image shows a collimated atomic [Fe II] jet at ~10,000 K piercing through a surrounding molecular H₂ cocoon, with the spatial geometry of the embedded protostar's outflow made visible through an orange + cyan emission-line composite.",
+        "This is just one of Megan Reiter's six-target survey of the Carina Nebula's Herbig-Haro objects, each with a uniform four-filter NIRCam program. The orange channel shows the continuum-subtracted H₂ molecular shocks while cyan shows continuum-subtracted [Fe II] atomic shocks.",
+      ],
     },
-    description: [
-      "This image shows a collimated atomic [Fe II] jet at ~10,000 K piercing through a surrounding molecular H₂ cocoon, with the spatial geometry of the embedded protostar's outflow made visible through an orange + cyan emission-line composite.",
-      "This is just one of Megan Reiter's six-target survey of the Carina Nebula's Herbig-Haro objects, each with a uniform four-filter NIRCam program. The targets fall under “Molecular Cloud / SFR” with strong H II region overlap.",
-    ],
-    meta: [
-      ["Proposal", "5408"],
-      ["Target", "HH 666"],
-      ["Release Date", "June 11, 2026"],
+    details: [
+      ["Target", "HH 666 (Herbig-Haro 666)"],
+      ["Classification", "Protostellar jet (Herbig-Haro object)"],
+      ["Constellation", "Carina"],
+      ["Distance", "~7,500 light-years"],
+      ["Instruments", "JWST NIRCam"],
+      ["Release Date", "2026-06-11"],
       ["Principal Investigator", "Megan Reiter"],
-      ["Filters", "F150W2+F164N, F150W2+F162M, F444W+F470N, F444W"],
     ],
+    footnote:
+      "Distance: HH 666 lies within the Carina Nebula complex at ~2.3 kpc / 7,500 light-years (Smith 2006).",
   },
   {
     id: "cats-paw",
     nav: "Cat's Paw Nebula",
     title: "Cat's Paw Nebula",
-    subtitle: "NIRCam Observations of a Star-Forming Nebula",
-    gallery: [
-      { name: "F187N", src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F187N-Color.jpg`, alt: "F187N narrowband channel of the Cat's Paw Nebula." },
-      { name: "F200W", src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F200W-Color.jpg`, alt: "F200W broadband channel of the Cat's Paw Nebula." },
-      { name: "F277W", src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F277W-Color.jpg`, alt: "F277W broadband channel of the Cat's Paw Nebula." },
-      { name: "F356M", src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F356M-Color.jpg`, alt: "F356M medium-band channel of the Cat's Paw Nebula." },
-      { name: "F470N", src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F470N-Color.jpg`, alt: "F470N narrowband channel of the Cat's Paw Nebula." },
-    ],
-    galleryCols: 5,
-    composite: {
+    subtitle: "NIRCam Observations Of A Star Forming Nebula",
+    hero: {
       src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFreg1-Final.jpg`,
       alt: "Final color composite of a star-forming region in the Cat's Paw Nebula (NGC 6334).",
+      aspect: "aspect-square",
+      overlay: {
+        title: "NIRCam composite",
+        description: "Colors are mapped from five near-infrared filters.",
+      },
     },
-    description: [
-      "Proposal 6778 is a Director's Discretionary (DD) program led by Macarena García Marín (STScI), executed in a single visit, and it is the source dataset for the JWST third-anniversary public release of the Cat's Paw Nebula.",
+    gallery: [
+      {
+        name: "F090W",
+        description: "0.9 μm broadband; foreground stars, least-obscured populations",
+        dot: "#0000ff",
+        src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F090W.jpg`,
+        alt: "F090W broadband channel of the Cat's Paw Nebula.",
+      },
+      {
+        name: "F187N",
+        description: "1.87 μm narrowband; ionized hydrogen (Paschen-α)",
+        dot: "#00f6ff",
+        src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F187N.jpg`,
+        alt: "F187N narrowband channel of the Cat's Paw Nebula.",
+      },
+      {
+        name: "F277W",
+        description: "2.8 μm broadband; dust penetration",
+        dot: "#33ff00",
+        src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F277W.jpg`,
+        alt: "F277W broadband channel of the Cat's Paw Nebula.",
+      },
+      {
+        name: "F335M",
+        description: "3.35 μm medium band; PAH dust emission (photodissociation regions)",
+        dot: "#ffea00",
+        src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F335M.jpg`,
+        alt: "F335M medium-band channel of the Cat's Paw Nebula.",
+      },
+      {
+        name: "F470N",
+        description: "4.7 μm narrowband; shocked molecular hydrogen (H₂)",
+        dot: "#ff0006",
+        src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFReg1-F470N.jpg`,
+        alt: "F470N narrowband channel of the Cat's Paw Nebula.",
+      },
     ],
-    meta: [
-      ["Proposal", "6778"],
+    galleryCols: 5,
+    feature: {
+      heading: "H II Cavities Five-Filter NIRCam Composite",
+      body: [
+        "This image reveals H II cavities carved out of dense molecular gas by the ultraviolet radiation and stellar winds of newborn massive stars, with PAH-rich photodissociation rims and shocked molecular hydrogen tracing where feedback is actively eroding the parent cloud.",
+        "The composite maps foreground and continuum starlight in blue (F090W), Paschen-α ionized hydrogen in cyan (F187N), warm dust and 3.3 μm PAH emission along the cavity rims in green and yellow (F277W, F335M), and shocked H₂ in deep red (F470N).",
+      ],
+    },
+    details: [
       ["Target", "NGC 6334"],
-      ["Release Date", "July 10, 2025"],
+      ["Classification", "H II region and massive star-forming complex"],
+      ["Constellation", "Scorpius"],
+      ["Distance", "~5,500 light-years"],
+      ["Instruments", "JWST NIRCam"],
+      ["Release Date", "2025-07-10"],
       ["Principal Investigator", "Macarena García Marín"],
-      ["Filters", "F187N, F200W, F277W, F356M, F470N"],
     ],
+    footnote:
+      "Distance estimates for this complex range from about 4,200 to 5,700 light-years depending on the method used.",
   },
   {
     id: "southern-ring",
     nav: "Southern Ring Nebula",
     title: "Southern Ring Nebula",
-    subtitle: "JWST Early Release Observation 7",
-    gallery: [
-      { name: "F090W", src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F090W-Color.jpg`, alt: "F090W broadband channel of the Southern Ring Nebula." },
-      { name: "F187N", src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F187N-Color.jpg`, alt: "F187N narrowband channel of the Southern Ring Nebula." },
-      { name: "F212N", src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F212N-Color.jpg`, alt: "F212N narrowband channel of the Southern Ring Nebula." },
-      { name: "F356W", src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F356W-Color.jpg`, alt: "F356W broadband channel of the Southern Ring Nebula." },
-      { name: "F405N", src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F405N-Color.jpg`, alt: "F405N narrowband channel of the Southern Ring Nebula." },
-      { name: "F470N", src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F470N-Color.jpg`, alt: "F470N narrowband channel of the Southern Ring Nebula." },
-    ],
-    galleryCols: 6,
-    composite: {
+    subtitle: "JWST Early Release Observation Program 2733",
+    hero: {
       src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-Final.jpg`,
       alt: "Final color composite of the Southern Ring Nebula (NGC 3132).",
+      aspect: "aspect-square",
+      overlay: {
+        title: "NIRCam composite",
+        description: "Colors are mapped from six near-infrared filters.",
+      },
     },
-    description: [
-      "The Southern Ring Nebula observations were part of the JWST's Early Release Observations (ERO) program—the telescope's first public science showcase and one of several flagship ERO targets.",
-      "It's a planetary nebula: the glowing, expelled envelope of a dying star. JWST's big payoff was the central star system — the infrared view showed that the star actually shaping the nebula is a faint white dwarf, nearly lost in the glare of its brighter companion, ringed by spiral structure and a dusty disk that point to a multiple-star history (De Marco et al. 2022). The six NIRCam filters separate the ionized gas, the molecular halo, the dust, and the stars, mapping how the dying star shed its mass over time.",
+    gallery: [
+      {
+        name: "F090W",
+        description: "0.9 μm broadband; foreground stars, least-obscured populations",
+        dot: "#0000ff",
+        src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F090W.jpg`,
+        alt: "F090W broadband channel of the Southern Ring Nebula.",
+      },
+      {
+        name: "F187N",
+        description: "1.87 μm narrowband; ionized hydrogen (Paschen-α)",
+        dot: "#00f6ff",
+        src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F187N.jpg`,
+        alt: "F187N narrowband channel of the Southern Ring Nebula.",
+      },
+      {
+        name: "F212N",
+        description: "2.12 μm narrowband; molecular hydrogen (H₂) in the inner shell",
+        dot: "#33ff00",
+        src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F212N.jpg`,
+        alt: "F212N narrowband channel of the Southern Ring Nebula.",
+      },
+      {
+        name: "F356W",
+        description: "3.56 μm broadband; dust and continuum from expanding ejecta",
+        dot: "#ffea00",
+        src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F356W.jpg`,
+        alt: "F356W broadband channel of the Southern Ring Nebula.",
+      },
+      {
+        name: "F405N",
+        description: "4.05 μm narrowband; ionized hydrogen (Brackett-α)",
+        dot: "#ff5500",
+        src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F405N.jpg`,
+        alt: "F405N narrowband channel of the Southern Ring Nebula.",
+      },
+      {
+        name: "F470N",
+        description: "4.7 μm narrowband; cooler molecular hydrogen (H₂) in the outer shell",
+        dot: "#ff0006",
+        src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-F470N.jpg`,
+        alt: "F470N narrowband channel of the Southern Ring Nebula.",
+      },
     ],
-    meta: [
-      ["Proposal", "2733"],
+    galleryCols: 6,
+    feature: {
+      heading: "A Dying Star's Layered Ejecta Five-Filter NIRCam Composite",
+      body: [
+        "This image reveals the concentric shells of a young planetary nebula, where a dying white dwarf—the faint point visible along one of the diffraction spikes—has expelled layers of gas and dust into space over thousands of years; sculpted by gravitational stirring from the prominent bright star at the center in a tight binary orbit.",
+        "A processing choice: I split F405N into its own color rather than merging it with F470N as STScI did, to bring out additional structure in the ionized gas.",
+      ],
+    },
+    details: [
       ["Target", "NGC 3132"],
-      ["Release Date", "July 12, 2022"],
+      ["Classification", "Planetary nebula (bipolar, young)"],
+      ["Constellation", "Vela"],
+      ["Distance", "~2,000 light-years"],
+      ["Instruments", "JWST NIRCam"],
+      ["Release Date", "2022-07-12"],
       ["Principal Investigator", "Klaus Pontoppidan"],
-      ["Filters", "F090W, F187N, F212N, F356W, F405N, F470N"],
     ],
+    footnote:
+      "NASA quotes distance at ~2,000 ly. The current primary-literature value from Gaia parallax of the central star (Chornay & Walton 2021, cited in the JWST ERO paper) is ~2,500 ly.",
   },
   {
     id: "cosmic-cliffs",
     nav: "Carina Nebula Cosmic Cliffs",
     title: "Cosmic Cliffs of the Carina Nebula",
-    subtitle: "JWST Early Release Observation 5",
-    gallery: [
-      { name: "F090W", src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F090W-Color.jpg`, alt: "F090W broadband channel of the Cosmic Cliffs in the Carina Nebula." },
-      { name: "F187N", src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F187N-Color.jpg`, alt: "F187N narrowband channel of the Cosmic Cliffs." },
-      { name: "F200W", src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F200W-Color.jpg`, alt: "F200W broadband channel of the Cosmic Cliffs." },
-      { name: "F335M", src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F335M-Color.jpg`, alt: "F335M medium-band channel of the Cosmic Cliffs." },
-      { name: "F444W", src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F444W-Color.jpg`, alt: "F444W broadband channel of the Cosmic Cliffs." },
-    ],
-    galleryCols: 5,
-    composite: {
+    subtitle: "JWST Early Release Observation Program 2731",
+    hero: {
       src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-NGC3324-Final.jpg`,
       alt: "Final color composite of the Cosmic Cliffs region (NGC 3324) of the Carina Nebula.",
+      aspect: "aspect-video",
+      overlay: {
+        title: "NIRCam composite",
+        description: "Colors are mapped from five near-infrared filters.",
+      },
     },
-    description: ["Description coming soon."],
-    meta: [
-      ["Proposal", "2731"],
+    gallery: [
+      {
+        name: "F090W",
+        description: "0.9 μm broadband; starlight and the cliff face's dust structure",
+        dot: "#aa00ff",
+        src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F090W.jpg`,
+        alt: "F090W broadband channel of the Cosmic Cliffs in the Carina Nebula.",
+      },
+      {
+        name: "F187N",
+        description:
+          "1.87 μm narrowband; ionized hydrogen (Paschen-α), tracing atomic jets erupting along the ridge",
+        dot: "#00f6ff",
+        src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F187N.jpg`,
+        alt: "F187N narrowband channel of the Cosmic Cliffs.",
+      },
+      {
+        name: "F200W",
+        description: "2.0 μm broadband; stellar continuum across the dust wall",
+        dot: "#33ff00",
+        src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F200W.jpg`,
+        alt: "F200W broadband channel of the Cosmic Cliffs.",
+      },
+      {
+        name: "F335M",
+        description: "3.35 μm medium band; PAH emission glowing along the cliff's eroding rim",
+        dot: "#ffea00",
+        src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F335M.jpg`,
+        alt: "F335M medium-band channel of the Cosmic Cliffs.",
+      },
+      {
+        name: "F444W",
+        description: "4.4 μm broadband; warm dust and continuum at base of the cliffscape",
+        dot: "#ff0006",
+        src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-F444W.jpg`,
+        alt: "F444W broadband channel of the Cosmic Cliffs.",
+      },
+    ],
+    galleryCols: 5,
+    feature: {
+      heading: "The Cosmic Cliffs Five-Filter NIRCam Composite",
+      body: [
+        "This image shows the eroding edge of a vast gas cavity, where ultraviolet radiation and stellar winds from massive young stars are slowly carving away the dust wall of NGC 3324, exposing newborn stars and the atomic jets they fire outward as they form.",
+        "I've departed substantially from the published palette here by reassigning several channels toward cooler, higher-contrast hues rather than the warm orange-and-blue treatment of the official release. This brings out depth in the cliff face and ridge structure that a closer wavelength-order mapping tends to flatten.",
+      ],
+    },
+    details: [
       ["Target", "NGC 3324"],
-      ["Filters", "F090W, F187N, F200W, F335M, F444W"],
+      ["Classification", "H II region/young star-forming region"],
+      ["Constellation", "Carina"],
+      ["Distance", "~7,600 light-years"],
+      ["Instruments", "JWST NIRCam"],
+      ["Release Date", "2022-07-12"],
+      ["Principal Investigator", "Klaus Pontoppidan"],
     ],
   },
   {
     id: "pillars-of-creation",
     nav: "Pillars of Creation",
     title: "Pillars of Creation",
-    subtitle: "Eagle Nebula (M16)",
-    gallery: [
-      { name: "F090W", src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F090W-Color.jpg`, alt: "F090W broadband channel of the Pillars of Creation." },
-      { name: "F187N", src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F187N-Color.jpg`, alt: "F187N narrowband channel of the Pillars of Creation." },
-      { name: "F200W", src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F200W-Color.jpg`, alt: "F200W broadband channel of the Pillars of Creation." },
-      { name: "F335M", src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F335M-Color.jpg`, alt: "F335M medium-band channel of the Pillars of Creation." },
-      { name: "F444W", src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F444W-Color.jpg`, alt: "F444W broadband channel of the Pillars of Creation." },
-    ],
-    galleryCols: 5,
-    composite: {
+    subtitle: "JWST Program 2739",
+    hero: {
       src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-Final.jpg`,
       alt: "Final color composite of the Pillars of Creation in the Eagle Nebula (M16).",
+      aspect: "aspect-[9/16]",
+      overlay: {
+        title: "NIRCam composite",
+        description: "Colors are mapped from five near-infrared filters.",
+      },
     },
-    description: ["Description coming soon."],
-    meta: [
-      ["Proposal", "2739"],
-      ["Target", "Eagle Nebula (M16)"],
-      ["Filters", "F090W, F187N, F200W, F335M, F444W"],
+    gallery: [
+      {
+        name: "F090W",
+        description: "0.9 μm broadband; background starlight silhouetting the pillar towers",
+        dot: "#aa00ff",
+        src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F090W.jpg`,
+        alt: "F090W broadband channel of the Pillars of Creation.",
+      },
+      {
+        name: "F187N",
+        description: "1.87 μm narrowband; ionized hydrogen, tracing jets bursting through the pillar tips",
+        dot: "#00f6ff",
+        src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F187N.jpg`,
+        alt: "F187N narrowband channel of the Pillars of Creation.",
+      },
+      {
+        name: "F200W",
+        description:
+          "2.0 μm broadband; stellar continuum, revealing hundreds of stars hidden within and behind the dust",
+        dot: "#33ff00",
+        src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F200W.jpg`,
+        alt: "F200W broadband channel of the Pillars of Creation.",
+      },
+      {
+        name: "F335M",
+        description:
+          "3.35 μm medium band; PAH emission glowing along the pillar edges where radiation is actively eroding them",
+        dot: "#ffea00",
+        src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F335M.jpg`,
+        alt: "F335M medium-band channel of the Pillars of Creation.",
+      },
+      {
+        name: "F444W",
+        description: "4.4 μm broadband; warm dust and continuum forming the dense body of each pillar",
+        dot: "#ff0006",
+        src: `${BASE}/2739-PillarsOfCreation-EagleNebula-M16/2739-PillarsOfCreation-EagleNebula-M16-F444W.jpg`,
+        alt: "F444W broadband channel of the Pillars of Creation.",
+      },
     ],
+    galleryCols: 5,
+    feature: {
+      heading: "The Pillars of Creation Five-Filter NIRCam Composite",
+      body: [
+        "This image reveals towering columns of cold gas and dust several light-years tall, where dense knots are collapsing under their own gravity to form new stars, even as the ultraviolet radiation and winds from nearby young stars slowly erode the pillars away.",
+        "As with the Cosmic Cliffs, I've pushed this composite toward a higher-contrast, cooler-toned palette than the official orange-and-blue release, to bring out the layered structure of the dust towers rather than flatten it into a single warm gradient.",
+      ],
+    },
+    details: [
+      ["Target", "M16 (Eagle Nebula)"],
+      ["Classification", "Emission nebula/star-forming region"],
+      ["Constellation", "Serpens (Serpens Cauda)"],
+      ["Distance", "~6,500 light-years"],
+      ["Instruments", "JWST NIRCam"],
+      ["Release Date", "2022-10-19"],
+      ["Principal Investigator", "Klaus Pontoppidan"],
+    ],
+    footnote:
+      "Published distances for M16 range from about 5,700 to 7,000 light-years depending on the method used.",
   },
 ]
 
 // Responsive grid class for the channel gallery based on desktop column count.
 // Gaps follow the case study grid contract: 12px mobile, 24px desktop.
 const galleryGrid = (cols: number) => {
-  if (cols <= 3) return "grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6"
+  if (cols <= 2) return "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6"
   if (cols <= 5) return "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6"
-  return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-6"
+  return "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-6"
 }
 
 const aboutLead =
-  "Unlike local astrophotography data, JWST i2d.fits data is already calibrated, dark-subtracted, flat-fielded, and mostly distortion-corrected. My job is alignment, dynamic range control, noise management, flux normalization, color mapping, calibration, and detail enhancement."
+  "Unlike local astrophotography data, space telescope i2d.fits data is already calibrated, dark-subtracted, flat-fielded, and mostly distortion-corrected. My job is alignment, dynamic range control, noise management, flux normalization, color mapping, calibration, and detail enhancement."
 
 const acknowledgments = [
   "Some/all of the data presented here were obtained from the Mikulski Archive for Space Telescopes (MAST). STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555. Support for MAST for non-HST data is provided by the NASA Office of Space Science via grant NNX13AC07G and by other grants and contracts.",
@@ -195,31 +389,32 @@ const acknowledgments = [
 ---
 <Layout
   title="Astrophotography — Erica Jaclyn Stein"
-  description="JWST NIRCam and MIRI image processing by Erica Jaclyn Stein — public data, artistically rendered."
+  description="Space telescope image processing by Erica Jaclyn Stein — public JWST data, artistically rendered."
 >
   <article>
 
-    {/* ── Hero — Intro Hero pattern ───────────────────────────── */}
+    {/* ── Intro — PageHero ────────────────────────────────────── */}
     <header class="px-6 py-12 sm:py-24">
       <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-        <h1 class="text-3xl sm:text-5xl font-medium tracking-tight">{hero.title}</h1>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight">{hero.title}</h1>
         <p class="text-lg text-muted-foreground">{hero.subtitle}</p>
       </div>
     </header>
 
     <div class="max-w-[1920px] mx-auto w-full">
 
-      {/* ── Intro metadata row — description box + jump nav ───── */}
+      {/* ── Intro Feature.2 — Composite Imagery + Jump To ─────── */}
       <section class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
-        <div class="bg-muted flex items-center p-8 md:p-12 xl:p-24">
-          <p class="text-lg leading-relaxed">{hero.description}</p>
+        <div class="flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
+          <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight">{intro.heading}</h2>
+          <p class="text-lg leading-relaxed">{intro.body}</p>
         </div>
-        <nav aria-label="Jump to image" class="flex flex-col justify-center p-8 md:p-12 xl:p-24">
-          <p class="text-base sm:text-sm font-semibold text-muted-foreground mb-4">Jump to</p>
+        <nav aria-label="Jump to image" class="bg-muted flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
+          <p class="eyebrow text-sm font-semibold uppercase tracking-wide">Jump To</p>
           <ul class="space-y-3">
             {nebulae.map((n) => (
               <li>
-                <a href={`#${n.id}`} class="text-base sm:text-sm font-medium hover:underline underline-offset-4">
+                <a href={`#${n.id}`} class="text-base font-medium hover:underline underline-offset-4">
                   {n.nav}
                 </a>
               </li>
@@ -233,94 +428,100 @@ const acknowledgments = [
         <section id={n.id} class="scroll-mt-24">
           <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
             <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-              <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-medium tracking-tight">{n.title}</h2>
+              <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-semibold tracking-tight">{n.title}</h2>
               {n.subtitle && <p class="text-lg text-muted-foreground">{n.subtitle}</p>}
             </div>
           </header>
 
-          {/* Channel gallery — landscape tiles with overlaid captions (explicit copy) */}
+          {/* Hero Figure — composite, per-section aspect ratio, optional overlay caption */}
+          <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
+            <figure class="relative m-0">
+              <button
+                type="button"
+                class={`lightbox-trigger block w-full ${n.hero.aspect} overflow-hidden bg-neutral-900 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+                data-src={n.hero.src}
+                data-alt={n.hero.alt}
+                data-title={n.title}
+                data-subtitle={n.hero.overlay?.description ?? ""}
+                aria-label={`View ${n.title} composite full screen`}
+              >
+                <img
+                  src={n.hero.src}
+                  alt={n.hero.alt}
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchpriority={idx === 0 ? "high" : "auto"}
+                  class="h-full w-full object-cover"
+                />
+              </button>
+              {n.hero.overlay && (
+                <figcaption class="pointer-events-none absolute bottom-3 left-3 sm:bottom-6 sm:left-6 max-w-[calc(100%-1.5rem)] sm:max-w-md rounded-xl bg-black/45 px-4 py-3 text-white backdrop-blur-sm">
+                  <p class="text-sm font-medium leading-none">{n.hero.overlay.title}</p>
+                  <p class="mt-1.5 text-sm text-white/80">{n.hero.overlay.description}</p>
+                </figcaption>
+              )}
+            </figure>
+          </div>
+
+          {/* Gallery — filter-channel breakdown, square tiles with captions below */}
           {n.gallery.length > 0 && (
             <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
               <ul class:list={[galleryGrid(n.galleryCols), idx === 0 && "hero-gallery"]}>
                 {n.gallery.map((g) => (
                   <li>
-                    <button
-                      type="button"
-                      class="lightbox-trigger relative block w-full aspect-video overflow-hidden bg-neutral-900 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      data-src={g.src}
-                      data-alt={g.alt}
-                      data-title={g.name}
-                      data-subtitle={g.formula ?? ""}
-                      aria-label={`View ${g.name}${g.formula ? " — " + g.formula : ""} full screen`}
-                    >
-                      <img
-                        src={g.src}
-                        alt={g.alt}
-                        loading="lazy"
-                        decoding="async"
-                        class="absolute inset-0 h-full w-full object-cover"
-                      />
-                      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                      <div class="absolute bottom-3 left-3 right-3 text-white text-left pointer-events-none">
-                        <p class="text-sm font-semibold leading-none">{g.name}</p>
-                        {g.formula && <p class="text-xs mt-1.5 text-white/80">{g.formula}</p>}
-                      </div>
-                    </button>
+                    <figure class="m-0">
+                      <button
+                        type="button"
+                        class={`lightbox-trigger relative block w-full ${n.hero.aspect} overflow-hidden bg-neutral-900 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+                        data-src={g.src}
+                        data-alt={g.alt}
+                        data-title={g.name}
+                        data-subtitle={g.description}
+                        aria-label={`View ${g.name} — ${g.description} full screen`}
+                      >
+                        <img
+                          src={g.src}
+                          alt={g.alt}
+                          loading="lazy"
+                          decoding="async"
+                          class="absolute inset-0 h-full w-full object-cover"
+                        />
+                      </button>
+                      <figcaption class="mt-3">
+                        <div class="flex items-center gap-2">
+                          <span class="size-2.5 shrink-0 rounded-full" style={`background-color:${g.dot}`} aria-hidden="true"></span>
+                          <p class="text-sm font-medium leading-none">{g.name}</p>
+                        </div>
+                        <p class="mt-1.5 text-sm text-muted-foreground leading-normal">{g.description}</p>
+                      </figcaption>
+                    </figure>
                   </li>
                 ))}
               </ul>
             </div>
           )}
 
-          {/* Composite — Single Image section + centered caption (explicit copy) */}
-          {n.composite && (
-            <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-              <figure class="m-0">
-                <button
-                  type="button"
-                  class="lightbox-trigger block w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  data-src={n.composite.src}
-                  data-alt={n.composite.alt}
-                  data-title={n.title}
-                  data-subtitle={n.composite.caption ?? ""}
-                  aria-label={`View ${n.title} composite full screen`}
-                >
-                  <img
-                    src={n.composite.src}
-                    alt={n.composite.alt}
-                    loading={idx === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    fetchpriority={idx === 0 ? "high" : "auto"}
-                    class="w-full h-auto bg-neutral-900"
-                  />
-                </button>
-                {n.composite.caption && (
-                  <figcaption class="mt-3 text-center text-sm font-medium">{n.composite.caption}</figcaption>
-                )}
-              </figure>
+          {/* Feature.2 — composite description (left) + Details (right, muted) */}
+          <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
+            <div class="flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
+              <h3 class="text-xl sm:text-2xl font-semibold tracking-tight">{n.feature.heading}</h3>
+              <div class="space-y-4 text-lg leading-relaxed">
+                {n.feature.body.map((p) => <p>{p}</p>)}
+              </div>
             </div>
-          )}
-
-          {/* Metadata row — data (left) + description box (right), Data First */}
-          {n.note ? (
-            <p class="px-6 py-3 text-sm text-muted-foreground italic text-center">{n.note}</p>
-          ) : (
-            <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
-              <dl class="flex flex-col justify-center gap-4 sm:gap-2 p-8 md:p-12 xl:p-24">
-                {n.meta.map(([label, value]) => (
-                  <div class="flex flex-col gap-0.5 sm:flex-row sm:gap-4">
-                    <dt class="shrink-0 font-semibold text-muted-foreground text-base sm:text-sm sm:w-40">{label}</dt>
-                    <dd class="flex-1 text-base sm:text-sm">{value}</dd>
+            <div class="bg-muted flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
+              <p class="eyebrow text-sm font-semibold uppercase tracking-wide">Details</p>
+              <dl class="flex flex-col">
+                {n.details.map(([label, value], i) => (
+                  <div class={`flex flex-col gap-0.5 sm:flex-row sm:gap-4 py-3 ${i === 0 ? "" : "border-t border-border"}`}>
+                    <dt class="shrink-0 text-[13px] font-semibold text-muted-foreground sm:w-48">{label}</dt>
+                    <dd class="flex-1 text-sm">{value}</dd>
                   </div>
                 ))}
               </dl>
-              <div class="bg-muted flex flex-col justify-center p-8 md:p-12 xl:p-24">
-                <div class="space-y-4 text-lg leading-relaxed">
-                  {n.description.map((p) => <p>{p}</p>)}
-                </div>
-              </div>
+              {n.footnote && <p class="text-xs text-muted-foreground leading-relaxed">{n.footnote}</p>}
             </div>
-          )}
+          </div>
         </section>
       ))}
 
@@ -328,7 +529,7 @@ const acknowledgments = [
       <section>
         <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
           <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-            <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-medium tracking-tight">About</h2>
+            <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-semibold tracking-tight">About Space Telescope Imagery</h2>
           </div>
         </header>
 
@@ -338,15 +539,15 @@ const acknowledgments = [
             <p>
               All images are public data, processed through multiple applications, and artistically
               rendered by Erica Jaclyn Stein. Full res options for print and display available. Please
-              send requests to <a href="mailto:erica@ericajaclyn.com" class="underline underline-offset-4 hover:opacity-70 transition-opacity">erica@ericajaclyn.com</a>.
+              send requests to <a href="mailto:erica@ericajaclyn.com" class="link">erica@ericajaclyn.com</a>.
             </p>
           </div>
 
-          {/* Acknowledgments accordion (collapsed by default) */}
+          {/* Acknowledgements accordion (collapsed by default) */}
           <div class="border-t border-border">
             <details class="group border-b border-border">
               <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
-                <span class="text-xl sm:text-2xl font-medium tracking-tight">Acknowledgments</span>
+                <span class="text-xl sm:text-2xl font-semibold tracking-tight">Acknowledgements</span>
                 <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
                   <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -361,9 +562,9 @@ const acknowledgments = [
       </section>
     </div>
 
-    {/* ── View Work CTA ───────────────────────────────────────── */}
+    {/* ── Back to UX Design CTA ───────────────────────────────── */}
     <div class="py-6 px-6 max-w-[1920px] mx-auto w-full flex justify-center mb-12 mt-8">
-      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-lg sm:text-base w-full sm:w-auto">View Work</a>
+      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-lg sm:text-base w-full sm:w-auto">Back to UX Design</a>
     </div>
   </article>
 
@@ -415,6 +616,11 @@ const acknowledgments = [
 </Layout>
 
 <style>
+  /* Eyebrow label — Figma base/accent blue, mode-aware via the site's blue token */
+  .eyebrow {
+    color: var(--input-ring);
+  }
+
   /* ── Wave bounce-in for the first section's channel gallery ── */
   .hero-gallery > li {
     opacity: 0;
