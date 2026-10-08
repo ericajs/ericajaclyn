@@ -5,7 +5,8 @@ interface Props {
 const { class: className = "" } = Astro.props
 ---
 {/* Figma ToggleGroup: 128px wide, 2px padding/gap, rounded-full border;
-    the selected segment fills with --secondary (never --accent). */}
+    the selected segment fills with --secondary (never --accent). Hover
+    adds no fill; the icon drops to 90% opacity, like the header links. */}
 <div
   class:list={[
     "inline-flex items-center gap-0.5 p-0.5 rounded-full border border-border",
@@ -19,7 +20,7 @@ const { class: className = "" } = Astro.props
     data-theme-set="dark"
     aria-label="Dark mode"
     aria-pressed="false"
-    class="theme-seg flex-1 flex items-center justify-center min-h-10 px-2 py-2.5 rounded-full transition-colors hover:bg-secondary/60 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    class="theme-seg flex-1 flex items-center justify-center min-h-10 px-2 py-2.5 rounded-full transition-colors text-foreground hover:text-foreground/90 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
   >
     {/* Icon / MoonStar */}
     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -33,7 +34,7 @@ const { class: className = "" } = Astro.props
     data-theme-set="light"
     aria-label="Light mode"
     aria-pressed="false"
-    class="theme-seg flex-1 flex items-center justify-center min-h-10 px-2 py-2.5 rounded-full transition-colors hover:bg-secondary/60 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    class="theme-seg flex-1 flex items-center justify-center min-h-10 px-2 py-2.5 rounded-full transition-colors text-foreground hover:text-foreground/90 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
   >
     {/* Icon / Sun */}
     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
