@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/main.astro"
+import PageHero from "@/components/PageHero.astro"
 
 const bio = [
   "Advances in technology continue to reshape how we view and use information, constantly moving digital design into new realms of exploration. This is where I work—meeting the shift between what was, what is, and what's still taking shape with a steady, empirical practice: testing assumptions, grounding decisions in research, and building things that hold up as the ground shifts beneath them.",
@@ -48,15 +49,12 @@ const accordions = [
   title="About — Erica Jaclyn Stein"
   description="About Erica Jaclyn Stein: digital product designer specializing in design systems, accessible UX, and agentic AI-native interfaces."
 >
-  <section id="about-top" class="max-w-3xl mx-auto px-6 py-16 sm:py-24">
+  <PageHero title="About" />
 
-    {/* ── Hero ──────────────────────────────────────────────── */}
-    <div class="text-center">
-      <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight">About</h1>
-    </div>
+  <section id="about-top" class="max-w-3xl mx-auto px-6 pb-16 sm:pb-24">
 
     {/* ── Bio ───────────────────────────────────────────────── */}
-    <div class="mt-12 space-y-6 leading-normal">
+    <div class="space-y-6 leading-normal">
       {bio.map((p) => <p>{p}</p>)}
     </div>
 

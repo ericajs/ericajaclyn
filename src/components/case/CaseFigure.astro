@@ -1,0 +1,33 @@
+---
+// Figma: figure.2x1 / figure.21x9 / figure.4x3 — a full-width media row.
+// Row padding 12/24 above 768, 6/12 at ≤768 (Measurements — Figures).
+// figure.21x9 measures 1152:492 above 768 and an exact 21:9 at ≤768;
+// the spec treats those measured dimensions as authoritative.
+// figure.4x3 is an exact 4:3 at every width (Foot Locker section composites).
+interface Props {
+  src: string
+  alt: string
+  aspect?: "2x1" | "21x9" | "4x3"
+  // Non-animated alternative served under prefers-reduced-motion
+  still?: string
+}
+const { src, alt, aspect = "2x1", still } = Astro.props
+
+const ratio = {
+  "2x1": "aspect-[2/1]",
+  "21x9": "aspect-[21/9] min-[769px]:aspect-[1152/492]",
+  "4x3": "aspect-[4/3]",
+}[aspect]
+---
+<figure class="px-3 py-1.5 min-[769px]:px-6 min-[769px]:py-3">
+  <div class:list={[ratio, "overflow-hidden bg-muted"]}>
+    {still ? (
+      <picture class="block size-full">
+        <source srcset={still} media="(prefers-reduced-motion: reduce)" />
+        <img src={src} alt={alt} loading="lazy" decoding="async" class="size-full object-cover" />
+      </picture>
+    ) : (
+      <img src={src} alt={alt} loading="lazy" decoding="async" class="size-full object-cover" />
+    )}
+  </div>
+</figure>

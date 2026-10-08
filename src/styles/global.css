@@ -67,7 +67,7 @@
     --secondary-foreground: #1c1c1f;
     --muted: #f1f1f2;
     --muted-foreground: #747478;
-    --accent: #f1f1f2;
+    --accent: #3131f5;
     --accent-foreground: #2c2c2e;
     --destructive: oklch(0.577 0.245 27.325);
     --border: #e7e7ea;
@@ -91,14 +91,13 @@
 
     /* Translucent fill for outline controls (Figma: custom/background dark:input/30) */
     --input-surface: #ffffff;
-    /* Scrim behind the mobile menu card (Figma: custom/background dark:blur) */
-    --overlay-blur: rgb(28 28 31 / 0.28);
+    /* Scrim behind the mobile menu card (Figma: custom/background light:blur) */
+    --overlay-blur: rgb(255 255 255 / 0.42);
 
     /* ── Fluid layout rhythm ──────────────────────────────────────
        Figma grid padding-x steps 12px (≤768) → 24px (≥1024); these
        interpolate instead of stepping so margins track the viewport. */
     --page-px: clamp(0.75rem, 4.6875vw - 1.5rem, 1.5rem);
-    --section-py: clamp(3.5rem, 6.25vw, 6rem);
     --main-max-w: 2560px;
 }
 
@@ -170,9 +169,9 @@
     @apply border border-input text-foreground hover:bg-secondary;
     background-color: var(--input-surface);
     }
-  /* Footer / nav link buttons render at --primary weight per the Figma link button */
+  /* Footer link buttons — --primary color, medium weight (Figma link button) */
   .pill-link {
-    @apply text-primary font-normal hover:bg-secondary;
+    @apply text-primary font-medium hover:bg-secondary;
     }
   .pill-md {
     @apply h-10 px-4 text-base;

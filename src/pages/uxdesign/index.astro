@@ -1,91 +1,185 @@
 ---
 import { getCollection } from "astro:content"
 import Layout from "@/layouts/main.astro"
+import PageHero from "@/components/PageHero.astro"
 import WorkTile from "@/components/work/WorkTile.astro"
 import WorkCard from "@/components/work/WorkCard.astro"
+
+// Figma: UX Design page — six figureLayout cards keyed by work entry id.
+// Caption copy is the approved build-note copy (verbatim) and each image is
+// the Figma slot fill. Entries without a card here (Dynasol is hidden in
+// Figma) don't render.
+//   stack = figureLayout.1 justify=stretch — full-width 21:9 image, caption below
+//   row   = figureLayout.1/.2 — media + caption side by side from lg up;
+//           justify=end puts the caption first, end-aligned
+// Below lg every card stacks: media first, caption below, start-aligned
+// (stack cards keep their end-aligned caption).
+type Card = {
+  layout: "stack" | "row"
+  justify?: "start" | "end"
+  title: string
+  description: string
+  images: { src: string; alt: string; aspect: string; lgOnly?: boolean }[]
+}
+
+const cards: Record<string, Card> = {
+  naacpldf: {
+    layout: "stack",
+    title: "NAACP LDF",
+    description: "End-to-end digital archives design",
+    images: [
+      {
+        src: "/ux-design/naacp-ldf/21x9-Tri-Overhead-Blue-01.jpg",
+        alt: "Overhead view of a tablet, phone, and laptop displaying the NAACP LDF archives website on a bright blue surface.",
+        aspect: "aspect-[21/9]",
+      },
+    ],
+  },
+  morganstanley: {
+    layout: "row",
+    justify: "end",
+    title: "Morgan Stanley",
+    description: "Component libraries and responsive patterns",
+    images: [
+      {
+        src: "/ux-design/morgan-stanley/21x9-Standing-Blue-03.jpg",
+        alt: "Laptop, tablet, phone, and desktop screens showing Morgan Stanley advisor and team pages against a blue backdrop.",
+        aspect: "aspect-[2/1]",
+      },
+    ],
+  },
+  berluti: {
+    layout: "row",
+    justify: "start",
+    title: "Berluti",
+    description: "Multi-language retail product design",
+    images: [
+      {
+        src: "/ux-design/berluti/2x3-Hero-Berluti.jpg",
+        alt: "Portrait hero artwork for the BERLUTI luxury retail web design case study.",
+        aspect: "aspect-[2/3]",
+      },
+      {
+        src: "/ux-design/berluti/21x9-Tri-Overhead-Marble.jpg",
+        alt: "Overhead view of a laptop showing the Berluti store finder page, with leather shoes and a phone on a stone surface.",
+        aspect: "aspect-square",
+        lgOnly: true,
+      },
+    ],
+  },
+  footlocker: {
+    layout: "row",
+    justify: "end",
+    title: "Foot Locker",
+    description: "Multi-brand component system and responsive libraries",
+    images: [
+      {
+        src: "/ux-design/footlocker/2x3-Hero-FootLocker.jpg",
+        alt: "Portrait hero artwork for the Foot Locker multi-brand microsite system case study.",
+        aspect: "aspect-[2/3]",
+      },
+      {
+        src: "/ux-design/footlocker/1x1-XDR-BR-Display.jpg",
+        alt: "Desktop display showing the Foot Locker component library's color variables on a red background.",
+        aspect: "aspect-square",
+        lgOnly: true,
+      },
+    ],
+  },
+  mariandynus: {
+    layout: "stack",
+    title: "Mariandynus",
+    description: "Responsive gallery and custom iconography",
+    images: [
+      {
+        src: "/ux-design/mariandynus/21x9-Quad-Float-01.jpg",
+        alt: "Four floating device screens displaying the Mariandynus enterprise search and image-viewing interface.",
+        aspect: "aspect-[21/9]",
+      },
+    ],
+  },
+  milestonepod: {
+    layout: "row",
+    justify: "start",
+    title: "Milestonepod",
+    description: "Mobile app design and field research",
+    images: [
+      {
+        src: "/ux-design/milestonepod/2x1-AppStore.jpg",
+        alt: "App Store listing artwork for the Milestonepod wearable-tech mobile app.",
+        aspect: "aspect-[2/1]",
+      },
+    ],
+  },
+}
 
 // Pre-launch ideation — showing all entries (incl. drafts) so the full set
 // renders. At launch, add the draft filter:
 //   await getCollection("work", ({ data }) => !data.draft)
 const allWork = await getCollection("work")
-const projects = allWork.sort((a, b) => a.data.order - b.data.order)
-
-// Collection-row templates from the Figma, assigned by position:
-//   a = [ wide image | card ]
-//   b = [ tall image | (square image + card) | spacer ]
-//   c = [ card / wide image ]            (stacked)
-//   d = [ card | wide image ]
-//   e = [ spacer | (square image + card) | tall image ]
-const sequence = ["a", "b", "c", "d", "e", "a", "c", "d"]
+const projects = allWork
+  .filter((entry) => entry.id in cards)
+  .sort((a, b) => a.data.order - b.data.order)
 ---
 <Layout
   title="UX Design — Erica Jaclyn Stein"
   description="Selected case studies in digital product design, design systems, and accessible UX."
 >
-  {/* ── Hero ──────────────────────────────────────────────────── */}
-  <section class="max-w-3xl mx-auto px-6 pt-20 sm:pt-28 pb-12 sm:pb-20 text-center">
-    <p class="text-sm font-semibold text-muted-foreground mb-4">Case Studies</p>
-    <h1 class="text-4xl sm:text-5xl font-medium tracking-tight">UX Design</h1>
-  </section>
+  <PageHero title="UX Design" eyebrow="Case Studies" lgAtMd />
 
-  {/* ── Collection rows ───────────────────────────────────────── */}
-  <div class="max-w-6xl mx-auto px-6 pb-24 space-y-20 sm:space-y-28">
-    {projects.map((entry, i) => {
-      const tpl = sequence[i % sequence.length]
-      const isFull = entry.data.treatment === "full"
-      const Tag = isFull ? "a" : "div"
-      const linkProps = isFull ? { href: `/uxdesign/${entry.id}` } : {}
-      const cover = entry.data.coverImage
-      const alt = entry.data.coverAlt
-      const secondary = entry.data.secondaryImage
-      const secondaryAlt = entry.data.secondaryImageAlt
-      const { title, scope } = entry.data
-      return (
-        <article>
-          {tpl === "a" && (
-            <Tag {...linkProps} class:list={["group grid md:grid-cols-2 gap-6 sm:gap-10 items-end", isFull && "cursor-pointer"]}>
-              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/1]" />
-              <WorkCard title={title} scope={scope} isFull={isFull} />
-            </Tag>
-          )}
-
-          {tpl === "b" && (
-            <Tag {...linkProps} class:list={["group grid md:grid-cols-3 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
-              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/3]" />
-              <div class="flex flex-col gap-6">
-                <WorkTile title={title} src={secondary} alt={secondaryAlt} aspect="aspect-square" />
-                <WorkCard title={title} scope={scope} isFull={isFull} />
-              </div>
-              <div class="hidden md:block" aria-hidden="true"></div>
-            </Tag>
-          )}
-
-          {tpl === "c" && (
-            <Tag {...linkProps} class:list={["group flex flex-col gap-6", isFull && "cursor-pointer"]}>
-              <WorkCard title={title} scope={scope} isFull={isFull} />
-              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/1]" />
-            </Tag>
-          )}
-
-          {tpl === "d" && (
-            <Tag {...linkProps} class:list={["group grid md:grid-cols-2 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
-              <WorkCard title={title} scope={scope} isFull={isFull} class="order-2 md:order-1" />
-              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/1]" class="order-1 md:order-2" />
-            </Tag>
-          )}
-
-          {tpl === "e" && (
-            <Tag {...linkProps} class:list={["group grid md:grid-cols-3 gap-6 sm:gap-10 items-start", isFull && "cursor-pointer"]}>
-              <div class="hidden md:block" aria-hidden="true"></div>
-              <div class="flex flex-col gap-6">
-                <WorkTile title={title} src={secondary} alt={secondaryAlt} aspect="aspect-square" />
-                <WorkCard title={title} scope={scope} isFull={isFull} />
-              </div>
-              <WorkTile title={title} src={cover} alt={alt} aspect="aspect-[2/3]" />
-            </Tag>
-          )}
-        </article>
-      )
-    })}
-  </div>
+  {/* ── Case study cards ──────────────────────────────────────── */}
+  {projects.map((entry, i) => {
+    const card = cards[entry.id]
+    // Only `treatment: "full"` entries have a case study page
+    const isFull = entry.data.treatment === "full"
+    const Tag = isFull ? "a" : "div"
+    const linkProps = isFull
+      ? {
+          href: `/uxdesign/${entry.id}`,
+          "aria-labelledby": `${entry.id}-title`,
+          "aria-describedby": `${entry.id}-description`,
+        }
+      : {}
+    const isRow = card.layout === "row"
+    const captionFirst = isRow && card.justify === "end"
+    return (
+      // Responsive spec: padding 6/12/48/12 below lg, 24/24/96/24 from lg
+      <div class="px-[var(--page-px)] pt-1.5 pb-12 lg:pt-6 lg:pb-24">
+        <Tag
+          {...linkProps}
+          class:list={[
+            "block",
+            isFull && "group cursor-pointer focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-input-ring",
+          ]}
+        >
+          <figure
+            class:list={[
+              // Item spacing 12, except horizontal rows (24) from lg
+              "flex flex-col gap-3",
+              isRow ? "lg:flex-row lg:items-start lg:gap-6" : "items-end",
+            ]}
+          >
+            {card.images.map((img) => (
+              <WorkTile
+                title={card.title}
+                src={img.src}
+                alt={img.alt}
+                aspect={img.aspect}
+                loading={i === 0 ? "eager" : "lazy"}
+                class:list={["w-full", isRow && "lg:min-w-0 lg:flex-1", img.lgOnly && "hidden lg:block"]}
+              />
+            ))}
+            <WorkCard
+              id={entry.id}
+              title={card.title}
+              description={card.description}
+              isFull={isFull}
+              align={isRow ? (captionFirst ? "end-lg" : "start") : "end"}
+              class:list={[isRow && "lg:min-w-0 lg:flex-1", captionFirst && "lg:order-first"]}
+            />
+          </figure>
+        </Tag>
+      </div>
+    )
+  })}
 </Layout>

@@ -1,26 +1,30 @@
 ---
+// Figma: aspect.ratio — image fill cropped to a fixed ratio, square corners.
 interface Props {
   title: string
   src?: string
   alt?: string
   aspect: string // e.g. "aspect-[2/1]"
+  loading?: "lazy" | "eager"
   class?: string
 }
-const { title, src, alt = "", aspect, class: className = "" } = Astro.props
+const { title, src, alt = "", aspect, loading = "lazy", class: className = "" } = Astro.props
 ---
 {src ? (
-  <div class:list={[aspect, "overflow-hidden rounded-md bg-muted", className]}>
+  <div class:list={[aspect, "overflow-hidden bg-muted", className]}>
     <img
       src={src}
       alt={alt}
-      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      loading={loading}
+      decoding="async"
+      class="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
     />
   </div>
 ) : (
   <div
     class:list={[
       aspect,
-      "rounded-md border border-border bg-muted/40 flex items-center justify-center transition-colors group-hover:bg-muted",
+      "border border-border bg-muted/40 flex items-center justify-center transition-colors group-hover:bg-muted",
       className,
     ]}
   >

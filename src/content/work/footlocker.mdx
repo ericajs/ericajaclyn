@@ -1,13 +1,13 @@
 ---
 title: "Foot Locker"
-subtitle: "Localized Multi-Brand Repeatable Microsite Design"
+subtitle: "Responsive Web Design and Component Library"
 description: "A multi-brand design system generating localized microsites for Foot Locker, Kids Foot Locker, Champs Sports, and Eastbay from a single component library."
 year: 2022
 role: "Lead UX Designer, Design System Architecture"
 scope: "Component system and responsive library spanning one parent and four sub-brands."
 client: "Foot Locker, Inc."
 disciplines: ["Design Systems", "Multi-brand", "Component Architecture"]
-tags: ["Design Systems", "Component Architecture", "Multi-Brand", "Responsive Design", "Retail Services", "Interaction"]
+tags: ["Design Systems", "Component Architecture", "Multi-Brand", "Responsive", "Retail Services"]
 accessibility:
   - "Ensuring WCAG 2.1 AA compliance was foundational across all five brand skins."
   - "Semantic HTML and ARIA landmarks kept product, store finder, and events templates navigable by screen reader."
@@ -24,17 +24,19 @@ designSystem:
 tools:
   - "Figma"
   - "Sketch"
+  - "Github"
   - "Mapbox"
+aboutName: "Foot Locker"
 aboutProject:
   - "An exercise in automation, variation, and identity, this design eloquently solves a need for page templates, reusable components, with a wide range of data variation and customization capabilities."
   - "Reusability & repeatability. A modular framework comprised of adaptive content blocks is key to the template design. This modularity provides a fundamental structural consistency across Foot Locker Inc.'s parent brand experience, while giving each sub-brand control over specific data and styling needs."
 outcome: ""
-intro: "A robust and scalable multi-brand design system to serve a tightly regulated network of localized retail websites. Its atomic structure generates seven localized microsite types — Foot Locker, Inc., Kids Foot Locker, Champs Sports, Eastbay — each resolving across six breakpoints from a single source."
+intro: "A robust and scalable multi-brand design system to serve a tightly regulated network of localized retail websites. Its atomic structure generates four localized sub-branded microsites — Foot Locker, Inc., Kids Foot Locker,  Champs Sports, Eastbay—each resolving across six breakpoints from a single source."
 heroImage: "/ux-design/footlocker/2x3-Hero-FootLocker.jpg"
 heroAlt: "Portrait hero artwork for the Foot Locker multi-brand microsite system case study."
 heroOrder: 3
 coverImage: "/ux-design/footlocker/21x9-Quad-Float-FL.jpg"
-coverAlt: "Floating multi-device composition showing the Foot Locker design system across desktop, tablet, and mobile breakpoints."
+coverAlt: "Laptop, tablets and phone on a red background showing Foot Locker pages for the 69th & Ashland store, with store hours, a map and a Launch Locator banner."
 coverAspect: "21:9"
 bodyWidth: "full"
 ogImage: ""
@@ -43,72 +45,79 @@ order: 4
 draft: true
 ---
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="aspect-[4/3] overflow-hidden">
-    <img src="/ux-design/footlocker/4x3-Iso-Screens-FL.jpg" alt="Isometric composition of Foot Locker product and category screens across desktop, tablet, and mobile." loading="lazy" decoding="async" />
-  </div>
-</div>
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="grid sm:grid-cols-2 gap-3 sm:gap-6">
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-XDR-L-Display.jpg" alt="Pro Display XDR showing the Foot Locker homepage, left angle." loading="lazy" decoding="async" />
-    </div>
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-XDR-R-Display.jpg" alt="Pro Display XDR showing the Foot Locker homepage, right angle." loading="lazy" decoding="async" />
-    </div>
-  </div>
-</div>
+import CaseFigure from "@/components/case/CaseFigure.astro"
+import FeatureDetails from "@/components/case/FeatureDetails.astro"
+import CaseGallery from "@/components/case/CaseGallery.astro"
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="grid md:grid-cols-2 gap-3 sm:gap-6 items-center">
-    <div class="p-8 sm:p-12 xl:p-24 flex flex-col justify-center gap-6">
-      <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Repeatable Patterns</h3>
-      <p class="text-lg text-muted-foreground leading-relaxed">Foot Locker's design system was hand-crafted to include responsive and flexible UX patterns—the bedrock of a cohesive end-to-end customer experience across multiple channels.</p>
-    </div>
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-MBP16-BL-FL-Prod.jpg" alt="MacBook Pro 16 displaying a Foot Locker product template page." loading="lazy" decoding="async" />
-    </div>
-  </div>
-</div>
+{/* Section.1 — Repeatable Patterns (text → square), Reusable Components (square → text) */}
+<section aria-labelledby="repeatable-patterns reusable-components">
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="grid md:grid-cols-2 gap-3 sm:gap-6 items-center">
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-MBP16-R-FL-TopSellsers.jpg" alt="MacBook Pro 16 displaying the Foot Locker top sellers template page." loading="lazy" decoding="async" />
-    </div>
-    <div class="p-8 sm:p-12 xl:p-24 flex flex-col justify-center gap-6">
-      <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Reusable Components</h3>
-      <p class="text-lg text-muted-foreground leading-relaxed">A large set of beautifully designed components and library that Foot Locker could extend, customize, and build on.</p>
-    </div>
-  </div>
-</div>
+<CaseFigure
+  aspect="4x3"
+  src="/ux-design/footlocker/4x3-Iso-Screens-FL.jpg"
+  alt="Angled Foot Locker pages on a dark background: a Top Sellers at Capital Plaza product grid, store details and sneaker photography."
+/>
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="aspect-[4/3] overflow-hidden">
-    <img src="/ux-design/footlocker/4x3-Iso-Screens-KFL.jpg" alt="Isometric composition of Kids Foot Locker sub-brand screens across desktop, tablet, and mobile." loading="lazy" decoding="async" />
-  </div>
-</div>
+<FeatureDetails
+  id="repeatable-patterns"
+  heading="Repeatable Patterns"
+  body="Foot Locker’s design system was hand-crafted to include responsive and flexible UX patterns—the bedrock of a cohesive end-to-end customer experience across multiple channels."
+  image={{ src: "/ux-design/footlocker/1x1-iPadPro12-R-Events.jpg", alt: "Tablet showing Champs Sports event cards for the Jordan Why Not Zer0.5 and Jordan XXXVI releases, above a list of nearby Champs Sports stores." }}
+/>
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="grid md:grid-cols-2 gap-3 sm:gap-6 items-center">
-    <div class="p-8 sm:p-12 xl:p-24 flex flex-col justify-center gap-6">
-      <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Mapbox Integration</h3>
-      <p class="text-lg text-muted-foreground leading-relaxed">Mapbox Studio used for multi-brand customization and adding an extra flair of character to the navigational and mapping user experience.</p>
-    </div>
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-S21U-T-StoreFinder.jpg" alt="Samsung Galaxy S21 Ultra displaying the Foot Locker store finder map experience." loading="lazy" decoding="async" />
-    </div>
-  </div>
-</div>
+<FeatureDetails
+  imageFirst
+  id="reusable-components"
+  heading="Reusable Components"
+  body="A large, carefully crafted component library that Foot Locker could extend, customize, and build on."
+  image={{ src: "/ux-design/footlocker/1x1-MBP16-BL-FL-Prod.jpg", alt: "Laptop showing Foot Locker 69th & Ashland product cards for the Air Force 1 High, Nike Huarache and New Balance 327, above a Nike + Air Jordan Experience banner." }}
+/>
 
-<div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
-  <div class="grid sm:grid-cols-2 gap-3 sm:gap-6">
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-iPhone-B-StoreFinder.jpg" alt="iPhone displaying the Foot Locker store finder map experience." loading="lazy" decoding="async" />
-    </div>
-    <div class="aspect-square overflow-hidden">
-      <img src="/ux-design/footlocker/1x1-iPadPro12-R-Events.jpg" alt="iPad Pro 12 displaying the Foot Locker events template page." loading="lazy" decoding="async" />
-    </div>
-  </div>
-</div>
+<CaseGallery
+  columns={[
+    [{ src: "/ux-design/footlocker/1x1-Phone-B-FL-TopSellers.jpg", alt: "Phone showing Top Sellers at Capital Plaza, with a Reebok Pump Omni Zone Anuel product card priced at $170." }],
+    [{ src: "/ux-design/footlocker/1x1-Phone-T-KFL-Events.jpg", alt: "Phone showing an adidas Harden Vol. 6 event card, coming soon to Foot Locker 69th & Ashland, above a Nearby Foot Locker Stores heading." }],
+  ]}
+/>
+
+</section>
+
+{/* Section.2 — Branded Mapbox Integration (text → square) */}
+<section aria-labelledby="branded-mapbox-integration">
+
+<CaseFigure
+  aspect="4x3"
+  src="/ux-design/footlocker/4x3-Iso-Screens-StoreFinder.jpg"
+  alt="Angled Foot Locker store finder pages on a dark background: a list of stores in Chicago, IL beside a dark map with red location pins."
+/>
+
+<FeatureDetails
+  id="branded-mapbox-integration"
+  heading="Branded Mapbox Integration"
+  body="Mapbox Studio used for multi-brand customization and adding an extra flair of character to the navigational and mapping user experience."
+  image={{ src: "/ux-design/footlocker/1x1-S21U-T-StoreFinder.jpg", alt: "Phone showing a dark branded map of Chicago’s West Englewood area, with a 69th & Ashland store card and a View List button." }}
+/>
+
+<CaseGallery
+  columns={[
+    [{ src: "/ux-design/footlocker/1x1-iPhone-B-StoreFinder.jpg", alt: "Phone showing a Find a Store search for 60636, listing the 69th & Ashland, 47th & Ashland and 55th & Wentworth stores with hours and phone numbers." }],
+    [{ src: "/ux-design/footlocker/1x1-Tablet-R-StoreFinder.jpg", alt: "Tablet showing the 874 Foot Locker Stores in the United States directory, listing states with their store counts." }],
+  ]}
+/>
+
+</section>
+
+{/* Section.3 — design system artifacts; no editorial heading */}
+<CaseFigure
+  aspect="4x3"
+  src="/ux-design/footlocker/2x1-ScreenStack-x4.jpg"
+  alt="Stacked sheets of Foot Locker design system documentation, with logo lockups and red and black color chips."
+/>
+
+<CaseGallery
+  columns={[
+    [{ src: "/ux-design/footlocker/1x1-XDR-BL-Display.jpg", alt: "Desktop display showing the Foot Locker module library, a grid of page module thumbnails." }],
+    [{ src: "/ux-design/footlocker/1x1-XDR-BR-Display.jpg", alt: "Desktop display showing Foot Locker color variables, with blue, red, gray, green and purple swatches." }],
+  ]}
+/>

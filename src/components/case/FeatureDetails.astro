@@ -1,0 +1,61 @@
+---
+// Figma: feature.details.2 — a HeadingBlock text card paired with a
+// square image on a muted card. Two columns above 768; at ≤768 the
+// cards stack in source order with a 12px gap, so DOM order is the
+// visual order at every width.
+// Spec (>1280 | ≤1280 | ≤1024 | ≤768 | ≤640):
+//   card padding      96   96   64   56   40
+//   HeadingBlock gap  32   32   32   24   24
+//   body / list     16/24 16/24 16/24 18/26 18/26
+//
+// Card min-height follows grid position, not content: the first cell
+// is 144 at ≤768 and 288 above; the second cell is 288 throughout.
+//
+// `sectionHeading` renders the tagline as the section's h2 (the first
+// card of Discovery / Storytelling / Typography); repeat taglines stay
+// visual brows so the outline reads h2 → h3 → h3. Without a tagline
+// (HeadingBlock's Tagline hidden) the heading itself is the section h2.
+interface Props {
+  tagline?: string
+  heading: string
+  body?: string
+  items?: string[]
+  image: { src: string; alt: string }
+  imageFirst?: boolean
+  sectionHeading?: boolean
+  id?: string
+}
+const { tagline, heading, body, items, image, imageFirst = false, sectionHeading = false, id } = Astro.props
+
+const cells = imageFirst ? ["image", "text"] : ["text", "image"]
+const brow = "text-sm font-semibold uppercase tracking-[1px] text-accent [text-box:trim-both_cap_alphabetic]"
+const copy = "text-lg/[26px] min-[769px]:text-base"
+const Heading = tagline ? "h3" : "h2"
+---
+<div class="grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">
+  {cells.map((cell, i) => cell === "text" ? (
+    <div class:list={["flex flex-col items-center justify-center p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24", i === 0 ? "min-h-36 min-[769px]:min-h-[288px]" : "min-h-[288px]"]}>
+      <div class="flex w-full max-w-lg flex-col gap-6 min-[769px]:gap-8">
+        {tagline && (sectionHeading ? <h2 id={id} class={brow}>{tagline}</h2> : <p class={brow}>{tagline}</p>)}
+        <Heading id={tagline ? undefined : id} class="text-2xl font-semibold">{heading}</Heading>
+        {body && <p class:list={[copy, "font-light"]}>{body}</p>}
+        {items && (
+          <ul class:list={[copy, "flex flex-col gap-4"]}>
+            {items.map((item) => (
+              <li class="flex gap-4">
+                <span aria-hidden="true" class="w-6 shrink-0 text-center text-muted-foreground select-none">—</span>
+                <span class="min-w-0 flex-1">{item}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  ) : (
+    <div class="flex items-center justify-center bg-muted">
+      <div class="aspect-square w-full overflow-hidden">
+        <img src={image.src} alt={image.alt} loading="lazy" decoding="async" class="size-full object-cover" />
+      </div>
+    </div>
+  ))}
+</div>
