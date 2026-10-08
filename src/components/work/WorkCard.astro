@@ -1,15 +1,30 @@
 ---
+// Figma: Figcaption (textAlign start | end). Renders inside a <figure>; the
+// title is a plain line, not a heading element (build note).
 interface Props {
   title: string
-  scope: string
+  description: string
   isFull: boolean
+  // "end-lg" = start-aligned while stacked, end-aligned from lg up
+  align?: "start" | "end" | "end-lg"
+  // Prefix for the title/description ids a card link can reference
+  id?: string
   class?: string
 }
-const { title, scope, isFull, class: className = "" } = Astro.props
+const { title, description, isFull, align = "start", id, class: className = "" } = Astro.props
+const alignClass = {
+  start: "text-start",
+  end: "text-end",
+  "end-lg": "text-start lg:text-end",
+}[align]
 ---
-<div class:list={["max-w-md", className]}>
-  <h2 class:list={["text-base font-semibold", isFull && "group-hover:underline underline-offset-4"]}>
-    {title}
-  </h2>
-  <p class="mt-1.5 text-sm text-muted-foreground">{scope}</p>
-</div>
+<figcaption class:list={["w-full max-w-md text-sm", alignClass, className]}>
+  {/* Padding sits inside so a flex-1 caption splits the row evenly with the
+      images, as Figma's fill-container does */}
+  <div class="flex flex-col gap-0.5 p-3">
+    <p id={id && `${id}-title`} class:list={["font-medium text-card-foreground", isFull && "group-hover:underline underline-offset-4"]}>
+      {title}
+    </p>
+    <p id={id && `${id}-description`} class="text-muted-foreground">{description}</p>
+  </div>
+</figcaption>

@@ -2,6 +2,8 @@
 import { getCollection, render } from "astro:content"
 import Layout from "@/layouts/main.astro"
 import BackToTop from "@/components/BackToTop.astro"
+import PageHero from "@/components/PageHero.astro"
+import CasePagination from "@/components/case/CasePagination.astro"
 
 export async function getStaticPaths() {
   // Pre-launch: include drafts so case study pages render for preview.
@@ -25,7 +27,7 @@ const { Content } = await render(entry)
 
 const {
   title, subtitle, description, role, scope, client,
-  tags, accessibility, designSystem, tools, aboutProject, outcome, intro,
+  tags, accessibility, designSystem, tools, aboutName, aboutProject, outcome, intro,
   coverImage, coverAlt, coverAspect, bodyWidth, ogImage,
 } = entry.data
 
@@ -43,91 +45,60 @@ const aboutItems = [
 ].filter((a) => a.items.length)
 
 const counter = `${index + 1} of ${total}`
+
+// figure.21x9 measures 1152:492 above 768 and an exact 21:9 at ≤768
+const coverRatio = coverAspect === "21:9" ? "aspect-[21/9] min-[769px]:aspect-[1152/492]" : "aspect-video"
+
+// feature.details.2 card padding: 40 / 56 / 64 / 96 at ≤640 / ≤768 / ≤1024 / >1024
+const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
 ---
 <Layout title={`${title} — Erica Jaclyn Stein`} description={description} ogImage={ogImage}>
   <article>
 
-    {/* ── Top pagination — icon-only on mobile ────────────────── */}
-    <nav aria-label="Case study pagination" class="p-3 sm:px-0 sm:py-6">
-      <div class="max-w-[1920px] mx-auto w-full sm:px-6">
-        <div class="flex items-center gap-2 sm:px-3">
-          <div class="flex-1 min-w-0 flex items-center gap-4">
-            {prev ? (
-              <a
-                href={`/uxdesign/${prev.id}`}
-                aria-label={`Previous case study: ${prev.data.title}`}
-                class="pill pill-ghost size-11 sm:size-10 shrink-0"
-              >
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
-              </a>
-            ) : (
-              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
-              </span>
-            )}
-            {prev && <span class="hidden sm:block text-sm truncate">{prev.data.title}</span>}
-          </div>
-          <p class="w-[60px] sm:w-[120px] shrink-0 text-center text-sm text-muted-foreground">{counter}</p>
-          <div class="flex-1 min-w-0 flex items-center justify-end gap-4">
-            {next && <span class="hidden sm:block text-sm truncate text-right">{next.data.title}</span>}
-            {next ? (
-              <a
-                href={`/uxdesign/${next.id}`}
-                aria-label={`Next case study: ${next.data.title}`}
-                class="pill pill-ghost size-11 sm:size-10 shrink-0"
-              >
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-              </a>
-            ) : (
-              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
+    {/* ── Top pagination ──────────────────────────────────────── */}
+    <CasePagination label="Case study pagination" prev={prev} next={next} counter={counter} />
 
-    {/* ── Intro container ─────────────────────────────────────── */}
+    {/* ── Main — vertical, zero gap ───────────────────────────── */}
     <div class="max-w-[1920px] mx-auto w-full" data-lightbox-scope>
 
-      {/* Hero */}
-      <header class="px-6 py-12 sm:py-24">
-        <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-          <p class="text-lg sm:text-base font-semibold text-muted-foreground">Case Study</p>
-          <h1 class="text-3xl sm:text-5xl font-medium tracking-tight">{title}</h1>
-          {subtitle && <p class="text-lg text-muted-foreground">{subtitle}</p>}
-        </div>
-      </header>
+      {/* Intro — pageHero → figure.21x9 → feature.details.2 */}
+      <PageHero title={title} description={subtitle} />
 
-      {/* Cover image */}
-      <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
+      <div class="px-3 py-1.5 min-[769px]:px-6 min-[769px]:py-3">
         {coverImage ? (
-          <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "overflow-hidden bg-muted"]}>
+          <div class:list={[coverRatio, "overflow-hidden bg-muted"]}>
             <img src={coverImage} alt={coverAlt ?? ""} class="h-full w-full object-cover" />
           </div>
         ) : (
-          <div class:list={[coverAspect === "21:9" ? "aspect-[21/9]" : "aspect-video", "border border-border bg-muted/40 flex items-center justify-center"]}>
+          <div class:list={[coverRatio, "border border-border bg-muted/40 flex items-center justify-center"]}>
             <span class="text-muted-foreground text-sm uppercase tracking-widest">{title}</span>
           </div>
         )}
       </div>
 
-      {/* Metadata row */}
-      <section class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
+      {/* Intro paragraph + metadata description list. Two columns above
+          768, stacked at ≤768 (Measurements — Intro Details). */}
+      <section class="grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">
         {intro && (
-          <div class="bg-muted flex items-center p-8 md:p-12 xl:p-24">
-            <p class="text-lg leading-relaxed">{intro}</p>
+          <div class:list={["flex min-h-36 flex-col items-center min-[769px]:min-h-[288px]", cardPad]}>
+            <p class="w-full max-w-lg text-lg/[26px] font-light min-[769px]:text-base">{intro}</p>
           </div>
         )}
-        <dl class="flex flex-col justify-center gap-4 sm:gap-2 p-8 md:p-12 xl:p-24">
-          {meta.map(({ label, value }) => (
-            <div class="flex flex-col gap-0.5 sm:flex-row sm:gap-1">
-              <dt class="shrink-0 font-semibold text-muted-foreground text-base sm:text-sm sm:w-16">{label}</dt>
-              <dd class="flex-1 text-base sm:text-sm">{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <div class:list={["flex min-h-[288px] flex-col items-center bg-muted", cardPad]}>
+          {/* DescriptionList.Item (justify=start): term column min 64px, 12px
+              gap, details left-aligned. Rows pad 11px + a 1px divider: Figma's
+              12px padding with an inside stroke. The last item has no divider
+              and no bottom padding (master notes: divider=false on the last
+              item in a group) */}
+          <dl class="flex w-full max-w-lg flex-col gap-4">
+            {meta.map(({ label, value }) => (
+              <div class="flex items-start gap-3 border-b border-border pb-[11px] last:border-b-0 last:pb-0">
+                <dt class="min-w-16 shrink-0 text-sm font-light capitalize text-popover-foreground">{label}</dt>
+                <dd class="min-w-0 flex-1 text-base min-[769px]:text-sm">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </section>
 
       {/* ── Narrative + image stack (MDX body) ──────────────────── */}
@@ -135,105 +106,60 @@ const counter = `${index + 1} of ${total}`
         <Content />
       </div>
 
-      {/* ── Outro — About [Project] ─────────────────────────────── */}
+      {/* ── About [Client] — heading → rich text → accordions ───── */}
       {(aboutProject.length > 0 || outcome || aboutItems.length > 0) && (
-        <section class="w-full">
-          <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
-            <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-              <p class="text-lg sm:text-base font-semibold text-muted-foreground">More About This Project</p>
-              <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-medium tracking-tight">About {title}</h2>
+        <section aria-labelledby="about-heading" class="w-full">
+          {/* Heading padding 96/96/48 · 64/64/48 · 56/56/40 · 40/40/32;
+              heading 36/40 · 30/36 · 28/36 (Measurements — About) */}
+          <div class="flex flex-col items-center px-10 pt-10 pb-8 min-[641px]:px-14 min-[641px]:pt-14 min-[641px]:pb-10 min-[769px]:px-16 min-[769px]:pt-16 min-[769px]:pb-12 min-[1025px]:px-24 min-[1025px]:pt-24">
+            <h2 id="about-heading" class="w-full max-w-lg text-center text-[28px]/9 font-semibold min-[769px]:max-w-2xl min-[769px]:text-3xl min-[1025px]:text-4xl">About {aboutName ?? client ?? title}</h2>
+          </div>
+
+          <div class="px-10 pt-3 pb-6 min-[641px]:px-14 min-[769px]:px-16 min-[1025px]:px-24">
+            <div class="mx-auto w-full max-w-lg min-[641px]:max-w-xl">
+              {(aboutProject.length > 0 || outcome) && (
+                <div class="flex flex-col gap-6 pb-6 text-lg/[26px] font-light min-[769px]:text-base">
+                  {aboutProject.map((p) => <p>{p}</p>)}
+                  {outcome && <p><strong class="font-bold">Outcome</strong>: {outcome}</p>}
+                </div>
+              )}
+
+              {aboutItems.map(({ label, items }) => (
+                <details class="group border-b border-border">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-6 [&::-webkit-details-marker]:hidden">
+                    <span class="min-w-0 flex-1 text-2xl font-semibold">{label}</span>
+                    <span class="flex h-6 w-4 shrink-0 items-center justify-center text-muted-foreground" aria-hidden="true">
+                      <svg class="size-4 group-open:hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+                      <svg class="hidden size-4 group-open:block" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="8" x2="13" y2="8"/></svg>
+                    </span>
+                  </summary>
+                  <ul class="pb-6 text-lg/[26px] min-[769px]:text-base">
+                    {items.map((it) => (
+                      <li class="flex gap-4">
+                        {/* List.Item marker: a 10×1 dash in a 24px box, muted at 75% */}
+                        <span aria-hidden="true" class="flex h-[26px] w-6 shrink-0 items-center justify-center min-[769px]:h-6">
+                          <span class="h-px w-2.5 rounded-full bg-muted-foreground opacity-75"></span>
+                        </span>
+                        <span class="min-w-0 flex-1">{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
             </div>
-          </header>
-
-          <div class="max-w-3xl mx-auto px-6 py-3 sm:py-6">
-            {aboutProject.length > 0 && (
-              <div class="space-y-6 text-lg sm:text-base leading-relaxed sm:leading-normal mb-6">
-                {aboutProject.map((p) => <p>{p}</p>)}
-              </div>
-            )}
-
-            {outcome && (
-              <p class="mb-6 text-sm text-muted-foreground border-l-2 border-border pl-4">{outcome}</p>
-            )}
-
-            {aboutItems.length > 0 && (
-              <div class="border-t border-border">
-                {aboutItems.map(({ label, items }) => (
-                  <details class="group border-b border-border">
-                    <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
-                      <span class="text-xl sm:text-2xl font-medium tracking-tight">{label}</span>
-                      <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
-                        <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                      </span>
-                    </summary>
-                    <div class="pb-6">
-                      <ul class="space-y-3 text-lg sm:text-base">
-                        {items.map((it) => (
-                          <li class="flex gap-4">
-                            <span aria-hidden="true" class="text-muted-foreground select-none">—</span>
-                            <span>{it}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </details>
-                ))}
-              </div>
-            )}
           </div>
         </section>
       )}
     </div>
 
-    {/* ── Bottom pagination — full design on all breakpoints ──── */}
-    <nav aria-label="More case studies" class="p-3 sm:px-0 sm:py-6 mt-8">
-      <div class="max-w-[1920px] mx-auto w-full sm:px-6">
-        <div class="flex items-start sm:items-center gap-2 sm:px-3">
-          <div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-            {prev ? (
-              <>
-                <a
-                  href={`/uxdesign/${prev.id}`}
-                  aria-label={`Previous case study: ${prev.data.title}`}
-                  class="pill pill-ghost size-11 sm:size-10 shrink-0"
-                >
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
-                </a>
-                <span class="text-sm truncate px-1 sm:px-0">{prev.data.title}</span>
-              </>
-            ) : (
-              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
-              </span>
-            )}
-          </div>
-          <p class="w-[60px] sm:w-[120px] shrink-0 self-stretch flex items-center justify-center text-sm text-muted-foreground">{counter}</p>
-          <div class="flex-1 min-w-0 flex flex-col items-end sm:flex-row sm:items-center sm:justify-end gap-1 sm:gap-4">
-            {next ? (
-              <>
-                <span class="order-2 sm:order-1 text-sm truncate text-right px-1 sm:px-0">{next.data.title}</span>
-                <a
-                  href={`/uxdesign/${next.id}`}
-                  aria-label={`Next case study: ${next.data.title}`}
-                  class="order-1 sm:order-2 pill pill-ghost size-11 sm:size-10 shrink-0"
-                >
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-                </a>
-              </>
-            ) : (
-              <span class="inline-flex items-center justify-center rounded-full size-11 sm:size-10 shrink-0 opacity-45" aria-hidden="true">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
+    {/* ── Bottom pagination ───────────────────────────────────── */}
+    <CasePagination label="More case studies" prev={prev} next={next} counter={counter} />
 
-    {/* ── Back to UX Design CTA ───────────────────────────────── */}
-    <div class="py-6 px-6 max-w-[1920px] mx-auto w-full flex justify-center mb-12">
-      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-lg sm:text-base w-full sm:w-auto">Back to UX Design</a>
+    {/* ── CTA — Back to UX Design. Padding 48/24/12 above 768,
+         32/12 at ≤768; the button hugs its label, filling the padded
+         width at ≤640 (Measurements — CTA). ───────────────────── */}
+    <div class="mx-auto flex w-full max-w-[1920px] justify-center px-9 py-8 min-[641px]:px-3 min-[769px]:px-6 min-[769px]:pt-12 min-[769px]:pb-3">
+      <a href="/uxdesign" class="pill pill-primary h-11 w-full px-4 text-lg min-[641px]:w-auto min-[769px]:h-10 min-[769px]:text-base">Back to UX Design</a>
     </div>
 
     <BackToTop />
@@ -315,9 +241,11 @@ const counter = `${index + 1} of ${total}`
     background: none;
     cursor: zoom-in;
   }
+  /* Inset so the ring isn't clipped by the media frames' overflow-hidden;
+     outlines paint above the image */
   .lightbox-trigger:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--ring);
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
   }
 
   .lightbox.is-open { display: block; }
@@ -340,8 +268,11 @@ const counter = `${index + 1} of ${total}`
     btn.type = "button"
     btn.className = "lightbox-trigger"
     btn.setAttribute("aria-label", `View image full screen: ${img.alt || "case study image"}`)
-    img.parentNode?.insertBefore(btn, img)
-    btn.appendChild(img)
+    // Wrap a <picture> whole so its <source> (e.g. a reduced-motion still)
+    // stays attached to the image
+    const target = img.parentElement instanceof HTMLPictureElement ? img.parentElement : img
+    target.parentNode?.insertBefore(btn, target)
+    btn.appendChild(target)
     return btn
   })
 

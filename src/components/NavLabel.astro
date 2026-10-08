@@ -1,0 +1,17 @@
+---
+// Header link label with the "selected" indicator: a small dot left of the
+// label instead of a background fill. The dot sits outside the label's box
+// (absolutely positioned in the pill's left padding), so the text stays put
+// whether or not the link is current.
+interface Props {
+  label: string
+  active?: boolean
+}
+const { label, active = false } = Astro.props
+---
+<span class="relative">
+  {active && (
+    <span aria-hidden="true" class="absolute right-full top-1/2 mr-2 size-1.5 -translate-y-1/2 rounded-full bg-foreground"></span>
+  )}
+  {label}
+</span>

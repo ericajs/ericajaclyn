@@ -21,6 +21,9 @@ const work = defineCollection({
     accessibility: z.array(z.string()).default([]),
     designSystem: z.array(z.string()).default([]),
     tools: z.array(z.string()).default([]),
+    // Name used in the "About [Name]" heading when it differs from `client`
+    // (e.g. client "Foot Locker, Inc." → "About Foot Locker")
+    aboutName: z.string().optional(),
     // "About [Project]" description paragraphs shown above the accordions
     aboutProject: z.array(z.string()).default([]),
     // One-line outcome (where available)

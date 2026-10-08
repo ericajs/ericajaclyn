@@ -1,0 +1,29 @@
+---
+// Figma: gallery.2 — two columns of figures above 768, one stacked
+// column at ≤768 (gap 24 → 12, row padding 12/24 → 6/12).
+// Each inner array is a column, so stacking keeps source order: e.g.
+// Section.1's two square artifacts, then its tall artifact.
+// Square figures crop to 1:1; `natural` figures keep their own ratio
+// (the spec keeps the Section.1 tall artifact uncropped) and need their
+// intrinsic width/height so the lazy-loaded image reserves its space.
+interface Figure {
+  src: string
+  alt: string
+  natural?: { width: number; height: number }
+}
+interface Props {
+  columns: Figure[][]
+}
+const { columns } = Astro.props
+---
+<div class="grid items-start gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">
+  {columns.map((column) => (
+    <div class="flex flex-col gap-3 min-[769px]:gap-6">
+      {column.map(({ src, alt, natural }) => (
+        <figure class:list={["overflow-hidden bg-muted", !natural && "aspect-square"]}>
+          <img src={src} alt={alt} width={natural?.width} height={natural?.height} loading="lazy" decoding="async" class:list={["w-full", natural ? "h-auto" : "h-full object-cover"]} />
+        </figure>
+      ))}
+    </div>
+  ))}
+</div>

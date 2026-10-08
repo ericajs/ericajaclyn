@@ -13,38 +13,45 @@ const socials = [
   { href: "https://www.behance.net/ericajaclyn", label: "Behance" },
 ]
 const year = new Date().getFullYear()
+
+// Link button (sm) above 640; full-width ghost button at ≤640
+// (Tailwind max-[641px] is width < 641px)
+const link = "pill pill-link pill-sm max-[641px]:h-11 max-[641px]:w-full max-[641px]:px-4 max-[641px]:text-[18px] max-[641px]:leading-[26px] max-[641px]:text-foreground"
 ---
-{/* Footer is fluid edge-to-edge — no max-width, per the Figma build note. */}
-<footer class="w-full px-[var(--page-px)] py-[var(--section-py)]">
-  {/* ≥md: links / logo / socials in three equal columns.
-      <md: logo first, then stacked centered groups. */}
-  <div class="border-t border-border py-12 flex flex-col items-center gap-8 md:flex-row md:items-start md:gap-0">
-    <div class="order-1 flex md:hidden justify-center">
-      <a href="/" class="flex items-center justify-center size-10 hover:opacity-70 transition-opacity" aria-label="Home">
+{/* Footer is fluid edge-to-edge — no max-width, per the Figma build note.
+    Responsive spec (≤640 / ≤768 / ≤1024 / >1024): padding-y 40 / 56 / 64 / 96;
+    horizontal through 768, stacked at ≤640. */}
+<footer class="w-full px-[var(--page-px)] py-10 min-[641px]:py-14 min-[769px]:py-16 min-[1025px]:py-24">
+  {/* ≥641: links / logo / socials in three equal columns.
+      ≤640: logo first, then stacked centered groups of 44px ghost buttons
+      at the xs text/base step (18/26). */}
+  <div class="border-t border-border py-10 flex flex-col items-center gap-6 min-[641px]:py-12 min-[641px]:flex-row min-[641px]:items-start min-[641px]:gap-0">
+    <div class="order-1 flex min-[641px]:hidden justify-center">
+      <a href="/" class="flex items-center justify-center size-11 hover:opacity-70 transition-opacity" aria-label="Home">
         <Logo class="size-[26px]" />
       </a>
     </div>
 
-    <nav aria-label="Footer" class="order-2 md:order-none flex flex-1 min-w-0 flex-col items-center md:items-start">
+    <nav aria-label="Footer" class="order-2 min-[641px]:order-none flex flex-1 min-w-0 self-stretch min-[641px]:self-auto flex-col gap-0.5 min-[641px]:gap-0 items-center min-[641px]:items-start">
       {navLinks.map(({ href, label }) => (
-        <a href={href} class="pill pill-link pill-sm">{label}</a>
+        <a href={href} class={link}>{label}</a>
       ))}
     </nav>
 
-    <div class="hidden md:flex flex-1 min-w-0 items-center justify-center">
-      <a href="/" class="flex items-center justify-center size-10 hover:opacity-70 transition-opacity" aria-label="Home">
+    <div class="hidden min-[641px]:flex flex-1 min-w-0 items-center justify-center">
+      <a href="/" class="flex items-center justify-center size-11 min-[769px]:size-10 hover:opacity-70 transition-opacity" aria-label="Home">
         <Logo class="size-[26px]" />
       </a>
     </div>
 
-    <hr class="order-3 md:hidden w-full border-t border-border" />
+    <hr class="order-3 min-[641px]:hidden w-full border-t border-border" />
 
-    <nav aria-label="Social" class="order-4 md:order-none flex flex-1 min-w-0 flex-col items-center md:items-end">
+    <nav aria-label="Social" class="order-4 min-[641px]:order-none flex flex-1 min-w-0 self-stretch min-[641px]:self-auto flex-col gap-0.5 min-[641px]:gap-0 items-center min-[641px]:items-end">
       {socials.map(({ href, label }) => (
-        <a href={href} target="_blank" rel="noopener noreferrer" class="pill pill-link pill-sm">{label}</a>
+        <a href={href} target="_blank" rel="noopener noreferrer" class={link}>{label}</a>
       ))}
     </nav>
   </div>
 
-  <p class="text-xs text-muted-foreground text-center md:text-start">Copyright © {year} ericajaclyn.com</p>
+  <p class="text-xs text-muted-foreground text-center min-[641px]:text-start">Copyright © {year} ericajaclyn.com</p>
 </footer>

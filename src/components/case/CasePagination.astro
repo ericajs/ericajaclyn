@@ -1,0 +1,51 @@
+---
+// Figma: Pagination — rendered above and below Main on every case study.
+// Spec (>1280 | ≤1280 | ≤1024 | ≤768 | ≤640):
+//   height      64   64   64   56   56
+//   padding  12/24 12/24 12/24 6/12 6/12
+//   buttons     40   40   40   44   44
+//   arrow↔name   16   16   16    8    —
+// Project names sit beside the arrows from 641px up; ≤640 is icon-only.
+import type { CollectionEntry } from "astro:content"
+
+interface Props {
+  label: string
+  prev: CollectionEntry<"work"> | null
+  next: CollectionEntry<"work"> | null
+  counter: string
+}
+const { label, prev, next, counter } = Astro.props
+
+const button = "pill pill-ghost size-11 shrink-0 min-[769px]:size-10"
+const disabled = "inline-flex size-11 shrink-0 items-center justify-center rounded-full opacity-45 min-[769px]:size-10"
+const name = "hidden min-w-0 truncate text-sm leading-none min-[641px]:block"
+---
+<nav aria-label={label} class="mx-auto w-full max-w-[1920px] px-3 py-1.5 min-[769px]:px-6 min-[769px]:py-3">
+  <div class="flex items-center gap-6">
+    <div class="flex min-w-0 flex-1 items-center gap-2 min-[769px]:gap-4">
+      {prev ? (
+        <a href={`/uxdesign/${prev.id}`} aria-label={`Previous case study: ${prev.data.title}`} class={button}>
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+        </a>
+      ) : (
+        <span class={disabled} aria-hidden="true">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+        </span>
+      )}
+      {prev && <span class={name}>{prev.data.title}</span>}
+    </div>
+    <p class="w-[120px] shrink-0 text-center text-sm font-light leading-none text-muted-foreground">{counter}</p>
+    <div class="flex min-w-0 flex-1 items-center justify-end gap-2 min-[769px]:gap-4">
+      {next && <span class:list={[name, "text-right"]}>{next.data.title}</span>}
+      {next ? (
+        <a href={`/uxdesign/${next.id}`} aria-label={`Next case study: ${next.data.title}`} class={button}>
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+        </a>
+      ) : (
+        <span class={disabled} aria-hidden="true">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+        </span>
+      )}
+    </div>
+  </div>
+</nav>

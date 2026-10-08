@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/main.astro"
 import BackToTop from "@/components/BackToTop.astro"
+import PageHero from "@/components/PageHero.astro"
 
 const hero = {
   title: "Astrophotography",
@@ -393,13 +394,7 @@ const acknowledgments = [
 >
   <article>
 
-    {/* ── Intro — PageHero ────────────────────────────────────── */}
-    <header class="px-6 py-12 sm:py-24">
-      <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight">{hero.title}</h1>
-        <p class="text-lg text-muted-foreground">{hero.subtitle}</p>
-      </div>
-    </header>
+    <PageHero title={hero.title} description={hero.subtitle} />
 
     <div class="max-w-[1920px] mx-auto w-full">
 
@@ -510,11 +505,10 @@ const acknowledgments = [
               </div>
             </div>
             <div class="bg-muted flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
-              <p class="eyebrow text-sm font-semibold uppercase tracking-wide">Details</p>
               <dl class="flex flex-col">
                 {n.details.map(([label, value], i) => (
                   <div class={`flex flex-col gap-0.5 sm:flex-row sm:gap-4 py-3 ${i === 0 ? "" : "border-t border-border"}`}>
-                    <dt class="shrink-0 text-[13px] font-semibold text-muted-foreground sm:w-48">{label}</dt>
+                    <dt class="shrink-0 text-sm font-light capitalize text-muted-foreground sm:w-48">{label}</dt>
                     <dd class="flex-1 text-sm">{value}</dd>
                   </div>
                 ))}

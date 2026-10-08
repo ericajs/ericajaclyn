@@ -84,8 +84,11 @@
 </style>
 
 <script>
-  const btn = document.getElementById("back-to-top")
-  if (btn) {
+  const el = document.getElementById("back-to-top")
+  if (el) {
+    // Non-null alias: TS doesn't carry the `if` narrowing into the
+    // function declarations below
+    const btn: HTMLElement = el
     const THRESHOLD = window.innerHeight  // one viewport height — NN/g heuristic
     const INACTIVITY_MS = 2000
     let timer: ReturnType<typeof setTimeout> | null = null
