@@ -123,14 +123,14 @@ const isActive = (href: string) =>
       </button>
     </div>
 
-    {/* Links use the sm/xs text/base step (18/26) */}
+    {/* Links use text/base (16/24) */}
     <nav aria-label="Mobile" class="flex flex-col gap-6 p-3">
       <div class="flex flex-col items-stretch gap-2">
         {[...leftNav, ...rightNav].map(({ href, label }) => (
           <a
             href={href}
             aria-current={isActive(href) ? "page" : undefined}
-            class={`${navLink} pill-fluid text-[18px] leading-[26px]`}
+            class={`${navLink} pill-fluid`}
           >
             <NavLabel label={label} active={isActive(href)} />
           </a>

@@ -16,7 +16,7 @@ const year = new Date().getFullYear()
 
 // Link button (sm) above 640; full-width ghost button at ≤640
 // (Tailwind max-[641px] is width < 641px)
-const link = "pill pill-link pill-sm max-[641px]:h-11 max-[641px]:w-full max-[641px]:px-4 max-[641px]:text-[18px] max-[641px]:leading-[26px] max-[641px]:text-foreground"
+const link = "pill pill-link pill-sm max-[641px]:h-11 max-[641px]:w-full max-[641px]:px-4 max-[641px]:text-foreground"
 ---
 {/* Footer is fluid edge-to-edge — no max-width, per the Figma build note.
     Responsive spec (≤640 / ≤768 / ≤1024 / >1024): padding-y 40 / 56 / 64 / 96;
@@ -24,7 +24,7 @@ const link = "pill pill-link pill-sm max-[641px]:h-11 max-[641px]:w-full max-[64
 <footer class="w-full px-[var(--page-px)] py-10 min-[641px]:py-14 min-[769px]:py-16 min-[1025px]:py-24">
   {/* ≥641: links / logo / socials in three equal columns.
       ≤640: logo first, then stacked centered groups of 44px ghost buttons
-      at the xs text/base step (18/26). */}
+      at text/sm (14/20). */}
   <div class="border-t border-border py-10 flex flex-col items-center gap-6 min-[641px]:py-12 min-[641px]:flex-row min-[641px]:items-start min-[641px]:gap-0">
     <div class="order-1 flex min-[641px]:hidden justify-center">
       <a href="/" class="flex items-center justify-center size-11 hover:opacity-70 transition-opacity" aria-label="Home">
