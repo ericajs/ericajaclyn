@@ -402,7 +402,7 @@ const acknowledgments = [
       <section class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
         <div class="flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
           <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight">{intro.heading}</h2>
-          <p class="text-lg leading-relaxed">{intro.body}</p>
+          <p class="text-base">{intro.body}</p>
         </div>
         <nav aria-label="Jump to image" class="bg-muted flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
           <p class="eyebrow text-sm font-semibold uppercase tracking-wide">Jump To</p>
@@ -424,7 +424,7 @@ const acknowledgments = [
           <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
             <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
               <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-semibold tracking-tight">{n.title}</h2>
-              {n.subtitle && <p class="text-lg text-muted-foreground">{n.subtitle}</p>}
+              {n.subtitle && <p class="text-base text-muted-foreground">{n.subtitle}</p>}
             </div>
           </header>
 
@@ -500,7 +500,7 @@ const acknowledgments = [
           <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
             <div class="flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
               <h3 class="text-xl sm:text-2xl font-semibold tracking-tight">{n.feature.heading}</h3>
-              <div class="space-y-4 text-lg leading-relaxed">
+              <div class="space-y-4 text-base">
                 {n.feature.body.map((p) => <p>{p}</p>)}
               </div>
             </div>
@@ -528,7 +528,7 @@ const acknowledgments = [
         </header>
 
         <div class="max-w-3xl mx-auto px-6 py-3 sm:py-6">
-          <div class="space-y-6 text-lg sm:text-base leading-relaxed sm:leading-normal mb-6">
+          <div class="space-y-6 text-base mb-6">
             <p>{aboutLead}</p>
             <p>
               All images are public data, processed through multiple applications, and artistically
@@ -547,7 +547,7 @@ const acknowledgments = [
                   <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </span>
               </summary>
-              <div class="pb-6 space-y-3 text-base text-muted-foreground leading-relaxed">
+              <div class="pb-6 space-y-3 text-base text-muted-foreground">
                 {acknowledgments.map((a) => <p>{a}</p>)}
               </div>
             </details>
@@ -558,7 +558,7 @@ const acknowledgments = [
 
     {/* ── Back to UX Design CTA ───────────────────────────────── */}
     <div class="py-6 px-6 max-w-[1920px] mx-auto w-full flex justify-center mb-12 mt-8">
-      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-lg sm:text-base w-full sm:w-auto">Back to UX Design</a>
+      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-base w-full sm:w-auto">Back to UX Design</a>
     </div>
   </article>
 
@@ -602,7 +602,7 @@ const acknowledgments = [
     <figure class="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-20 py-16 sm:py-20 m-0">
       <img id="lightbox-img" alt="" class="max-w-full max-h-[80vh] object-contain" />
       <figcaption class="mt-6 text-center max-w-2xl">
-        <p id="lightbox-title" class="text-base sm:text-lg font-semibold"></p>
+        <p id="lightbox-title" class="text-base font-semibold"></p>
         <p id="lightbox-subtitle" class="mt-1 text-sm text-muted-foreground"></p>
       </figcaption>
     </figure>

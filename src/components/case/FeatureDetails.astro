@@ -6,7 +6,7 @@
 // Spec (>1280 | ≤1280 | ≤1024 | ≤768 | ≤640):
 //   card padding      96   96   64   56   40
 //   HeadingBlock gap  32   32   32   24   24
-//   body / list     16/24 16/24 16/24 18/26 18/26
+//   body / list     16/24 16/24 16/24 16/24 16/24
 //
 // Card min-height follows grid position, not content: the first cell
 // is 144 at ≤768 and 288 above; the second cell is 288 throughout.
@@ -29,7 +29,7 @@ const { tagline, heading, body, items, image, imageFirst = false, sectionHeading
 
 const cells = imageFirst ? ["image", "text"] : ["text", "image"]
 const brow = "text-sm font-semibold uppercase tracking-[1px] text-accent [text-box:trim-both_cap_alphabetic]"
-const copy = "text-lg/[26px] min-[769px]:text-base"
+const copy = "text-base"
 const Heading = tagline ? "h3" : "h2"
 ---
 <div class="grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">

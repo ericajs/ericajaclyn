@@ -12,7 +12,7 @@
 //   gap         24     32     40      48
 //   heading   30/36  30/36  48/48   48/48
 //   titleBlock 512    512    672     672
-//   slot text 18/26  18/26  16/24   16/24
+//   slot text 16/24  16/24  16/24   16/24
 //
 // `lgAtMd`: the UX Design page keeps lg padding/gap (96/48) through the
 // ≤1024 range (Figma UX Responsive Specs; spec decision log "UX1024").
@@ -46,7 +46,7 @@ const heading = "text-3xl font-semibold text-foreground min-[769px]:text-5xl"
     )}
     {description && (
       <div class="w-full max-w-lg">
-        <p class="text-lg/[26px] font-light text-muted-foreground min-[769px]:text-base">{description}</p>
+        <p class="text-base font-light text-muted-foreground">{description}</p>
       </div>
     )}
   </div>

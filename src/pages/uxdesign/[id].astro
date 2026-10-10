@@ -81,7 +81,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
       <section class="grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">
         {intro && (
           <div class:list={["flex min-h-36 flex-col items-center min-[769px]:min-h-[288px]", cardPad]}>
-            <p class="w-full max-w-lg text-lg/[26px] font-light min-[769px]:text-base">{intro}</p>
+            <p class="w-full max-w-lg text-base font-light">{intro}</p>
           </div>
         )}
         <div class:list={["flex min-h-[288px] flex-col items-center bg-muted", cardPad]}>
@@ -94,7 +94,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
             {meta.map(({ label, value }) => (
               <div class="flex items-start gap-3 border-b border-border pb-[11px] last:border-b-0 last:pb-0">
                 <dt class="min-w-16 shrink-0 text-sm font-light capitalize text-popover-foreground">{label}</dt>
-                <dd class="min-w-0 flex-1 text-base min-[769px]:text-sm">{value}</dd>
+                <dd class="min-w-0 flex-1 text-sm">{value}</dd>
               </div>
             ))}
           </dl>
@@ -118,7 +118,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
           <div class="px-10 pt-3 pb-6 min-[641px]:px-14 min-[769px]:px-16 min-[1025px]:px-24">
             <div class="mx-auto w-full max-w-lg min-[641px]:max-w-xl">
               {(aboutProject.length > 0 || outcome) && (
-                <div class="flex flex-col gap-6 pb-6 text-lg/[26px] font-light min-[769px]:text-base">
+                <div class="flex flex-col gap-6 pb-6 text-base font-light">
                   {aboutProject.map((p) => <p>{p}</p>)}
                   {outcome && <p><strong class="font-bold">Outcome</strong>: {outcome}</p>}
                 </div>
@@ -133,11 +133,11 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
                       <svg class="hidden size-4 group-open:block" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="8" x2="13" y2="8"/></svg>
                     </span>
                   </summary>
-                  <ul class="pb-6 text-lg/[26px] min-[769px]:text-base">
+                  <ul class="pb-6 text-base">
                     {items.map((it) => (
                       <li class="flex gap-4">
                         {/* List.Item marker: a 10×1 dash in a 24px box, muted at 75% */}
-                        <span aria-hidden="true" class="flex h-[26px] w-6 shrink-0 items-center justify-center min-[769px]:h-6">
+                        <span aria-hidden="true" class="flex h-6 w-6 shrink-0 items-center justify-center">
                           <span class="h-px w-2.5 rounded-full bg-muted-foreground opacity-75"></span>
                         </span>
                         <span class="min-w-0 flex-1">{it}</span>
@@ -159,7 +159,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
          32/12 at ≤768; the button hugs its label, filling the padded
          width at ≤640 (Measurements — CTA). ───────────────────── */}
     <div class="mx-auto flex w-full max-w-[1920px] justify-center px-9 py-8 min-[641px]:px-3 min-[769px]:px-6 min-[769px]:pt-12 min-[769px]:pb-3">
-      <a href="/uxdesign" class="pill pill-primary h-11 w-full px-4 text-lg min-[641px]:w-auto min-[769px]:h-10 min-[769px]:text-base">Back to UX Design</a>
+      <a href="/uxdesign" class="pill pill-primary h-11 w-full px-4 text-base min-[641px]:w-auto min-[769px]:h-10">Back to UX Design</a>
     </div>
 
     <BackToTop />
@@ -208,25 +208,6 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
 </Layout>
 
 <style is:global>
-  /* Narrative body styling (no typography plugin) — narrow "prose" bodies only */
-  .case-body:not(.case-body--full) { line-height: 1.7; }
-  .case-body:not(.case-body--full) > * + * { margin-top: 1.25rem; }
-  .case-body:not(.case-body--full) h2 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    margin-top: 3rem;
-  }
-  .case-body:not(.case-body--full) h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-top: 2rem;
-  }
-  .case-body:not(.case-body--full) p { color: var(--muted-foreground); }
-  .case-body:not(.case-body--full) ul { list-style: disc; padding-inline-start: 1.25rem; }
-  .case-body:not(.case-body--full) li { margin-top: 0.5rem; }
-  .case-body:not(.case-body--full) img { width: 100%; }
-
   /* Edge-to-edge, section-based bodies (image-led design system stories) */
   .case-body--full { display: flex; flex-direction: column; }
   .case-body--full img { width: 100%; height: 100%; display: block; object-fit: cover; }
