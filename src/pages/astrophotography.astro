@@ -428,7 +428,8 @@ const acknowledgments = [
             </div>
           </header>
 
-          {/* Hero Figure — composite, per-section aspect ratio, optional overlay caption */}
+          {/* Hero Figure — composite, per-section aspect ratio, optional caption: overlaid
+              above sm, a plain figcaption below the image at sm and xs (≤768) */}
           <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3">
             <figure class="relative m-0">
               <button
@@ -450,9 +451,9 @@ const acknowledgments = [
                 />
               </button>
               {n.hero.overlay && (
-                <figcaption class="pointer-events-none absolute bottom-3 left-3 sm:bottom-6 sm:left-6 max-w-[calc(100%-1.5rem)] sm:max-w-md rounded-xl bg-black/45 px-4 py-3 text-white backdrop-blur-sm">
+                <figcaption class="mt-3 min-[769px]:mt-0 min-[769px]:pointer-events-none min-[769px]:absolute min-[769px]:bottom-6 min-[769px]:left-6 min-[769px]:max-w-md min-[769px]:rounded-xl min-[769px]:bg-black/45 min-[769px]:px-4 min-[769px]:py-3 min-[769px]:text-white min-[769px]:backdrop-blur-sm">
                   <p class="text-sm font-medium leading-none">{n.hero.overlay.title}</p>
-                  <p class="mt-1.5 text-sm text-white/80">{n.hero.overlay.description}</p>
+                  <p class="mt-1.5 text-sm text-muted-foreground leading-normal min-[769px]:text-white/80">{n.hero.overlay.description}</p>
                 </figcaption>
               )}
             </figure>
