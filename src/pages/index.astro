@@ -42,7 +42,7 @@ const first = slides[0]
     <div class="hero-grid">
       <MainHeader />
 
-      <div id="hero-media" class="hero-media bg-muted" aria-live="polite">
+      <div id="hero-media" class="hero-media bg-background" aria-live="polite">
         {slides.map((s, i) => (
           <div class="hero-slide absolute inset-0" data-slide={i} hidden={i !== 0}>
             {s.cover ? (

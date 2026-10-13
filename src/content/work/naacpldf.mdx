@@ -42,7 +42,7 @@ draft: true
 ---
 
 import CaseFigure from "@/components/case/CaseFigure.astro"
-import FeatureDetails from "@/components/case/FeatureDetails.astro"
+import FeatureCaseStudy from "@/components/case/FeatureCaseStudy.astro"
 import CaseGallery from "@/components/case/CaseGallery.astro"
 
 {/* Section.1 — Discovery */}
@@ -53,7 +53,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of LDF Backstory desktop pages on a blue background: the “Voting Rights & the Fierce Urgency of Now” feature and the About LDF Backstory introduction."
 />
 
-<FeatureDetails
+<FeatureCaseStudy
+  variant="imageRight"
   sectionHeading
   id="discovery"
   tagline="Discovery"
@@ -62,8 +63,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   image={{ src: "/ux-design/naacp-ldf/1x1-GalaxyBookPro-R-Blue.jpg", alt: "Laptop showing the Backstory home page, with Start Exploring links beside the featured “Voting Rights & the Fierce Urgency of Now” story." }}
 />
 
-<FeatureDetails
-  imageFirst
+<FeatureCaseStudy
+  variant="imageLeft"
   tagline="Discovery"
   heading="Design Goals"
   items={[
@@ -98,7 +99,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of Backstory pages on a green background: “The March on Washington for Jobs & Freedom” story header and the About LDF Backstory introduction."
 />
 
-<FeatureDetails
+<FeatureCaseStudy
+  variant="imageRight"
   sectionHeading
   id="storytelling"
   tagline="Storytelling"
@@ -107,8 +109,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   image={{ src: "/ux-design/naacp-ldf/1x1-iPadPro12-R-Green.jpg", alt: "Tablet showing the About LDF Backstory page, opening with a large drop cap on a paragraph about Thurgood Marshall founding LDF in 1940." }}
 />
 
-<FeatureDetails
-  imageFirst
+<FeatureCaseStudy
+  variant="imageLeft"
   tagline="Storytelling"
   heading="Design Goals"
   items={[
@@ -131,7 +133,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of a Backstory story page on an orange-red background, with a voting rights feature header, editorial body text and Related Archive Items."
 />
 
-<FeatureDetails
+<FeatureCaseStudy
+  variant="imageRight"
   sectionHeading
   id="typography"
   tagline="Typography"
@@ -140,8 +143,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   image={{ src: "/ux-design/naacp-ldf/1x1-XDR-R-Orange.jpg", alt: "Desktop monitor showing a long-form voter protection story, with inline photography, a sidebar of related links and a teal story navigation panel." }}
 />
 
-<FeatureDetails
-  imageFirst
+<FeatureCaseStudy
+  variant="imageLeft"
   tagline="Typography"
   heading="Design Goals"
   items={[
@@ -157,17 +160,19 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
 </section>
 
 {/* Section.4 */}
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/naacp-ldf/1x1-Slide-Typeface1-02.jpg", alt: "Typeface study slide showing an article opening with a teal drop cap, justified body text and margin notes on the type settings." }],
-    [{ src: "/ux-design/naacp-ldf/1x1-S21U-B-Yellow.jpg", alt: "Phone showing “The March on Washington for Jobs & Freedom” story header over archival protest photography." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/naacp-ldf/1x1-Slide-Typeface1-02.jpg", alt: "Typeface study slide showing an article opening with a teal drop cap, justified body text and margin notes on the type settings." },
+    { src: "/ux-design/naacp-ldf/1x1-S21U-B-Yellow.jpg", alt: "Phone showing “The March on Washington for Jobs & Freedom” story header over archival protest photography." },
   ]}
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/naacp-ldf/1x1-TabS8U-L-Yellow.jpg", alt: "Tablet in landscape showing “The March on Washington for Jobs & Freedom” story header beneath the site navigation." }],
-    [{ src: "/ux-design/naacp-ldf/1x1-Slide-Typeface1-03.jpg", alt: "Typeface study slide showing two-column long-form text with colored drop caps, margin notes and a sidehead." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/naacp-ldf/1x1-TabS8U-L-Yellow.jpg", alt: "Tablet in landscape showing “The March on Washington for Jobs & Freedom” story header beneath the site navigation." },
+    { src: "/ux-design/naacp-ldf/1x1-Slide-Typeface1-03.jpg", alt: "Typeface study slide showing two-column long-form text with colored drop caps, margin notes and a sidehead." },
   ]}
 />
 
@@ -182,17 +187,19 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of archival March on Washington documents, including a Liberator magazine page and a final plans flyer, on a purple background."
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/naacp-ldf/1x1-Slide-Color-Palette.jpg", alt: "Color palette slide showing the Backstory swatches, from whites and grays through navy, purple, teal, cyan, gold and coral, with their names and values." }],
-    [{ src: "/ux-design/naacp-ldf/1x1-GalaxyBookPro-L-Purple.jpg", alt: "Laptop showing a digitized Liberator magazine advertisement for the August 28, 1963 March on Washington in the archive viewer, with a caption." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/naacp-ldf/1x1-Slide-Color-Palette.jpg", alt: "Color palette slide showing the Backstory swatches, from whites and grays through navy, purple, teal, cyan, gold and coral, with their names and values." },
+    { src: "/ux-design/naacp-ldf/1x1-GalaxyBookPro-L-Purple.jpg", alt: "Laptop showing a digitized Liberator magazine advertisement for the August 28, 1963 March on Washington in the archive viewer, with a caption." },
   ]}
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/naacp-ldf/1x1-TabS8-B-Purple.jpg", alt: "Tablet showing an archive item page for the March on Washington organizing manual, with a document viewer and a description below." }],
-    [{ src: "/ux-design/naacp-ldf/1x1-Slide-Color-Usage.jpg", alt: "Color usage slide showing a grid of text and background color pairings, each marked with its WCAG contrast rating." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/naacp-ldf/1x1-TabS8-B-Purple.jpg", alt: "Tablet showing an archive item page for the March on Washington organizing manual, with a document viewer and a description below." },
+    { src: "/ux-design/naacp-ldf/1x1-Slide-Color-Usage.jpg", alt: "Color usage slide showing a grid of text and background color pairings, each marked with its WCAG contrast rating." },
   ]}
 />
 
@@ -202,17 +209,19 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of a story's Images and Related Stories sections on a navy background, featuring March on Washington photography and a “We Demand Voting Rights Now!” sign."
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/naacp-ldf/1x1-iPhone13-B-Navy.jpg", alt: "Phone showing the Images section of a story, with a “We Demand Voting Rights Now!” sign above a swipeable photo gallery." }],
-    [{ src: "/ux-design/naacp-ldf/1x1-MBA2-R-Navy.jpg", alt: "Laptop showing the Images section as a horizontal gallery of March on Washington photographs." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/naacp-ldf/1x1-iPhone13-B-Navy.jpg", alt: "Phone showing the Images section of a story, with a “We Demand Voting Rights Now!” sign above a swipeable photo gallery." },
+    { src: "/ux-design/naacp-ldf/1x1-MBA2-R-Navy.jpg", alt: "Laptop showing the Images section as a horizontal gallery of March on Washington photographs." },
   ]}
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/naacp-ldf/1x1-TabS8-L-Navy.jpg", alt: "Tablet in landscape showing the image gallery, with a caption describing Dr. Martin Luther King Jr. at the March on Washington." }],
-    [{ src: "/ux-design/naacp-ldf/1x1-iPadPro12-T-Navy.jpg", alt: "Tablet showing the Related Stories section, with color-blocked story cards and protest photography." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/naacp-ldf/1x1-TabS8-L-Navy.jpg", alt: "Tablet in landscape showing the image gallery, with a caption describing Dr. Martin Luther King Jr. at the March on Washington." },
+    { src: "/ux-design/naacp-ldf/1x1-iPadPro12-T-Navy.jpg", alt: "Tablet showing the Related Stories section, with color-blocked story cards and protest photography." },
   ]}
 />
 

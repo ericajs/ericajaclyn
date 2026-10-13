@@ -2,6 +2,7 @@
 import Layout from "@/layouts/main.astro"
 import BackToTop from "@/components/BackToTop.astro"
 import PageHero from "@/components/PageHero.astro"
+import AccordionItem from "@/components/AccordionItem.astro"
 
 const hero = {
   title: "Space",
@@ -18,13 +19,15 @@ type Nebula = {
   id: string
   nav: string
   title: string
-  // Part of `title` set in Caecilia Head Italic (Figma sectionHeader styling)
+  // Part of `title` set in Caecilia Head Oblique (Figma sectionHeader styling)
   titleItalic?: string
   subtitle: string
   hero: { src: string; alt: string; aspect: string; overlay?: { title: string; description: string } }
   gallery: GalleryItem[]
   galleryCols: number
-  feature: { heading: string; body: string[] }
+  // A paragraph can open with a bold lead-in (Caecilia Text Bold), e.g.
+  // "A processing choice: …" — the colon and text that follow stay regular
+  feature: { heading: string; body: (string | { lead: string; text: string })[] }
   details: [string, string][]
   footnote?: string
 }
@@ -63,7 +66,7 @@ const nebulae: Nebula[] = [
     ],
     galleryCols: 2,
     feature: {
-      heading: "Stellar Jets Bicolor [FE II] + H2 Emission",
+      heading: "Stellar Jets Bicolor [FE II] + H₂ Emission",
       body: [
         "This image shows a collimated atomic [Fe II] jet at ~10,000 K piercing through a surrounding molecular H₂ cocoon, with the spatial geometry of the embedded protostar's outflow made visible through an orange + cyan emission-line composite.",
         "This is just one of Megan Reiter's six-target survey of the Carina Nebula's Herbig-Haro objects, each with a uniform four-filter NIRCam program. The orange channel shows the continuum-subtracted H₂ molecular shocks while cyan shows continuum-subtracted [Fe II] atomic shocks.",
@@ -217,7 +220,7 @@ const nebulae: Nebula[] = [
       heading: "A Dying Star's Layered Ejecta Five-Filter NIRCam Composite",
       body: [
         "This image reveals the concentric shells of a young planetary nebula, where a dying white dwarf—the faint point visible along one of the diffraction spikes—has expelled layers of gas and dust into space over thousands of years; sculpted by gravitational stirring from the prominent bright star at the center in a tight binary orbit.",
-        "A processing choice: I split F405N into its own color rather than merging it with F470N as STScI did, to bring out additional structure in the ionized gas.",
+        { lead: "A processing choice", text: ": I split F405N into its own color rather than merging it with F470N as STScI did, to bring out additional structure in the ionized gas." },
       ],
     },
     details: [
@@ -463,12 +466,12 @@ const acknowledgments = [
         const t = splitTitle(n.title, n.titleItalic)
         return (
         <section id={n.id} class="scroll-mt-24">
-          {/* sectionHeader — top rule, heading-lg title with its italic fragment */}
+          {/* sectionHeader — top rule, heading-lg title with its oblique fragment */}
           <header class={sectionHeaderWrap}>
             <div class="flex flex-col items-center border-t border-border">
               <div class={sectionHeaderContent}>
                 <h2 class="heading-lg text-foreground">
-                  {t.before}{t.italic && <span class="italic leading-none">{t.italic}</span>}{t.after}
+                  {t.before}{t.italic && <span class="oblique">{t.italic}</span>}{t.after}
                 </h2>
                 {n.subtitle && <p class="text-sm text-muted-foreground">{n.subtitle}</p>}
               </div>
@@ -481,7 +484,7 @@ const acknowledgments = [
             <figure class="relative m-0">
               <button
                 type="button"
-                class={`lightbox-trigger block w-full ${n.hero.aspect} overflow-hidden bg-neutral-900 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+                class={`lightbox-trigger block w-full ${n.hero.aspect} overflow-hidden bg-background cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
                 data-src={n.hero.src}
                 data-alt={n.hero.alt}
                 data-title={n.title}
@@ -518,7 +521,7 @@ const acknowledgments = [
                     <figure class="m-0">
                       <button
                         type="button"
-                        class={`lightbox-trigger relative block w-full ${n.hero.aspect} overflow-hidden bg-neutral-900 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+                        class={`lightbox-trigger relative block w-full ${n.hero.aspect} overflow-hidden bg-background cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
                         data-src={g.src}
                         data-alt={g.alt}
                         data-title={g.name}
@@ -559,7 +562,7 @@ const acknowledgments = [
               <div class="flex w-full max-w-lg flex-col gap-8">
                 <h3 class="heading-md text-foreground">{n.feature.heading}</h3>
                 <div class:list={["text-base", paraGap]}>
-                  {n.feature.body.map((p) => <p>{p}</p>)}
+                  {n.feature.body.map((p) => typeof p === "string" ? <p>{p}</p> : <p><strong class="font-bold">{p.lead}</strong>{p.text}</p>)}
                 </div>
               </div>
             </div>
@@ -609,18 +612,13 @@ const acknowledgments = [
 
         {/* richText (accordions) — Acknowledgements, collapsed by default */}
         <div class:list={["flex flex-col items-center", richPad]}>
-          <details class="group w-full max-w-xl border-b border-border">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4">
-              <span class="min-w-0 flex-1 font-praxis text-[26px] leading-8 font-medium tracking-[-0.5px] text-foreground">Acknowledgements</span>
-              <span class="relative size-6 shrink-0 text-muted-foreground" aria-hidden="true">
-                <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V19"/><path d="M5 12H19"/></svg>
-                <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H19"/></svg>
-              </span>
-            </summary>
-            <div class:list={["pb-4 text-base text-foreground", paraGap]}>
-              {acknowledgments.map((a) => <p>{a}</p>)}
-            </div>
-          </details>
+          <div class="w-full max-w-xl">
+            <AccordionItem label="Acknowledgements">
+              <div class:list={["text-base text-foreground", paraGap]}>
+                {acknowledgments.map((a) => <p>{a}</p>)}
+              </div>
+            </AccordionItem>
+          </div>
         </div>
       </section>
     </div>

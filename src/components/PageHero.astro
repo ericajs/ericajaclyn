@@ -16,20 +16,27 @@
 //
 // `lgAtMd`: the UX Design page keeps lg padding/gap (96/48) through the
 // ≤1024 range (Figma UX Responsive Specs; spec decision log "UX1024").
+// `smAtMd`: the case study frames keep sm padding/gap (64/32) through the
+// ≤1024 range (caseStudy.* breakpoint=1024 frames: pageHero 252 tall).
 interface Props {
   title: string
   eyebrow?: string
   description?: string
   lgAtMd?: boolean
+  smAtMd?: boolean
 }
-const { title, eyebrow, description, lgAtMd = false } = Astro.props
+const { title, eyebrow, description, lgAtMd = false, smAtMd = false } = Astro.props
 
 const pad = lgAtMd
   ? "p-14 min-[641px]:p-16 min-[769px]:p-24"
-  : "p-14 min-[641px]:p-16 min-[769px]:p-20 min-[1025px]:p-24"
+  : smAtMd
+    ? "p-14 min-[641px]:p-16 min-[1025px]:p-24"
+    : "p-14 min-[641px]:p-16 min-[769px]:p-20 min-[1025px]:p-24"
 const gap = lgAtMd
   ? "gap-6 min-[641px]:gap-8 min-[769px]:gap-12"
-  : "gap-6 min-[641px]:gap-8 min-[769px]:gap-10 min-[1025px]:gap-12"
+  : smAtMd
+    ? "gap-6 min-[641px]:gap-8 min-[1025px]:gap-12"
+    : "gap-6 min-[641px]:gap-8 min-[769px]:gap-10 min-[1025px]:gap-12"
 const heading =
   "font-serif-heading font-light tracking-normal text-foreground text-[54px] leading-[56px] min-[641px]:leading-[60px] min-[769px]:text-[68px] min-[769px]:leading-[72px]"
 ---

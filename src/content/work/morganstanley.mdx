@@ -45,8 +45,7 @@ draft: true
 ---
 
 import CaseFigure from "@/components/case/CaseFigure.astro"
-import FeatureDetails from "@/components/case/FeatureDetails.astro"
-import CaseGallery from "@/components/case/CaseGallery.astro"
+import FeatureCaseStudy from "@/components/case/FeatureCaseStudy.astro"
 
 {/* Section.1 — Accessible & Inclusive (Branch Blue) */}
 <section aria-labelledby="accessible-inclusive">
@@ -56,17 +55,19 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of Morgan Stanley Oxwaki Valley Branch pages on a blue background: the branch header with an appointment button, a services list, a team section and More From Morgan Stanley cards."
 />
 
-<FeatureDetails
+<FeatureCaseStudy
+  variant="imageRight"
   id="accessible-inclusive"
   heading="Accessible & Inclusive"
   body="Accessibility governed the work: WCAG 2.1 AA compliance, semantic color tokens, per-archetype focus order, tested screen-reader behavior, and contrast re-verified through every palette change."
   image={{ src: "/ux-design/morgan-stanley/1x1-iPhone-B-Branch-Blue.jpg", alt: "Phone showing the Granite District Complex branch page, with call and directions links, branch contact details and a Schedule an Appointment button." }}
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/morgan-stanley/1x1-TabS8U-L-Branch-Blue.jpg", alt: "Tablet in landscape showing the More From Morgan Stanley section, with article cards on mobile banking and Reserved living and giving benefits." }],
-    [{ src: "/ux-design/morgan-stanley/1x1-MBP16-R-Branch-Blue.jpg", alt: "Laptop showing the Granite District Complex branch page, with a video of a city skyline and a list of services." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/morgan-stanley/1x1-TabS8U-L-Branch-Blue.jpg", alt: "Tablet in landscape showing the More From Morgan Stanley section, with article cards on mobile banking and Reserved living and giving benefits." },
+    { src: "/ux-design/morgan-stanley/1x1-MBP16-R-Branch-Blue.jpg", alt: "Laptop showing the Granite District Complex branch page, with a video of a city skyline and a list of services." },
   ]}
 />
 
@@ -80,18 +81,19 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled composition of Morgan Stanley advisor pages on a purple background: Poloma Prescott’s profile header, her mission statement and services, and a Global Investments Office Portfolio Insights panel."
 />
 
-<FeatureDetails
-  imageFirst
+<FeatureCaseStudy
+  variant="imageLeft"
   id="repeatability"
   heading="Repeatability"
   body="Reuse kept the platform consistent at scale, one component fix reaching every instance across two thousand placements."
   image={{ src: "/ux-design/morgan-stanley/1x1-TabS8-L-Advisors-Purple.jpg", alt: "Tablet in landscape showing an advisor’s More From Morgan Stanley section, with a mountain lake photo, a Let’s Talk About You card and a Contact Me button." }}
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/morgan-stanley/1x1-MBA-R-Advisors-Purple.jpg", alt: "Laptop showing Poloma Prescott’s advisor profile header, with her title, phone number, social links and a Contact Me button." }],
-    [{ src: "/ux-design/morgan-stanley/1x1-S21U-T-Advisors-Purple.jpg", alt: "Phone showing the Global Investments Office Portfolio Insights panel above a Business Planning card." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/morgan-stanley/1x1-MBA-R-Advisors-Purple.jpg", alt: "Laptop showing Poloma Prescott’s advisor profile header, with her title, phone number, social links and a Contact Me button." },
+    { src: "/ux-design/morgan-stanley/1x1-S21U-T-Advisors-Purple.jpg", alt: "Phone showing the Global Investments Office Portfolio Insights panel above a Business Planning card." },
   ]}
 />
 
@@ -103,10 +105,11 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Tablet, phone and laptop on a teal background showing The Delta Wing Group private wealth management team page, with its mission statement and skyscraper photography."
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/morgan-stanley/1x1-PWM-S22U-L-Team-Cyan.jpg", alt: "Phone in landscape showing a Contact Me invitation above a market ticker with Nasdaq, Dow and S&P 500 changes." }],
-    [{ src: "/ux-design/morgan-stanley/1x1-PWM-MBP16-R-Team-Cyan.jpg", alt: "Laptop showing The Delta Wing Group page, with section tabs, a Managing Wealth, Making a Difference introduction and a list of services." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/morgan-stanley/1x1-PWM-S22U-L-Team-Cyan.jpg", alt: "Phone in landscape showing a Contact Me invitation above a market ticker with Nasdaq, Dow and S&P 500 changes." },
+    { src: "/ux-design/morgan-stanley/1x1-PWM-MBP16-R-Team-Cyan.jpg", alt: "Laptop showing The Delta Wing Group page, with section tabs, a Managing Wealth, Making a Difference introduction and a list of services." },
   ]}
 />
 
@@ -116,10 +119,11 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Laptop, tablet and phone on a dark teal background showing The Kito Khan Group financial advisor team page, with contact details, a video and a mission statement."
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/morgan-stanley/1x1-FA-iPad-L-Team-Teal.jpg", alt: "Tablet in landscape showing a grid of Morgan Stanley article cards, including cash back rewards, ideas that could add alpha and cybersecurity resources." }],
-    [{ src: "/ux-design/morgan-stanley/1x1-FA-S21U-R-Team-Teal.jpg", alt: "Phone in landscape showing a “Where will this summer take you?” card about budgeting tools, beside a photo of a fairground ride." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/morgan-stanley/1x1-FA-iPad-L-Team-Teal.jpg", alt: "Tablet in landscape showing a grid of Morgan Stanley article cards, including cash back rewards, ideas that could add alpha and cybersecurity resources." },
+    { src: "/ux-design/morgan-stanley/1x1-FA-S21U-R-Team-Teal.jpg", alt: "Phone in landscape showing a “Where will this summer take you?” card about budgeting tools, beside a photo of a fairground ride." },
   ]}
 />
 
@@ -129,9 +133,10 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Laptop, tablet and phone on a green background showing the Graystone Consulting page, with an aerial ocean header and client asset figures."
 />
 
-<CaseGallery
-  columns={[
-    [{ src: "/ux-design/morgan-stanley/1x1-GC-iPadPro12-L-Team-Green.jpg", alt: "Tablet in landscape showing Graystone Consulting’s Services We Provide grid: philanthropy, endowment, institutional investment and impact consulting." }],
-    [{ src: "/ux-design/morgan-stanley/1x1-GC-S22U-B-Team-Green.jpg", alt: "Phone showing a Public & Private Corporations card beneath a photo of a wind turbine." }],
+<FeatureCaseStudy
+  variant="images"
+  images={[
+    { src: "/ux-design/morgan-stanley/1x1-GC-iPadPro12-L-Team-Green.jpg", alt: "Tablet in landscape showing Graystone Consulting’s Services We Provide grid: philanthropy, endowment, institutional investment and impact consulting." },
+    { src: "/ux-design/morgan-stanley/1x1-GC-S22U-B-Team-Green.jpg", alt: "Phone showing a Public & Private Corporations card beneath a photo of a wind turbine." },
   ]}
 />

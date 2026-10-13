@@ -1,0 +1,26 @@
+---
+// Figma: accordionItem (22:516) — the one accordion used site-wide (case
+// study About lists, About page, Space Acknowledgements).
+// Trigger: title in custom/heading-sm (Caecilia Head Regular 26/32), 16px
+// vertical padding, 24px plus/minus icon in muted-foreground (1px stroke).
+// Content: 16px bottom padding; a 1px rule closes each item.
+// Native <details>/<summary>: collapsed on load, toggled by click,
+// Enter or Space, and announced as expanded/collapsed.
+interface Props {
+  label: string
+  open?: boolean
+}
+const { label, open = false } = Astro.props
+---
+<details class="group border-b border-border" open={open}>
+  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
+    <span class="heading-sm min-w-0 flex-1 text-foreground">{label}</span>
+    <span class="relative size-6 shrink-0 text-muted-foreground" aria-hidden="true">
+      <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V19"/><path d="M5 12H19"/></svg>
+      <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H19"/></svg>
+    </span>
+  </summary>
+  <div class="pb-4">
+    <slot />
+  </div>
+</details>

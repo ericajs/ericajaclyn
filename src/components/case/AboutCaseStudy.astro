@@ -1,0 +1,47 @@
+---
+import AccordionItem from "@/components/AccordionItem.astro"
+
+// Figma: aboutCaseStudy (22889:76254) — the About block under the
+// sectionHeader.
+//   variant=body  — rich text, 576 max (512 at ≤640), paragraphs 24 apart
+//   variant=lists — accordions (Accessibility / Design System / Tools),
+//                   576 max; collapsed on load, each toggles open
+// Horizontal padding 96 / 64 / 64 / 56 (>1024 | ≤1024 | ≤768 | ≤640),
+// vertical 24 at every width.
+// Accordions use the shared AccordionItem (heading-sm titles); each list
+// has a 12px item gap, 16px marker gap and a 24px dash marker.
+interface List {
+  label: string
+  items: string[]
+}
+interface Props {
+  variant: "body" | "lists"
+  paragraphs?: string[]
+  outcome?: string
+  lists?: List[]
+}
+const { variant, paragraphs = [], outcome, lists = [] } = Astro.props
+---
+<div class="flex flex-col items-center px-14 py-6 min-[641px]:px-16 min-[1025px]:px-24">
+  {variant === "body" ? (
+    <div class="flex w-full max-w-lg flex-col gap-6 text-base font-normal text-foreground min-[641px]:max-w-xl">
+      {paragraphs.map((p) => <p>{p}</p>)}
+      {outcome && <p><strong class="font-bold">Outcome</strong>: {outcome}</p>}
+    </div>
+  ) : (
+    <div class="w-full max-w-xl">
+      {lists.map(({ label, items }) => (
+        <AccordionItem label={label}>
+          <ul class="flex flex-col gap-3 text-base text-foreground">
+            {items.map((it) => (
+              <li class="flex gap-4">
+                <svg aria-hidden="true" class="size-6 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none"><path opacity="0.75" d="M7.5 12.5C7.22386 12.5 7 12.2761 7 12C7 11.7239 7.22386 11.5 7.5 11.5H16.5C16.7761 11.5 17 11.7239 17 12C17 12.2761 16.7761 12.5 16.5 12.5H7.5Z" fill="currentColor"/></svg>
+                <span class="min-w-0 flex-1">{it}</span>
+              </li>
+            ))}
+          </ul>
+        </AccordionItem>
+      ))}
+    </div>
+  )}
+</div>
