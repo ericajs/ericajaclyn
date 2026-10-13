@@ -6,9 +6,7 @@
     { "source": "/footlocker", "destination": "/uxdesign/footlocker", "permanent": true },
     { "source": "/berluti", "destination": "/uxdesign/berluti", "permanent": true },
     { "source": "/mariandynus", "destination": "/uxdesign/mariandynus", "permanent": true },
-    { "source": "/dynamic-solar", "destination": "/uxdesign", "permanent": true },
     { "source": "/milestonepod", "destination": "/uxdesign/milestonepod", "permanent": true },
-    { "source": "/kudos", "destination": "/uxdesign", "permanent": true },
     { "source": "/jwst", "destination": "/space", "permanent": true },
     { "source": "/astrophotography", "destination": "/space", "permanent": true },
     { "source": "/work", "destination": "/uxdesign", "permanent": true }
