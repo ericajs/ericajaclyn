@@ -38,7 +38,7 @@ const Heading = tagline ? "h3" : "h2"
       <div class="flex w-full max-w-lg flex-col gap-6 min-[769px]:gap-8">
         {tagline && (sectionHeading ? <h2 id={id} class={brow}>{tagline}</h2> : <p class={brow}>{tagline}</p>)}
         <Heading id={tagline ? undefined : id} class="text-2xl font-semibold">{heading}</Heading>
-        {body && <p class:list={[copy, "font-light"]}>{body}</p>}
+        {body && <p class:list={[copy, "font-normal"]}>{body}</p>}
         {items && (
           <ul class:list={[copy, "flex flex-col gap-4"]}>
             {items.map((item) => (

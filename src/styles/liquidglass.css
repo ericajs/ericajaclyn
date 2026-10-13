@@ -7,7 +7,7 @@
       --accent / --border here would silently override the shadcn
       tokens for every descendant.
    2. Ground and ink inherit from the site's own --background /
-      --foreground, so the guide flows out of SiteHeader instead of
+      --foreground, so the guide flows out of the navBar instead of
       sitting on a different colour. Only the guide-specific hues
       (accent, code, semantic) are declared locally.
 

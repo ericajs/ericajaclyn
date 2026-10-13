@@ -9,7 +9,8 @@
     { "source": "/dynamic-solar", "destination": "/uxdesign/dynasol", "permanent": true },
     { "source": "/milestonepod", "destination": "/uxdesign/milestonepod", "permanent": true },
     { "source": "/kudos", "destination": "/uxdesign/kudos", "permanent": true },
-    { "source": "/jwst", "destination": "/astrophotography", "permanent": true },
+    { "source": "/jwst", "destination": "/space", "permanent": true },
+    { "source": "/astrophotography", "destination": "/space", "permanent": true },
     { "source": "/work", "destination": "/uxdesign", "permanent": true }
   ]
 }

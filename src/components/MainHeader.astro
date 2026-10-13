@@ -1,0 +1,84 @@
+---
+// Figma: mainHeader (22880:83742) — the Home hero's copy column. Layers:
+//   mainHeader › gridItem › content › title / textBlock / actionItems
+// Renders as a direct child of the hero grid, beside the featured image
+// from 1024px and stacked above it below that.
+//
+// Responsive ranges follow the Responsive Specs tables
+// (≤640 / ≤768 / ≤1024 / >1024), expressed mobile-first as
+// min-[641px] / min-[769px] / min-[1025px]:
+//
+//                     ≤640   ≤768   ≤1024   >1024
+//   gridItem padding   56     64     80      96
+//   content max-width  384    384    384     384
+//   content gap        48     48     48      48
+//   title (heading-xl) 60/60  60/60  72/72   72/72
+//   actionItems height 44     44     40      40
+//
+// mainHeader's own padding (24 / 12) applies only while it is a column
+// beside the image; stacked, the hero grid's page padding already puts the
+// gridItem 12px from the viewport edge, as in the 640 / 768 frames.
+---
+<div class="main-header">
+  <div class="grid-item p-14 min-[641px]:p-16 min-[769px]:p-20 min-[1025px]:p-24">
+    <div class="content">
+      <h1 class="title heading-xl">
+        Digital Product <span class="italic">Design</span>
+      </h1>
+      <p class="text-block text-base leading-6">
+        Accessible and Inclusive User Experiences, Adaptive Design Systems, Agentic Automation
+      </p>
+      <div class="action-items">
+        <a href="/uxdesign" class="pill pill-primary pill-fluid">View Work</a>
+        <a href="/contact" class="pill pill-outline pill-fluid">Get In Touch</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .main-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grid-item {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Figma content: max-w-sm (384px), spacing/12 (48px) between the title,
+     textBlock and actionItems at every breakpoint */
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 100%;
+    max-width: 384px;
+  }
+
+  .action-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  /* Figma's smallest frame (640) keeps the actions in a row; below that
+     they stack full-width */
+  @media (max-width: 639px) {
+    .action-items {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+  }
+
+  /* Side by side with the image: mainHeader adds its own grid padding */
+  @media (min-width: 1024px) {
+    .main-header {
+      padding: 0.75rem 1.5rem;
+    }
+  }
+</style>

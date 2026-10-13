@@ -1,6 +1,6 @@
 ---
 import "@/styles/global.css"
-import SiteHeader from "@/components/SiteHeader.astro"
+import NavBar from "@/components/NavBar.astro"
 import SiteFooter from "@/components/SiteFooter.astro"
 
 interface Props {
@@ -31,6 +31,8 @@ const {
         } catch (e) {}
       })()
     </script>
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="stylesheet" href="https://use.typekit.net/pjj2hzl.css" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -48,7 +50,7 @@ const {
     >
       Skip to content
     </a>
-    <SiteHeader />
+    <NavBar />
     {/* Header and footer stay fluid; main content caps at 2560px (build note). */}
     <main id="main" class="flex-1 w-full mx-auto max-w-[var(--main-max-w)]">
       <slot />
