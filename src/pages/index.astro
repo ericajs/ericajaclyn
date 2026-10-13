@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 import Layout from "@/layouts/main.astro"
+import MainHeader from "@/components/MainHeader.astro"
 
 const allWork = await getCollection("work")
 const workSlides = allWork
@@ -18,13 +19,14 @@ const workSlides = allWork
     alt: e.data.heroAlt ?? e.data.coverAlt ?? "",
   }))
 
-// Fifth hero slide — an astrophotography piece that lives outside the work
-// collection (Build note: Project 5, Cats Paw Nebula → astrophotography).
+// Fifth hero slide — a Space piece that lives outside the work
+// collection (Build note: Project 5, Cats Paw Nebula → Space). Name only,
+// like the UX Design slides.
 const astroSlide = {
   title: "Cats Paw Nebula",
-  description: "JWST/astrophotography",
-  href: "/astrophotography#cats-paw",
-  cover: "/astrophotography/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFreg1-Hero.jpg",
+  description: "",
+  href: "/space#cats-paw",
+  cover: "/space/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFreg1-Hero.jpg",
   alt: "Portrait hero of the Cat's Paw Nebula processed from James Webb Space Telescope imagery.",
 }
 
@@ -36,22 +38,9 @@ const first = slides[0]
 
     {/* ── Hero grid: copy + featured image ───────────────────────
         Side by side from lg up, stacked below. Both columns are fluid;
-        the copy stays capped at 512px and centered in its column. */}
+        mainHeader keeps its content capped at 384px and centered. */}
     <div class="hero-grid">
-      <div class="hero-copy">
-        <div class="hero-copy-inner">
-          <h1 class="hero-heading font-semibold leading-none">
-            Digital Product Design
-          </h1>
-          <p class="text-base leading-6">
-            Accessible and Inclusive User Experiences, Adaptive Design Systems, Agentic Automation
-          </p>
-          <div class="hero-actions">
-            <a href="/uxdesign" class="pill pill-primary pill-fluid">View Work</a>
-            <a href="/contact" class="pill pill-outline pill-fluid">Get In Touch</a>
-          </div>
-        </div>
-      </div>
+      <MainHeader />
 
       <div id="hero-media" class="hero-media bg-muted" aria-live="polite">
         {slides.map((s, i) => (
@@ -82,7 +71,7 @@ const first = slides[0]
       <div class="hero-pager-spacer" aria-hidden="true"></div>
       <div class="hero-pager">
         <div class="flex items-center gap-4 min-w-0 flex-1">
-          <span id="hero-count" class="shrink-0 text-sm font-light leading-none text-muted-foreground">
+          <span id="hero-count" class="shrink-0 text-sm font-normal leading-none text-muted-foreground">
             1 of {slides.length}
           </span>
           <div class="flex items-center gap-3 min-w-0 flex-1">
@@ -118,20 +107,6 @@ const first = slides[0]
 </Layout>
 
 <style>
-  /* Figma: heading/xl steps 36px → 48px between the md and lg breakpoints */
-  .hero-heading {
-    font-size: clamp(2.25rem, 4.6875vw, 3rem);
-  }
-
-  /* Vertical rhythm inside the copy column: 24px at md → 48px at 2xl */
-  .hero-copy-inner {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.5rem, 3.125vw, 3rem);
-    width: 100%;
-    max-width: 512px;
-  }
-
   /* Grid rather than flex: with border-box padding, `flex: 1 1 0` would
      hand the padded copy column extra width and skew the 50/50 split. */
   .hero-grid {
@@ -139,32 +114,6 @@ const first = slides[0]
     grid-template-columns: minmax(0, 1fr);
     padding-inline: var(--page-px);
     padding-top: 0.75rem;
-  }
-
-  .hero-copy {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Figma space/xl/padding, scaled fluidly rather than stepped */
-    padding: clamp(2rem, 6.25vw, 6rem);
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    max-width: 384px;
-  }
-
-  /* Figma stacks the actions full-width below sm and lays them out in a
-     row from sm up */
-  @media (max-width: 639px) {
-    .hero-actions {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.5rem;
-      max-width: none;
-    }
   }
 
   .hero-media {

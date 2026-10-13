@@ -1,12 +1,21 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+/* Caecilia Sans, Praxis Next and Kepler load from Adobe Fonts (Typekit) in
+   layouts/main.astro; TASA Explorer is the fallback */
 @import "@fontsource-variable/tasa-explorer";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans: 'TASA Explorer Variable', sans-serif;
+    /* Figma font/font-sans-body — site-wide body face (Caecilia ships 400/700/800
+       only, so medium renders 400 and semibold renders 700) */
+    --font-sans: 'caecilia-sans-text', 'TASA Explorer Variable', sans-serif;
+    /* Figma font/font-sans-heading */
+    --font-sans-heading: 'caecilia-sans-head', 'caecilia-sans-text', 'TASA Explorer Variable', sans-serif;
+    /* Figma font/font-sans (Praxis Next) — kept for the accordion trigger */
+    --font-praxis: 'praxis-next', 'TASA Explorer Variable', sans-serif;
+    --font-serif-heading: 'kepler-3-display-extended', serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -59,18 +68,18 @@
     --card: #ffffff;
     --card-foreground: #1c1c1f;
     --popover: #ffffff;
-    --popover-foreground: #1c1c1f;
+    --popover-foreground: #3b3b3d;
     --primary: #0e0e0f;
     --primary-foreground: #ffffff;
-    --secondary: #e7e7ea;
+    --secondary: #eaeaea;
     --secondary-foreground: #1c1c1f;
-    --muted: #f1f1f2;
+    --muted: #f7f7f7;
     --muted-foreground: #747478;
     --accent: #3131f5;
     --accent-foreground: #2c2c2e;
     --destructive: oklch(0.577 0.245 27.325);
-    --border: #e7e7ea;
-    --input: #e7e7ea;
+    --border: #eaeaea;
+    --input: #eaeaea;
     --ring: #747478;
     --input-ring: #2563eb;
     --chart-1: #1c1c1f;
@@ -106,13 +115,13 @@
     --card: #1c1c1f;
     --card-foreground: #ffffff;
     --popover: #1c1c1f;
-    --popover-foreground: #ffffff;
+    --popover-foreground: #f7f7f7;
     --primary: #ffffff;
     --primary-foreground: #0e0e0f;
     --secondary: #2c2c2e;
     --secondary-foreground: #ffffff;
     --muted: #2c2c2e;
-    --muted-foreground: #f0f0f7;
+    --muted-foreground: #8e8e94;
     --accent: #3131f5;
     --accent-foreground: #ffffff;
     --destructive: oklch(0.704 0.191 22.216);
@@ -189,6 +198,67 @@
   .link {
     @apply text-accent-foreground underline underline-offset-4 hover:opacity-70 transition-opacity;
     }
+
+  /* Figma "custom/heading-xl" — font/font-serif-heading (Kepler 3 Display)
+     Extended Light, 72/72, stepping to 60/60 at ≤768 */
+  .heading-xl {
+    font-family: var(--font-serif-heading);
+    font-weight: 300;
+    font-size: 72px;
+    line-height: 72px;
+    letter-spacing: 0;
+    }
+  @media (max-width: 768px) {
+    .heading-xl {
+      font-size: 60px;
+      line-height: 60px;
+      }
+  }
+
+  /* Figma "custom/brow" — font/font-sans-heading Bold, 12/16, 1.2px tracking,
+     uppercase, muted. Eyebrows and taglines above headings. */
+  .brow {
+    font-family: var(--font-sans-heading);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    font-feature-settings: "case" 1, "lnum" 1, "pnum" 1;
+    color: var(--muted-foreground);
+    }
+
+  /* Figma "custom/heading-lg" — sectionHeader title. font/font-sans-heading
+     Regular, 42/48 above 1024, 40/48 at ≤1024 */
+  .heading-lg {
+    font-family: var(--font-sans-heading);
+    font-weight: 400;
+    font-size: 42px;
+    line-height: 48px;
+    letter-spacing: -0.2px;
+    font-feature-settings: "salt" 1;
+    }
+  @media (max-width: 1024px) {
+    .heading-lg {
+      font-size: 40px;
+      }
+  }
+
+  /* Figma "custom/heading-md" — featureSpace title. font/font-sans-heading
+     Regular, 34/42 above 768, 32/40 at ≤768 */
+  .heading-md {
+    font-family: var(--font-sans-heading);
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 42px;
+    letter-spacing: -0.2px;
+    }
+  @media (max-width: 768px) {
+    .heading-md {
+      font-size: 32px;
+      line-height: 40px;
+      }
+  }
 }
 
 /* Blue focus ring for all text-type form inputs — site-wide standard.

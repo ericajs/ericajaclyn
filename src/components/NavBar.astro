@@ -1,0 +1,78 @@
+---
+import Logo from "@/components/Logo.astro"
+import ThemeToggle from "@/components/ThemeToggle.astro"
+import NavLabel from "@/components/NavLabel.astro"
+import NavMenu from "@/components/NavMenu.astro"
+import { primaryNav, secondaryNav, isActivePath, navHover, navLink } from "@/lib/nav"
+
+const isActive = (href: string) => isActivePath(Astro.url.pathname, href)
+---
+{/* Figma navBar (17014:178483) — fluid edge-to-edge, no max-width, per
+    the Figma build note. 64px tall at every size. Responsive spec
+    (≤640 xs / ≤768 sm / ≤1024 md / >1024 lg): logo + menuButton with
+    py 6 through sm; links / logo / links + toggleGroup with py 12 from
+    md. Links are ghost sm buttons (14px, 32px tall, px 12) spaced 20px. */}
+<header class="w-full h-16 px-[var(--page-px)] py-1.5 flex items-center min-[769px]:py-3">
+  <div class="w-full">
+
+    {/* md / lg — links left, centered logo, links + theme toggle right.
+        Equal 1fr side columns keep the logo centered while never letting
+        either link group shrink under its content near 769px. */}
+    <div class="hidden min-[769px]:grid grid-cols-[1fr_auto_1fr] items-center">
+      <nav aria-label="Primary" class="flex items-center gap-5">
+        {primaryNav.map(({ href, label }) => (
+          <a
+            href={href}
+            aria-current={isActive(href) ? "page" : undefined}
+            class={`${navLink} pill-sm`}
+          >
+            <NavLabel label={label} active={isActive(href)} />
+          </a>
+        ))}
+      </nav>
+
+      <div class="flex items-center justify-center">
+        <a href="/" class="flex items-center justify-center size-10 hover:opacity-70 transition-opacity" aria-label="Home">
+          <Logo class="size-[26px]" />
+        </a>
+      </div>
+
+      <div class="flex items-center justify-end gap-5">
+        <nav aria-label="Secondary" class="flex items-center gap-5">
+          {secondaryNav.map(({ href, label }) => (
+            <a
+              href={href}
+              aria-current={isActive(href) ? "page" : undefined}
+              class={`${navLink} pill-sm`}
+            >
+              <NavLabel label={label} active={isActive(href)} />
+            </a>
+          ))}
+        </nav>
+        <ThemeToggle size="sm" class="shrink-0" />
+      </div>
+    </div>
+
+    {/* xs / sm — logo + menuButton (ghost icon, 24px Menu icon) */}
+    <div class="flex min-[769px]:hidden items-center justify-between">
+      <a href="/" class="flex items-center justify-center size-11 hover:opacity-70 transition-opacity" aria-label="Home">
+        <Logo class="size-[26px]" />
+      </a>
+      <button
+        type="button"
+        id="menu-open"
+        aria-label="Open menu"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        class:list={["flex items-center justify-center size-11 rounded-full transition-colors cursor-pointer", navHover]}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 12H20M4 6H20M4 18H20" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<NavMenu />

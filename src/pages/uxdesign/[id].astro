@@ -81,7 +81,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
       <section class="grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">
         {intro && (
           <div class:list={["flex min-h-36 flex-col items-center min-[769px]:min-h-[288px]", cardPad]}>
-            <p class="w-full max-w-lg text-base font-light">{intro}</p>
+            <p class="w-full max-w-lg text-base font-normal">{intro}</p>
           </div>
         )}
         <div class:list={["flex min-h-[288px] flex-col items-center bg-muted", cardPad]}>
@@ -93,7 +93,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
           <dl class="flex w-full max-w-lg flex-col gap-4">
             {meta.map(({ label, value }) => (
               <div class="flex items-start gap-3 border-b border-border pb-[11px] last:border-b-0 last:pb-0">
-                <dt class="min-w-16 shrink-0 text-sm font-light capitalize text-popover-foreground">{label}</dt>
+                <dt class="min-w-16 shrink-0 text-sm font-normal capitalize text-popover-foreground">{label}</dt>
                 <dd class="min-w-0 flex-1 text-sm">{value}</dd>
               </div>
             ))}
@@ -118,7 +118,7 @@ const cardPad = "p-10 min-[641px]:p-14 min-[769px]:p-16 min-[1025px]:p-24"
           <div class="px-10 pt-3 pb-6 min-[641px]:px-14 min-[769px]:px-16 min-[1025px]:px-24">
             <div class="mx-auto w-full max-w-lg min-[641px]:max-w-xl">
               {(aboutProject.length > 0 || outcome) && (
-                <div class="flex flex-col gap-6 pb-6 text-base font-light">
+                <div class="flex flex-col gap-6 pb-6 text-base font-normal">
                   {aboutProject.map((p) => <p>{p}</p>)}
                   {outcome && <p><strong class="font-bold">Outcome</strong>: {outcome}</p>}
                 </div>

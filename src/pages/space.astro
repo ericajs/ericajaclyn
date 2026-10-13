@@ -4,7 +4,7 @@ import BackToTop from "@/components/BackToTop.astro"
 import PageHero from "@/components/PageHero.astro"
 
 const hero = {
-  title: "Astrophotography",
+  title: "Space",
   subtitle: "Space Telescope Data Processing",
 }
 
@@ -18,6 +18,8 @@ type Nebula = {
   id: string
   nav: string
   title: string
+  // Part of `title` set in Caecilia Head Italic (Figma sectionHeader styling)
+  titleItalic?: string
   subtitle: string
   hero: { src: string; alt: string; aspect: string; overlay?: { title: string; description: string } }
   gallery: GalleryItem[]
@@ -27,13 +29,14 @@ type Nebula = {
   footnote?: string
 }
 
-const BASE = "/astrophotography"
+const BASE = "/space"
 
 const nebulae: Nebula[] = [
   {
     id: "carina-stellar-jets",
     nav: "Carina Nebula Stellar Jets",
     title: "Carina Nebula Protostellar Jets",
+    titleItalic: "Protostellar Jets",
     subtitle: "An atomic jet piercing a molecular cocoon in the Carina Nebula",
     hero: {
       src: `${BASE}/5408-CarinaNebula-StellarJets/5408-CarinaNebula-Stellar-Jets-HH666-Bicolor-FeII-H2.jpg`,
@@ -82,6 +85,7 @@ const nebulae: Nebula[] = [
     id: "cats-paw",
     nav: "Cat's Paw Nebula",
     title: "Cat's Paw Nebula",
+    titleItalic: "Nebula",
     subtitle: "NIRCam Observations Of A Star Forming Nebula",
     hero: {
       src: `${BASE}/6778-CatsPawNebula-SFReg1/6778-CatsPawNebula-SFreg1-Final.jpg`,
@@ -153,6 +157,7 @@ const nebulae: Nebula[] = [
     id: "southern-ring",
     nav: "Southern Ring Nebula",
     title: "Southern Ring Nebula",
+    titleItalic: "Nebula",
     subtitle: "JWST Early Release Observation Program 2733",
     hero: {
       src: `${BASE}/2733-SouthernRingNebula-NGC3132/2733-SouthernRingNebula-NGC3132-Final.jpg`,
@@ -231,6 +236,7 @@ const nebulae: Nebula[] = [
     id: "cosmic-cliffs",
     nav: "Carina Nebula Cosmic Cliffs",
     title: "Cosmic Cliffs of the Carina Nebula",
+    titleItalic: "Cosmic Cliffs",
     subtitle: "JWST Early Release Observation Program 2731",
     hero: {
       src: `${BASE}/2731-CarinaNebula-Cliffs-NGC3324/2731-CarinaNebula-Cliffs-NGC3324-Final.jpg`,
@@ -380,6 +386,36 @@ const galleryGrid = (cols: number) => {
   return "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-6"
 }
 
+// Gallery figCaption padding: Figma space/caption/default (24/16) for the
+// 2-up gallery, space/caption/compact (16/12) for the 5- and 6-up channel rows.
+const captionPad = (cols: number) => (cols <= 2 ? "px-6 py-4" : "px-4 py-3")
+
+// Split a section title around its italic fragment (copy is unchanged)
+const splitTitle = (title: string, italic?: string) => {
+  const i = italic ? title.indexOf(italic) : -1
+  if (!italic || i < 0) return { before: title, italic: "", after: "" }
+  return { before: title.slice(0, i), italic, after: title.slice(i + italic.length) }
+}
+
+// featureSpace grid — stacked with 12/6 grid padding through ≤768, two
+// columns with 24/12 above. gridItem padding steps 56 / 64 / 80 / 96.
+const featureGrid =
+  "grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3"
+const cellPad = "p-14 min-[641px]:p-16 min-[769px]:p-20 min-[1025px]:p-24"
+const cellGap = "gap-6 min-[641px]:gap-8 min-[769px]:gap-10 min-[1025px]:gap-12"
+// Second gridItem gets a divider once the cells sit side by side
+const cellDivider = "min-[769px]:border-l min-[769px]:border-border"
+// textBlock paragraph spacing (space/grid/gap): 12 through ≤768, 24 above
+const paraGap = "space-y-3 min-[769px]:space-y-6"
+// sectionHeader — grid padding 12/6 through ≤768, 24/12 above; content
+// max-width 384 → 512, padding-top 56/64/80/96, padding-bottom 32/40/48/48,
+// gap 16/16/24/24
+const sectionHeaderWrap = "px-3 py-1.5 min-[769px]:px-6 min-[769px]:py-3"
+const sectionHeaderContent =
+  "flex w-full max-w-sm flex-col items-center gap-4 text-center pt-14 pb-8 min-[641px]:pt-16 min-[641px]:pb-10 min-[769px]:max-w-lg min-[769px]:gap-6 min-[769px]:pt-20 min-[769px]:pb-12 min-[1025px]:pt-24"
+// richText horizontal padding (space/xl/pad)
+const richPad = "py-6 px-14 min-[641px]:px-16 min-[769px]:px-20 min-[1025px]:px-24"
+
 const aboutLead =
   "Unlike local astrophotography data, space telescope i2d.fits data is already calibrated, dark-subtracted, flat-fielded, and mostly distortion-corrected. My job is alignment, dynamic range control, noise management, flux normalization, color mapping, calibration, and detail enhancement."
 
@@ -389,7 +425,7 @@ const acknowledgments = [
 ]
 ---
 <Layout
-  title="Astrophotography — Erica Jaclyn Stein"
+  title="Space — Erica Jaclyn Stein"
   description="Space telescope image processing by Erica Jaclyn Stein — public JWST data, artistically rendered."
 >
   <article>
@@ -398,33 +434,44 @@ const acknowledgments = [
 
     <div class="max-w-[1920px] mx-auto w-full">
 
-      {/* ── Intro Feature.2 — Composite Imagery + Jump To ─────── */}
-      <section class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
-        <div class="flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
-          <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight">{intro.heading}</h2>
-          <p class="text-base">{intro.body}</p>
+      {/* ── Intro featureSpace — Composite Imagery + Jump To ──── */}
+      <section class:list={[featureGrid, "items-stretch"]}>
+        <div class:list={["flex flex-col items-center justify-center", cellPad]}>
+          <div class:list={["flex w-full max-w-lg flex-col", cellGap]}>
+            <h2 class="heading-md text-foreground">{intro.heading}</h2>
+            <p class="text-base">{intro.body}</p>
+          </div>
         </div>
-        <nav aria-label="Jump to image" class="bg-muted flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
-          <p class="eyebrow text-sm font-semibold uppercase tracking-wide">Jump To</p>
-          <ul class="space-y-3">
-            {nebulae.map((n) => (
-              <li>
-                <a href={`#${n.id}`} class="text-base font-medium hover:underline underline-offset-4">
-                  {n.nav}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <nav aria-label="Jump to image" class:list={["flex flex-col items-center justify-center", cellPad, cellDivider]}>
+          <div class:list={["flex w-full max-w-lg flex-col", cellGap]}>
+            <p class="brow">Jump To</p>
+            <ul class="flex flex-col gap-6">
+              {nebulae.map((n) => (
+                <li>
+                  <a href={`#${n.id}`} class="text-base leading-none text-primary underline underline-offset-4 hover:opacity-70 transition-opacity">
+                    {n.nav}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </nav>
       </section>
 
       {/* ── Nebula sections ───────────────────────────────────── */}
-      {nebulae.map((n, idx) => (
+      {nebulae.map((n, idx) => {
+        const t = splitTitle(n.title, n.titleItalic)
+        return (
         <section id={n.id} class="scroll-mt-24">
-          <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
-            <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-              <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-semibold tracking-tight">{n.title}</h2>
-              {n.subtitle && <p class="text-base text-muted-foreground">{n.subtitle}</p>}
+          {/* sectionHeader — top rule, heading-lg title with its italic fragment */}
+          <header class={sectionHeaderWrap}>
+            <div class="flex flex-col items-center border-t border-border">
+              <div class={sectionHeaderContent}>
+                <h2 class="heading-lg text-foreground">
+                  {t.before}{t.italic && <span class="italic leading-none">{t.italic}</span>}{t.after}
+                </h2>
+                {n.subtitle && <p class="text-sm text-muted-foreground">{n.subtitle}</p>}
+              </div>
             </div>
           </header>
 
@@ -450,10 +497,13 @@ const acknowledgments = [
                   class="h-full w-full object-cover"
                 />
               </button>
+              {/* Figma overlayCaption above 768: 384 wide, 12 in from the bottom-left,
+                  24/16 padding, 14 radius, blur/xl ÷ 2 backdrop blur, white text.
+                  At ≤768 a standard figCaption below the image (24 padding). */}
               {n.hero.overlay && (
-                <figcaption class="mt-3 min-[769px]:mt-0 min-[769px]:pointer-events-none min-[769px]:absolute min-[769px]:bottom-6 min-[769px]:left-6 min-[769px]:max-w-md min-[769px]:rounded-xl min-[769px]:bg-black/45 min-[769px]:px-4 min-[769px]:py-3 min-[769px]:text-white min-[769px]:backdrop-blur-sm">
-                  <p class="text-sm font-medium leading-none">{n.hero.overlay.title}</p>
-                  <p class="mt-1.5 text-sm text-muted-foreground leading-normal min-[769px]:text-white/80">{n.hero.overlay.description}</p>
+                <figcaption class="flex flex-col gap-0.5 p-6 text-sm min-[769px]:pointer-events-none min-[769px]:absolute min-[769px]:bottom-3 min-[769px]:left-3 min-[769px]:w-96 min-[769px]:max-w-[calc(100%-1.5rem)] min-[769px]:rounded-[14px] min-[769px]:bg-white/[0.01] min-[769px]:px-6 min-[769px]:py-4 min-[769px]:text-white min-[769px]:backdrop-blur-[12px]">
+                  <p class="font-medium text-card-foreground min-[769px]:text-white">{n.hero.overlay.title}</p>
+                  <p class="text-muted-foreground min-[769px]:text-white">{n.hero.overlay.description}</p>
                 </figcaption>
               )}
             </figure>
@@ -483,12 +533,15 @@ const acknowledgments = [
                           class="absolute inset-0 h-full w-full object-cover"
                         />
                       </button>
-                      <figcaption class="mt-3">
+                      <figcaption class:list={["flex flex-col gap-0.5 text-sm", captionPad(n.galleryCols)]}>
                         <div class="flex items-center gap-2">
-                          <span class="size-2.5 shrink-0 rounded-full" style={`background-color:${g.dot}`} aria-hidden="true"></span>
-                          <p class="text-sm font-medium leading-none">{g.name}</p>
+                          {/* Figma Icon / Circle — 16px icon box, 13.33px filled circle */}
+                          <span class="flex size-4 shrink-0 items-center justify-center" aria-hidden="true">
+                            <span class="size-[13.333px] rounded-full" style={`background-color:${g.dot}`}></span>
+                          </span>
+                          <p class="min-w-0 flex-1 font-medium text-card-foreground">{g.name}</p>
                         </div>
-                        <p class="mt-1.5 text-sm text-muted-foreground leading-normal">{g.description}</p>
+                        <p class="text-muted-foreground">{g.description}</p>
                       </figcaption>
                     </figure>
                   </li>
@@ -497,39 +550,54 @@ const acknowledgments = [
             </div>
           )}
 
-          {/* Feature.2 — composite description (left) + Details (right, muted) */}
-          <div class="w-full px-3 py-1.5 sm:px-6 sm:py-3 grid md:grid-cols-2 gap-3 sm:gap-6 items-stretch">
-            <div class="flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
-              <h3 class="text-xl sm:text-2xl font-semibold tracking-tight">{n.feature.heading}</h3>
-              <div class="space-y-4 text-base">
-                {n.feature.body.map((p) => <p>{p}</p>)}
+          {/* featureSpace — composite description (left) + description list
+              (right, divided by a rule from 769). Stacked at ≤768 the first
+              cell trims its bottom padding and the second its top (Figma
+              space/lg/pad: 32 at ≤640, 40 at ≤768). */}
+          <div class:list={[featureGrid, "items-stretch"]}>
+            <div class:list={["flex min-h-36 flex-col items-center justify-center min-[769px]:min-h-[288px]", cellPad, "pb-8 min-[641px]:pb-10"]}>
+              <div class="flex w-full max-w-lg flex-col gap-8">
+                <h3 class="heading-md text-foreground">{n.feature.heading}</h3>
+                <div class:list={["text-base", paraGap]}>
+                  {n.feature.body.map((p) => <p>{p}</p>)}
+                </div>
               </div>
             </div>
-            <div class="bg-muted flex flex-col justify-center gap-6 p-8 md:p-12 xl:p-24">
-              <dl class="flex flex-col">
-                {n.details.map(([label, value], i) => (
-                  <div class={`flex flex-col gap-0.5 sm:flex-row sm:gap-4 py-3 ${i === 0 ? "" : "border-t border-border"}`}>
-                    <dt class="shrink-0 text-sm font-light capitalize text-muted-foreground sm:w-48">{label}</dt>
-                    <dd class="flex-1 text-sm">{value}</dd>
-                  </div>
-                ))}
-              </dl>
-              {n.footnote && <p class="text-xs text-muted-foreground leading-relaxed">{n.footnote}</p>}
+            <div class:list={["flex min-h-[288px] flex-col items-center justify-center", cellPad, "pt-8 min-[641px]:pt-10", cellDivider]}>
+              <div class="flex w-full max-w-lg flex-col gap-3">
+                {/* descriptionList.item — vertical at ≤640, term left / details
+                    right above; each entry closes with a bottom rule */}
+                <dl class="flex flex-col gap-3">
+                  {n.details.map(([label, value]) => (
+                    <div class="flex flex-col gap-1.5 border-b border-border pb-3 text-sm min-[641px]:flex-row min-[641px]:gap-6">
+                      <dt class="shrink-0 capitalize text-popover-foreground min-[641px]:whitespace-nowrap">{label}</dt>
+                      <dd class="min-w-0 text-muted-foreground min-[641px]:flex-1 min-[641px]:text-right">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {n.footnote && (
+                  <p class="pt-6 text-xs text-muted-foreground min-[1025px]:text-popover-foreground">{n.footnote}</p>
+                )}
+              </div>
             </div>
           </div>
         </section>
-      ))}
+        )
+      })}
 
       {/* ── Outro — About ─────────────────────────────────────── */}
       <section>
-        <header class="px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
-          <div class="max-w-2xl mx-auto flex flex-col items-center gap-8 text-center">
-            <h2 class="text-[28px] leading-9 sm:text-4xl sm:leading-10 font-semibold tracking-tight">About Space Telescope Imagery</h2>
+        <header class={sectionHeaderWrap}>
+          <div class="flex flex-col items-center border-t border-border">
+            <div class={sectionHeaderContent}>
+              <h2 class="heading-lg text-foreground">About Space Telescope Imagery</h2>
+            </div>
           </div>
         </header>
 
-        <div class="max-w-3xl mx-auto px-6 py-3 sm:py-6">
-          <div class="space-y-6 text-base mb-6">
+        {/* richText (default) — 16/24 text block, 576 max (512 at ≤640) */}
+        <div class:list={["flex flex-col items-center", richPad]}>
+          <div class:list={["w-full max-w-lg text-base min-[641px]:max-w-xl", paraGap]}>
             <p>{aboutLead}</p>
             <p>
               All images are public data, processed through multiple applications, and artistically
@@ -537,29 +605,31 @@ const acknowledgments = [
               send requests to <a href="mailto:erica@ericajaclyn.com" class="link">erica@ericajaclyn.com</a>.
             </p>
           </div>
+        </div>
 
-          {/* Acknowledgements accordion (collapsed by default) */}
-          <div class="border-t border-border">
-            <details class="group border-b border-border">
-              <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
-                <span class="text-xl sm:text-2xl font-semibold tracking-tight">Acknowledgements</span>
-                <span class="relative size-5 shrink-0 text-muted-foreground" aria-hidden="true">
-                  <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </span>
-              </summary>
-              <div class="pb-6 space-y-3 text-base text-muted-foreground">
-                {acknowledgments.map((a) => <p>{a}</p>)}
-              </div>
-            </details>
-          </div>
+        {/* richText (accordions) — Acknowledgements, collapsed by default */}
+        <div class:list={["flex flex-col items-center", richPad]}>
+          <details class="group w-full max-w-xl border-b border-border">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4">
+              <span class="min-w-0 flex-1 font-praxis text-[26px] leading-8 font-medium tracking-[-0.5px] text-foreground">Acknowledgements</span>
+              <span class="relative size-6 shrink-0 text-muted-foreground" aria-hidden="true">
+                <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V19"/><path d="M5 12H19"/></svg>
+                <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12H19"/></svg>
+              </span>
+            </summary>
+            <div class:list={["pb-4 text-base text-foreground", paraGap]}>
+              {acknowledgments.map((a) => <p>{a}</p>)}
+            </div>
+          </details>
         </div>
       </section>
     </div>
 
-    {/* ── Back to UX Design CTA ───────────────────────────────── */}
-    <div class="py-6 px-6 max-w-[1920px] mx-auto w-full flex justify-center mb-12 mt-8">
-      <a href="/uxdesign" class="pill pill-primary h-11 sm:h-10 px-4 text-base w-full sm:w-auto">Back to UX Design</a>
+    {/* ── Back to UX Design CTA — padding 32 at ≤768, 48/12 above; the
+         button hugs its label (max 384) and keeps the 44px touch height
+         through ≤768 ─────────────────────────────────────────────── */}
+    <div class="max-w-[1920px] mx-auto w-full flex justify-center px-6 py-8 min-[769px]:pt-12 min-[769px]:pb-3">
+      <a href="/uxdesign" class="pill pill-primary h-11 min-[769px]:h-10 max-w-96 px-4 text-base leading-none">Back to UX Design</a>
     </div>
   </article>
 
@@ -611,11 +681,6 @@ const acknowledgments = [
 </Layout>
 
 <style>
-  /* Eyebrow label — Figma base/accent blue, mode-aware via the site's blue token */
-  .eyebrow {
-    color: var(--input-ring);
-  }
-
   /* ── Wave bounce-in for the first section's channel gallery ── */
   .hero-gallery > li {
     opacity: 0;
