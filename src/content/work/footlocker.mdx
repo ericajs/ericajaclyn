@@ -47,7 +47,7 @@ draft: true
 
 
 import CaseFigure from "@/components/case/CaseFigure.astro"
-import FeatureDetails from "@/components/case/FeatureDetails.astro"
+import FeatureCaseStudy from "@/components/case/FeatureCaseStudy.astro"
 import CaseGallery from "@/components/case/CaseGallery.astro"
 
 {/* Section.1 — Repeatable Patterns (text → square), Reusable Components (square → text) */}
@@ -59,15 +59,16 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled Foot Locker pages on a dark background: a Top Sellers at Capital Plaza product grid, store details and sneaker photography."
 />
 
-<FeatureDetails
+<FeatureCaseStudy
+  variant="imageRight"
   id="repeatable-patterns"
   heading="Repeatable Patterns"
   body="Foot Locker’s design system was hand-crafted to include responsive and flexible UX patterns—the bedrock of a cohesive end-to-end customer experience across multiple channels."
   image={{ src: "/ux-design/footlocker/1x1-iPadPro12-R-Events.jpg", alt: "Tablet showing Champs Sports event cards for the Jordan Why Not Zer0.5 and Jordan XXXVI releases, above a list of nearby Champs Sports stores." }}
 />
 
-<FeatureDetails
-  imageFirst
+<FeatureCaseStudy
+  variant="imageLeft"
   id="reusable-components"
   heading="Reusable Components"
   body="A large, carefully crafted component library that Foot Locker could extend, customize, and build on."
@@ -92,7 +93,8 @@ import CaseGallery from "@/components/case/CaseGallery.astro"
   alt="Angled Foot Locker store finder pages on a dark background: a list of stores in Chicago, IL beside a dark map with red location pins."
 />
 
-<FeatureDetails
+<FeatureCaseStudy
+  variant="imageRight"
   id="branded-mapbox-integration"
   heading="Branded Mapbox Integration"
   body="Mapbox Studio used for multi-brand customization and adding an extra flair of character to the navigational and mapping user experience."

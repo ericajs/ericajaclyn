@@ -10,28 +10,39 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
   title="Contact — Erica Jaclyn Stein"
   description="Get in touch with Erica Jaclyn Stein for product design, design systems, and accessible UX work."
 >
-  <PageHero title="Contact" />
+  <PageHero
+    title="Contact"
+    description="UX UI Design, Accessible and Inclusive User Experiences, Adaptive Design Systems, Agentic Automation"
+    smAtMd
+  />
 
-  <section class="max-w-6xl mx-auto px-6 pb-16 sm:pb-24">
+  {/* Figma contactForm — two gridItems on base/background, side by side
+      above 768 with a rule between them, stacked at ≤768 with a rule above
+      the form. Spec (>1024 | ≤1024 | ≤768 | ≤640):
+        row padding     24/12  24/12  12/6   12/6
+        cell padding      96     64     64     56
+        content max      512    512    512    384
+        block gap         48 at every width (heading → text → actions)
+        buttons           40     40     44     44 (full width at ≤640) */}
+  <section class="mx-auto grid w-full max-w-[1920px] gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3">
 
-    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-stretch">
-
-      {/* ── Left: invitation ──────────────────────────────────── */}
-      <div class="flex flex-col gap-12 p-6 sm:p-10 lg:p-16">
-        <div class="flex flex-col gap-8 max-w-lg">
-          <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight">Ready to collaborate?</h2>
-          <p class="text-base font-normal leading-6">
+    {/* ── Left: invitation ──────────────────────────────────── */}
+    <div class="flex flex-col items-center bg-background p-14 min-[641px]:p-16 min-[1025px]:p-24">
+      <div class="flex w-full max-w-sm flex-col gap-12 min-[641px]:max-w-lg">
+        <div class="flex flex-col gap-12">
+          <h2 class="heading-sm text-foreground">Ready to collaborate?</h2>
+          <p class="text-base font-normal">
             I’d love to hear from you! Whether you’re ready to start a project or just want to learn
             more about how I can help, feel free to reach out.
           </p>
         </div>
 
-        <div>
+        <div class="flex">
           <a
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            class="pill pill-outline pill-fluid"
+            class="pill pill-outline h-11 w-full px-4 text-base min-[641px]:w-auto min-[769px]:h-10"
           >
             {/* Icon / ArrowUpRight */}
             <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -41,20 +52,24 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
           </a>
         </div>
       </div>
+    </div>
 
-      {/* ── Right: form ───────────────────────────────────────── */}
-      <div class="bg-muted rounded-3xl p-6 sm:p-10 lg:p-16">
-        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-12">Get in touch</h2>
+    {/* ── Right: form ───────────────────────────────────────── */}
+    {/* Stacked, the rule sits inside the cell's top padding (Figma inside
+        stroke), so the top padding gives back its 1px */}
+    <div class="flex flex-col items-center border-t border-border bg-background p-14 pt-[55px] min-[641px]:p-16 min-[641px]:pt-[63px] min-[769px]:border-t-0 min-[769px]:border-l min-[769px]:pt-16 min-[1025px]:p-24">
+      <div class="flex w-full max-w-sm flex-col gap-12 min-[641px]:max-w-lg">
+        <h2 class="heading-sm text-foreground">Get in touch</h2>
 
         <form
           id="contact-form"
           action={`https://formspree.io/f/${FORMSPREE_ID}`}
           method="POST"
           novalidate
-          class="flex flex-col gap-8 max-w-xl"
+          class="flex flex-col gap-8"
         >
           <div class="flex flex-col gap-2">
-            <label for="name" class="text-sm font-medium">Name</label>
+            <label for="name" class="text-sm leading-none font-bold">Name</label>
             <input
               id="name" name="name" type="text" required
               autocomplete="name" placeholder="Your name"
@@ -65,7 +80,7 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
           </div>
 
           <div class="flex flex-col gap-2">
-            <label for="email" class="text-sm font-medium">Email</label>
+            <label for="email" class="text-sm leading-none font-bold">Email</label>
             <input
               id="email" name="email" type="email" required
               autocomplete="email" placeholder="example@mail.com"
@@ -76,12 +91,12 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
           </div>
 
           <div class="flex flex-col gap-2">
-            <label for="message" class="text-sm font-medium">Message</label>
+            <label for="message" class="text-sm leading-none font-bold">Message</label>
             <textarea
               id="message" name="message" required rows={4}
               placeholder="Your message here"
               aria-describedby="message-error"
-              class="contact-input min-h-24 w-full rounded-3xl border border-input p-4 text-base placeholder:text-muted-foreground focus:outline-none resize-y"
+              class="contact-input min-h-24 h-24 w-full rounded-3xl border border-input p-4 text-base placeholder:text-muted-foreground focus:outline-none resize-y"
             ></textarea>
             <p id="message-error" data-error class="hidden text-base text-destructive">Please provide detail.</p>
           </div>
@@ -90,7 +105,7 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
           <input type="text" name="_gotcha" class="hidden" aria-hidden="true" tabindex="-1" />
 
           <div class="flex justify-end">
-            <button type="submit" class="pill pill-primary pill-md">
+            <button type="submit" class="pill pill-primary h-11 w-full px-4 text-base min-[641px]:w-auto min-[769px]:h-10">
               {/* Icon / Send */}
               <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M9.16667 10.8333 1.66667 7.5 18.3333 1.66667 12.5 18.3333 9.16667 10.8333ZM18.3333 1.66667 9.16667 10.8333" />

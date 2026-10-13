@@ -11,7 +11,7 @@ interface Props {
 const { title, src, alt = "", aspect, loading = "lazy", class: className = "" } = Astro.props
 ---
 {src ? (
-  <div class:list={[aspect, "overflow-hidden bg-muted", className]}>
+  <div class:list={[aspect, "overflow-hidden bg-background", className]}>
     <img
       src={src}
       alt={alt}

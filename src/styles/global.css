@@ -7,14 +7,169 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─────────────────────────────────────────────────────────────
+   Caecilia Sans faces — explicit per style
+   Adobe kit pjj2hzl ships each Caecilia weight three ways (upright,
+   Italic, Oblique) but declares the Oblique files as font-style: normal,
+   so two faces share one descriptor and the later one wins (Bold and
+   ExtraBold rendered slanted). These rules re-declare the same kit files
+   under unambiguous names: font-style normal = upright, oblique =
+   Oblique (Figma "PMNCaeciliaSans Head Obl"), italic = true Italic.
+   The kit stylesheet in layouts/main.astro still loads and serves the
+   files; if the kit is republished and its file URLs change, update
+   them here from https://use.typekit.net/pjj2hzl.css.
+   ───────────────────────────────────────────────────────────── */
+/* Caecilia Sans Head Regular */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/2e10d9/00000000000000007735bc30/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff2"), url("https://use.typekit.net/af/2e10d9/00000000000000007735bc30/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff"), url("https://use.typekit.net/af/2e10d9/00000000000000007735bc30/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: auto;
+}
+/* Caecilia Sans Head Oblique */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/0a2037/00000000000000007735bc2e/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff2"), url("https://use.typekit.net/af/0a2037/00000000000000007735bc2e/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff"), url("https://use.typekit.net/af/0a2037/00000000000000007735bc2e/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("opentype");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: auto;
+}
+/* Caecilia Sans Head Italic */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/519189/00000000000000007735bc25/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3") format("woff2"), url("https://use.typekit.net/af/519189/00000000000000007735bc25/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3") format("woff"), url("https://use.typekit.net/af/519189/00000000000000007735bc25/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: auto;
+}
+/* Caecilia Sans Head Bold */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/455c0a/00000000000000007735bc14/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff2"), url("https://use.typekit.net/af/455c0a/00000000000000007735bc14/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/455c0a/00000000000000007735bc14/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: auto;
+}
+/* Caecilia Sans Head Bold Oblique */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/e023e6/00000000000000007735bc18/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff2"), url("https://use.typekit.net/af/e023e6/00000000000000007735bc18/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/e023e6/00000000000000007735bc18/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("opentype");
+  font-weight: 700;
+  font-style: oblique;
+  font-display: auto;
+}
+/* Caecilia Sans Head Bold Italic */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/6bb29b/00000000000000007735bc17/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3") format("woff2"), url("https://use.typekit.net/af/6bb29b/00000000000000007735bc17/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3") format("woff"), url("https://use.typekit.net/af/6bb29b/00000000000000007735bc17/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: auto;
+}
+/* Caecilia Sans Head ExtraBold */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/fe1e7b/00000000000000007735bc20/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff2"), url("https://use.typekit.net/af/fe1e7b/00000000000000007735bc20/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff"), url("https://use.typekit.net/af/fe1e7b/00000000000000007735bc20/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: auto;
+}
+/* Caecilia Sans Head ExtraBold Oblique */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/26c1c3/00000000000000007735bc24/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff2"), url("https://use.typekit.net/af/26c1c3/00000000000000007735bc24/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff"), url("https://use.typekit.net/af/26c1c3/00000000000000007735bc24/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("opentype");
+  font-weight: 800;
+  font-style: oblique;
+  font-display: auto;
+}
+/* Caecilia Sans Head ExtraBold Italic */
+@font-face {
+  font-family: "Caecilia Sans Head";
+  src: url("https://use.typekit.net/af/8f2eb6/00000000000000007735bc22/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i8&v=3") format("woff2"), url("https://use.typekit.net/af/8f2eb6/00000000000000007735bc22/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i8&v=3") format("woff"), url("https://use.typekit.net/af/8f2eb6/00000000000000007735bc22/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i8&v=3") format("opentype");
+  font-weight: 800;
+  font-style: italic;
+  font-display: auto;
+}
+/* Caecilia Sans Text Regular */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/74cab7/00000000000000007735bc33/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff2"), url("https://use.typekit.net/af/74cab7/00000000000000007735bc33/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff"), url("https://use.typekit.net/af/74cab7/00000000000000007735bc33/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: auto;
+}
+/* Caecilia Sans Text Oblique */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/350592/00000000000000007735bc31/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff2"), url("https://use.typekit.net/af/350592/00000000000000007735bc31/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("woff"), url("https://use.typekit.net/af/350592/00000000000000007735bc31/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3") format("opentype");
+  font-weight: 400;
+  font-style: oblique;
+  font-display: auto;
+}
+/* Caecilia Sans Text Italic */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/5c83c2/00000000000000007735bc28/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3") format("woff2"), url("https://use.typekit.net/af/5c83c2/00000000000000007735bc28/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3") format("woff"), url("https://use.typekit.net/af/5c83c2/00000000000000007735bc28/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: auto;
+}
+/* Caecilia Sans Text Bold */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/177360/00000000000000007735bc16/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff2"), url("https://use.typekit.net/af/177360/00000000000000007735bc16/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/177360/00000000000000007735bc16/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: auto;
+}
+/* Caecilia Sans Text Bold Oblique */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/675609/00000000000000007735bc1b/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff2"), url("https://use.typekit.net/af/675609/00000000000000007735bc1b/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/675609/00000000000000007735bc1b/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3") format("opentype");
+  font-weight: 700;
+  font-style: oblique;
+  font-display: auto;
+}
+/* Caecilia Sans Text Bold Italic */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/550f5b/00000000000000007735bc19/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3") format("woff2"), url("https://use.typekit.net/af/550f5b/00000000000000007735bc19/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3") format("woff"), url("https://use.typekit.net/af/550f5b/00000000000000007735bc19/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: auto;
+}
+/* Caecilia Sans Text ExtraBold */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/ddfb8c/00000000000000007735bc23/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff2"), url("https://use.typekit.net/af/ddfb8c/00000000000000007735bc23/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff"), url("https://use.typekit.net/af/ddfb8c/00000000000000007735bc23/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: auto;
+}
+/* Caecilia Sans Text ExtraBold Oblique */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/fdf957/00000000000000007735bc27/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff2"), url("https://use.typekit.net/af/fdf957/00000000000000007735bc27/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("woff"), url("https://use.typekit.net/af/fdf957/00000000000000007735bc27/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n8&v=3") format("opentype");
+  font-weight: 800;
+  font-style: oblique;
+  font-display: auto;
+}
+/* Caecilia Sans Text ExtraBold Italic */
+@font-face {
+  font-family: "Caecilia Sans Text";
+  src: url("https://use.typekit.net/af/baf453/00000000000000007735bc26/31/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i8&v=3") format("woff2"), url("https://use.typekit.net/af/baf453/00000000000000007735bc26/31/d?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i8&v=3") format("woff"), url("https://use.typekit.net/af/baf453/00000000000000007735bc26/31/a?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i8&v=3") format("opentype");
+  font-weight: 800;
+  font-style: italic;
+  font-display: auto;
+}
+
 @theme inline {
     /* Figma font/font-sans-body — site-wide body face (Caecilia ships 400/700/800
        only, so medium renders 400 and semibold renders 700) */
-    --font-sans: 'caecilia-sans-text', 'TASA Explorer Variable', sans-serif;
+    --font-sans: 'Caecilia Sans Text', 'caecilia-sans-text', 'TASA Explorer Variable', sans-serif;
     /* Figma font/font-sans-heading */
-    --font-sans-heading: 'caecilia-sans-head', 'caecilia-sans-text', 'TASA Explorer Variable', sans-serif;
-    /* Figma font/font-sans (Praxis Next) — kept for the accordion trigger */
-    --font-praxis: 'praxis-next', 'TASA Explorer Variable', sans-serif;
+    --font-sans-heading: 'Caecilia Sans Head', 'caecilia-sans-head', 'Caecilia Sans Text', 'TASA Explorer Variable', sans-serif;
     --font-serif-heading: 'kepler-3-display-extended', serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -229,7 +384,8 @@
     }
 
   /* Figma "custom/heading-lg" — sectionHeader title. font/font-sans-heading
-     Regular, 42/48 above 1024, 40/48 at ≤1024 */
+     Regular, 42/48 above 1024, 40/48 at ≤1024 (the case study
+     SectionHeader holds 42 down to 769px) */
   .heading-lg {
     font-family: var(--font-sans-heading);
     font-weight: 400;
@@ -244,14 +400,26 @@
       }
   }
 
-  /* Figma "custom/heading-md" — featureSpace title. font/font-sans-heading
-     Regular, 34/42 above 768, 32/40 at ≤768 */
+  /* Figma "custom/heading-sm" — contactForm headings. font/font-sans-heading
+     Regular, 26/32 at every width */
+  .heading-sm {
+    font-family: var(--font-sans-heading);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: 0;
+    font-feature-settings: "salt" 1;
+    }
+
+  /* Figma "custom/heading-md" — featureSpace / featureCaseStudy title.
+     font/font-sans-heading Regular, 34/42 above 768, 32/40 at ≤768 */
   .heading-md {
     font-family: var(--font-sans-heading);
     font-weight: 400;
     font-size: 34px;
     line-height: 42px;
     letter-spacing: -0.2px;
+    font-feature-settings: "salt" 1;
     }
   @media (max-width: 768px) {
     .heading-md {
@@ -269,4 +437,12 @@ select:focus {
   outline: none;
   border-color: var(--input-ring);
   box-shadow: 0 0 0 3px var(--input-ring);
+}
+
+/* Figma heading-lg / heading-md "oblique" variant — the Caecilia Sans Head
+   Oblique face (not the narrower true Italic). Wrap the slanted fragment of
+   a heading: <h2 class="heading-lg">Carina Nebula <span class="oblique">
+   Protostellar Jets</span></h2>. Size, line height and tracking inherit. */
+@utility oblique {
+  font-style: oblique;
 }

@@ -1,0 +1,135 @@
+---
+// Figma: featureCaseStudy (22883:73374) — the case study grid row.
+// Variants:
+//   intro      — titleBlock (tagline + optional heading + text) beside a
+//                descriptionList; a 1px rule divides the cells side by side
+//   imageRight — titleBlock card, then a square image on a muted card
+//   imageLeft  — same cells with the image visually first above 768;
+//                stacked (≤768) the text still leads, so DOM order stays
+//                text → image at every width
+//   images     — two square images on muted cards
+//
+// Two columns above 768; one stacked column at ≤768 (gap 24 → 12, row
+// padding 24/12 → 12/6).
+//
+// Spec (>1024 | ≤1024 | ≤768 | ≤640), from the page frames' variable modes:
+//   text card padding     96     64     64     56
+//   intro titleBlock gap  48     32     32     24
+//   intro padding (≤768)  —      —   64/64/40  56/56/32  (top/x/bottom;
+//                                    the list card mirrors it bottom-up)
+//   feature titleBlock gap 32 at every width
+//   heading-md           34/42  34/42  32/40  32/40
+//   text card min-height 288 side by side, 144 stacked; image cards 288
+//   image cards sit on base/background (white), not muted
+//   list gap 12, item gap 16, 24px dash marker
+//
+// `sectionHeading` renders the tagline as the section's h2 (the first
+// card of a tagged section); repeat taglines stay visual brows so the
+// outline reads h2 → h3 → h3. Without a tagline (titleBlock Tagline
+// hidden) the heading itself is the section h2.
+interface Image {
+  src: string
+  alt: string
+}
+interface Meta {
+  label: string
+  value: string
+}
+interface Props {
+  variant: "intro" | "imageRight" | "imageLeft" | "images"
+  tagline?: string
+  heading?: string
+  body?: string
+  items?: string[]
+  image?: Image
+  images?: [Image, Image]
+  meta?: Meta[]
+  sectionHeading?: boolean
+  id?: string
+}
+const {
+  variant,
+  tagline,
+  heading,
+  body,
+  items,
+  image,
+  images,
+  meta = [],
+  sectionHeading = false,
+  id,
+} = Astro.props
+
+const grid = "grid gap-3 px-3 py-1.5 min-[769px]:grid-cols-2 min-[769px]:gap-6 min-[769px]:px-6 min-[769px]:py-3"
+const textCard = "flex flex-col items-center justify-center bg-background"
+const textMinH = "min-h-36 min-[769px]:min-h-[288px]"
+const featurePad = "p-14 min-[641px]:p-16 min-[1025px]:p-24"
+const imageCard = "flex min-h-[288px] items-center justify-center bg-background"
+const heading2 = "heading-md text-foreground"
+const Heading = tagline ? "h3" : "h2"
+---
+{variant === "intro" ? (
+  <section aria-labelledby={id} class={grid}>
+    <div class:list={[textCard, textMinH, "px-14 pt-14 pb-8 min-[641px]:px-16 min-[641px]:pt-16 min-[641px]:pb-10 min-[769px]:p-16 min-[1025px]:p-24"]}>
+      <div class="flex w-full max-w-lg flex-col gap-6 min-[641px]:gap-8 min-[1025px]:gap-12">
+        {tagline && <h2 id={id} class="brow">{tagline}</h2>}
+        {heading && (
+          <p class="heading-lg text-foreground min-[769px]:text-[42px]">{heading}</p>
+        )}
+        {body && <p class="text-base font-normal text-foreground">{body}</p>}
+      </div>
+    </div>
+    {/* descriptionList — horizontal (term column min 64, 12 gap) from 641px;
+        at ≤640 the term stacks above its details (6 gap), per the master's
+        xs variant. Rows pad 11px + a 1px divider (Figma's 12px padding with
+        an inside stroke); the last row has no divider and no bottom padding. */}
+    <div class="flex flex-col items-center justify-center bg-background px-14 pt-8 pb-14 min-[641px]:px-16 min-[641px]:pt-10 min-[641px]:pb-16 min-[769px]:border-l min-[769px]:border-border min-[769px]:p-16 min-[1025px]:p-24">
+      <dl class="flex w-full max-w-lg flex-col gap-3">
+        {meta.map(({ label, value }) => (
+          <div class="flex flex-col gap-1.5 border-b border-border pb-[11px] last:border-b-0 last:pb-0 min-[641px]:flex-row min-[641px]:items-start min-[641px]:gap-3">
+            <dt class="text-sm font-normal text-popover-foreground min-[641px]:min-w-16 min-[641px]:shrink-0">{label}</dt>
+            <dd class="min-w-0 text-sm font-normal text-muted-foreground min-[641px]:flex-1">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+) : variant === "images" ? (
+  <div class={grid}>
+    {images?.map((img) => (
+      <figure class={imageCard}>
+        <div class="aspect-square w-full overflow-hidden">
+          <img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="size-full object-cover" />
+        </div>
+      </figure>
+    ))}
+  </div>
+) : (
+  <div class={grid}>
+    <div class:list={[textCard, textMinH, featurePad]}>
+      <div class="flex w-full max-w-lg flex-col gap-8">
+        {tagline && (sectionHeading ? <h2 id={id} class="brow">{tagline}</h2> : <p class="brow">{tagline}</p>)}
+        {heading && <Heading id={tagline ? undefined : id} class={heading2}>{heading}</Heading>}
+        {body && <p class="text-base font-normal text-foreground">{body}</p>}
+        {items && (
+          <ul class="flex flex-col gap-3 text-base text-foreground">
+            {items.map((item) => (
+              <li class="flex gap-4">
+                {/* list.Item marker=dash — Figma MarkerIcon path, muted at 75% */}
+                <svg aria-hidden="true" class="size-6 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none"><path opacity="0.75" d="M7.5 12.5C7.22386 12.5 7 12.2761 7 12C7 11.7239 7.22386 11.5 7.5 11.5H16.5C16.7761 11.5 17 11.7239 17 12C17 12.2761 16.7761 12.5 16.5 12.5H7.5Z" fill="currentColor"/></svg>
+                <span class="min-w-0 flex-1">{item}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+    {image && (
+      <div class:list={[imageCard, variant === "imageLeft" && "min-[769px]:order-first"]}>
+        <div class="aspect-square w-full overflow-hidden">
+          <img src={image.src} alt={image.alt} loading="lazy" decoding="async" class="size-full object-cover" />
+        </div>
+      </div>
+    )}
+  </div>
+)}

@@ -20,7 +20,7 @@ const { columns } = Astro.props
   {columns.map((column) => (
     <div class="flex flex-col gap-3 min-[769px]:gap-6">
       {column.map(({ src, alt, natural }) => (
-        <figure class:list={["overflow-hidden bg-muted", !natural && "aspect-square"]}>
+        <figure class:list={["overflow-hidden bg-background", !natural && "aspect-square"]}>
           <img src={src} alt={alt} width={natural?.width} height={natural?.height} loading="lazy" decoding="async" class:list={["w-full", natural ? "h-auto" : "h-full object-cover"]} />
         </figure>
       ))}

@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/main.astro"
 import PageHero from "@/components/PageHero.astro"
+import AccordionItem from "@/components/AccordionItem.astro"
 
 const bio = [
   "Advances in technology continue to reshape how we view and use information, constantly moving digital design into new realms of exploration. This is where I work—meeting the shift between what was, what is, and what's still taking shape with a steady, empirical practice: testing assumptions, grounding decisions in research, and building things that hold up as the ground shifts beneath them.",
@@ -61,15 +62,8 @@ const accordions = [
     {/* ── Accordions (collapsed by default) ─────────────────── */}
     <div class="mt-12">
       {accordions.map(({ label, items, badges }) => (
-        <details class="group border-b border-border">
-          <summary class="flex items-center justify-between py-6 cursor-pointer list-none gap-4">
-            <span class="text-2xl font-semibold tracking-tight">{label}</span>
-            <span class="relative size-6 shrink-0 text-muted-foreground" aria-hidden="true">
-              <svg class="absolute inset-0 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <svg class="absolute inset-0 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </span>
-          </summary>
-          <div class="pb-6">
+        <AccordionItem label={label}>
+          <div>
             <ul class="space-y-3">
               {items.map((it) => (
                 <li class="flex gap-4">
@@ -88,7 +82,7 @@ const accordions = [
               </ul>
             )}
           </div>
-        </details>
+        </AccordionItem>
       ))}
     </div>
 
