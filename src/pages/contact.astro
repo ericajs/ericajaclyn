@@ -2,8 +2,7 @@
 import Layout from "@/layouts/main.astro"
 import PageHero from "@/components/PageHero.astro"
 
-// Replace YOUR_FORM_ID with the ID from formspree.io after creating your form
-const FORMSPREE_ID = "YOUR_FORM_ID"
+const BASIN_URL = "https://usebasin.com/f/5cc816389ff2"
 const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
 ---
 <Layout
@@ -63,7 +62,7 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/ericajaclyn/"
 
         <form
           id="contact-form"
-          action={`https://formspree.io/f/${FORMSPREE_ID}`}
+          action={BASIN_URL}
           method="POST"
           novalidate
           class="flex flex-col gap-8"
