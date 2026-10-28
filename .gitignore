@@ -21,3 +21,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# private notes (kept local, never committed)
+docs/
+session-records/

@@ -15,6 +15,9 @@ const {
   ogImage,
 } = Astro.props
 
+// One canonical address per page: bare domain, no trailing slash
+const path = Astro.url.pathname.replace(/\/+$/, "")
+const canonicalURL = new URL(path || "/", Astro.site)
 ---
 
 <html lang="en" dir="ltr">
@@ -36,6 +39,9 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
