@@ -1,0 +1,36 @@
+---
+// The Threshold sign: an arched door, an eye that doubles as a keyhole, and
+// the sill. It is the book's cover mark, the induction's fixation point and
+// the cue for the task at the end, so every instance is this one component.
+// pathLength="1" on each stroke lets CSS "draw" it with a 0–1 dashoffset.
+interface Props {
+  class?: string
+  title?: string
+}
+const { class: cls, title } = Astro.props
+---
+
+<svg
+  class:list={["sign", cls]}
+  viewBox="0 0 100 120"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? "img" : undefined}
+  aria-hidden={title ? undefined : "true"}
+>
+  {title && <title>{title}</title>}
+  <path
+    class="sign-glow"
+    d="M22 108 V48 A28 28 0 0 1 78 48 V108 Z"
+    stroke="none"></path>
+  <path
+    class="sign-stroke"
+    d="M22 108 V48 A28 28 0 0 1 78 48 V108"
+    pathLength="1"></path>
+  <circle class="sign-stroke" cx="50" cy="56" r="11" pathLength="1"></circle>
+  <path class="sign-stroke" d="M50 67 V92" pathLength="1"></path>
+  <path class="sign-stroke" d="M8 108 H92" pathLength="1"></path>
+</svg>

@@ -18,7 +18,10 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    // /liquidglass stays out until we decide whether it should be public
-    sitemap({ filter: (page) => !page.includes("/liquidglass") }),
+    // /liquidglass stays out until we decide whether it should be public;
+    // /threshold is fiction (invented book and reviews) and is noindex
+    sitemap({
+      filter: (page) => !page.includes("/liquidglass") && !page.includes("/threshold"),
+    }),
   ],
 })
