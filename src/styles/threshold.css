@@ -28,7 +28,7 @@
   --fg-muted: var(--muted);
   --line: color-mix(in oklab, var(--fg) 14%, transparent);
 
-  --serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --serif: "Newsreader Variable", "Iowan Old Style", Georgia, serif;
   --sans: "Figtree Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --gutter: clamp(16px, 4vw, 40px);
 
@@ -259,7 +259,7 @@ html.is-under .nav {
 }
 .hero h1 {
   font: 500 clamp(3.5rem, 2rem + 7vw, 7.5rem) / 0.95 var(--serif);
-  font-variation-settings: "opsz" 144;
+  font-variation-settings: "opsz" 72;
   letter-spacing: -0.02em;
   margin-top: 18px;
 }
@@ -335,7 +335,7 @@ html.is-under .nav {
 }
 .cover-title {
   font: 500 clamp(1.9rem, 1rem + 3vw, 2.6rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 144;
+  font-variation-settings: "opsz" 72;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -660,7 +660,7 @@ html.is-under .nav {
 .chapter-head h2 {
   margin-top: 18px;
   font: 400 clamp(2.5rem, 1.5rem + 4vw, 4.5rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 144;
+  font-variation-settings: "opsz" 72;
 }
 
 .beat {
@@ -897,7 +897,7 @@ html:not(.js) .chapter-head {
 }
 .count {
   font: 200 clamp(4.5rem, 3rem + 9vw, 9rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 144;
+  font-variation-settings: "opsz" 72;
   color: var(--fg-muted);
   transition: color 1.2s ease;
 }
@@ -1050,7 +1050,7 @@ html:not(.js) .chapter-head {
 .welcome h2 {
   margin-top: 24px;
   font: 500 clamp(2.75rem, 1.5rem + 5vw, 5.5rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 144;
+  font-variation-settings: "opsz" 72;
 }
 .welcome-care {
   margin-top: 20px;

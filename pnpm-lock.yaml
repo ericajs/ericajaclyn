@@ -20,7 +20,7 @@ importers:
       '@fontsource-variable/figtree':
         specifier: ^5.2.10
         version: 5.2.10
-      '@fontsource-variable/fraunces':
+      '@fontsource-variable/newsreader':
         specifier: ^5.3.0
         version: 5.3.0
       '@fontsource-variable/tasa-explorer':
@@ -571,8 +571,8 @@ packages:
   '@fontsource-variable/figtree@5.2.10':
     resolution: {integrity: sha512-a5Gumbpy3mdd+Yg31g6Qb7CmjYbrfyutJa3bWfP5q8A4GclIOwX7mI+ZuSHsJnw/mHvW6r9oh1AHJcJTIxK4JA==}
 
-  '@fontsource-variable/fraunces@5.3.0':
-    resolution: {integrity: sha512-9BYGySn4AHEJdgp9Z28tQ3X+laJMEOITXkQarZXeloWQZDq5oOvXJ3kDA8c7MGIfpogIaZfjrQBqmda8POOCKA==}
+  '@fontsource-variable/newsreader@5.3.0':
+    resolution: {integrity: sha512-rrzYi43qMpbzwuFtf9OkWH8sxAPVPcQQQEwXpPtwaKYeJ8yVg5aLs5kawmo1f2Q1t1M38TLmEKCkGVDsYwgdFw==}
 
   '@fontsource-variable/tasa-explorer@5.2.2':
     resolution: {integrity: sha512-AL36qT/EJfQQtdlsewKaAvgxePSok6A0mffaA1mza83MWck4LEi8EnQTIkmxZ1+Jy7mJDcXARtDiwUoqubPRpQ==}
@@ -5092,7 +5092,7 @@ snapshots:
 
   '@fontsource-variable/figtree@5.2.10': {}
 
-  '@fontsource-variable/fraunces@5.3.0': {}
+  '@fontsource-variable/newsreader@5.3.0': {}
 
   '@fontsource-variable/tasa-explorer@5.2.2': {}
 
