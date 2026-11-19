@@ -1,0 +1,1123 @@
+---
+// /threshold — an interactive fiction. It opens as an ordinary publisher
+// microsite for a book that does not exist, then, as the reader scrolls,
+// turns into a guided induction: fixation, paced breathing, relaxation, a
+// countdown deepener, one post-hypnotic task, and a count-up emergence.
+//
+// It deliberately does NOT use the portfolio layout (layouts/main.astro): the
+// illusion depends on it looking like someone else's site. Styling lives in
+// styles/threshold.css, behaviour in the <script> at the bottom.
+import "@fontsource-variable/fraunces/opsz.css"
+import "@fontsource-variable/fraunces/opsz-italic.css"
+import "@fontsource-variable/figtree/index.css"
+import "@/styles/threshold.css"
+import Sign from "@/components/threshold/Sign.astro"
+
+const title = "Threshold — the new book by Dr. Isidore Valme"
+const description =
+  "Lucid dreaming, mind control and the secret grammar of symbols. The thirty-fourth book from psychoanalyst Dr. Isidore Valme. Read Chapter One free."
+const canonicalURL = new URL("/threshold", Astro.site)
+
+// "Selected works". The marked word in each highlighted title is kept when
+// the list dims, and together they read: "You are already reading slower."
+const works = [
+  ["The Wakeful Sleeper", 1988],
+  [["", "You", " and the Night Mind"], 1990],
+  ["Notes from the Hypnagogic Shore", 1992],
+  [["Dreams ", "Are", " Letters"], 1994],
+  ["A Grammar of Doors", 1997],
+  ["The Sleeping Crowd", 1999],
+  ["Mother, Mirror, Moon", 2002],
+  [["", "Already", " Elsewhere"], 2004],
+  ["The Analyst’s Lantern", 2006],
+  ["Seven Lectures on Trance", 2009],
+  [["", "Reading", " the Dark"], 2011],
+  ["Small Hours", 2013],
+  ["On Being Watched in Dreams", 2016],
+  [["", "Slower", " Than Sleep"], 2018],
+  ["The Second Attention", 2021],
+  ["Sigil", 2024],
+] as const
+
+const stairs = [
+  "Ten. Stepping down.",
+  "Nine. Each step twice as easy as the last.",
+  "Eight. Heavier now.",
+  "Seven. Any sounds around you are still there. They don’t need you.",
+  "Six. Deeper.",
+  "Five. Halfway down, and settling.",
+  "Four. Letting go a little more.",
+  "Three. Almost there.",
+  "Two. Deeper still.",
+  "One. All the way down.",
+]
+
+const emergence = [
+  "One. Beginning to come back up, slowly, easily.",
+  "Two. Feeling returning to your hands and your feet.",
+  "Three. The room around you. The sounds. The light.",
+  "Four. Take a deeper breath. Almost there.",
+  "Five. Eyes wide open. Wide awake, clear-headed, feeling good.",
+]
+---
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add("js")
+    </script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {
+      /* A fictional book with fictional reviews should not surface in search
+        results as though it were real. */
+    }
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/threshold/favicon.svg" />
+    <meta name="theme-color" content="#f5f0e6" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <a class="skip" href="#book">Skip to content</a>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <!-- ─────────────────────────── Act I: the microsite ─────────────────────────── -->
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="wordmark" href="#top" aria-label="Threshold, home">
+          <Sign class="wordmark-sign" />
+          <span>Threshold</span>
+        </a>
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="#book">The book</a></li>
+            <li><a href="#praise">Praise</a></li>
+            <li><a href="#author">The author</a></li>
+            <li><a href="#read">Chapter One</a></li>
+          </ul>
+        </nav>
+        <button class="btn btn-sm" type="button" data-preorder>Pre-order</button
+        >
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero wrap" aria-labelledby="hero-title" data-depth="0">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            The new book from Dr. Isidore Valme · February 2, 2027
+          </p>
+          <h1 id="hero-title">Threshold</h1>
+          <p class="hero-sub">
+            Lucid Dreaming, Mind Control &amp; the Secret Grammar of Symbols
+          </p>
+          <p class="hero-lede">
+            In his thirty-fourth book, the world’s most-read psychoanalyst shows
+            that the images you dream at night are the same images used to steer
+            you by day — and teaches you how to take them back.
+          </p>
+          <div class="hero-actions">
+            <button class="btn" type="button" data-preorder
+              >Pre-order the hardcover</button
+            >
+            <a class="btn btn-ghost" href="#read">Read Chapter One free</a>
+          </div>
+          <p class="hero-formats">
+            Hardcover · Ebook · Audiobook read by the author
+          </p>
+        </div>
+
+        <div class="book" aria-hidden="true">
+          <div class="book-cover">
+            <span class="cover-author">Isidore Valme</span>
+            <Sign class="cover-sign" />
+            <span class="cover-title">Threshold</span>
+            <span class="cover-sub"
+              >Lucid Dreaming, Mind Control<br />&amp; the Secret Grammar of
+              Symbols</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="praise" id="praise" aria-label="Praise for Threshold">
+        <div class="wrap praise-grid">
+          <figure>
+            <blockquote>
+              “A disquieting, luminous book. I haven’t slept the same way
+              since.”
+            </blockquote>
+            <figcaption>The Somnolent Review</figcaption>
+          </figure>
+          <figure>
+            <blockquote>
+              “Valme writes like a man holding a lantern in a room you didn’t
+              know was in your house.”
+            </blockquote>
+            <figcaption>Interior Quarterly</figcaption>
+          </figure>
+          <figure>
+            <blockquote>
+              “I don’t remember finishing it. I remember the door.”
+            </blockquote>
+            <figcaption>
+              Margit Oyelaran, author of <cite>The Glass Orchard</cite>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="about wrap" id="book" aria-labelledby="about-title">
+        <p class="eyebrow">About the book</p>
+        <h2 id="about-title">
+          Every night you sleep, you enter a language you’ve forgotten how to
+          read.
+        </h2>
+        <p class="about-lede">
+          Drawing on four decades of clinical practice and an archive of more
+          than twelve thousand recorded dreams, Dr. Valme argues that the
+          unconscious speaks in a small, stable vocabulary of symbols — and that
+          anyone fluent in it can shape what you feel, what you choose and what
+          you remember. Advertisers learned it. Demagogues learned it. Now,
+          quietly,
+          <em>you can learn it too</em>.
+        </p>
+
+        <ul class="pillars" role="list">
+          <li>
+            <Sign class="pillar-sign" />
+            <h3>Lucid dreaming</h3>
+            <p>
+              The habits that let you notice you’re dreaming, from simple
+              reality checks to the Threshold Method. Once you notice, you can
+              stay — and steer.
+            </p>
+          </li>
+          <li>
+            <Sign class="pillar-sign" />
+            <h3>Influence</h3>
+            <p>
+              Why the most powerful suggestions are the ones you never notice
+              receiving. A field guide to the patterns hidden in ordinary
+              speech, so you can recognise them —
+              <em>and let them work</em>.
+            </p>
+          </li>
+          <li>
+            <Sign class="pillar-sign" />
+            <h3>Symbols</h3>
+            <p>
+              The forty images that recur in every dreamer’s life, and the one
+              that matters most: the door. What it means when it’s locked, when
+              it’s open, and when it’s already behind you.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="pull" aria-label="Excerpt">
+        <div class="wrap">
+          <blockquote>
+            <p>
+              “You are never more suggestible than when you believe you are
+              simply reading.”
+            </p>
+            <footer>— from Chapter One</footer>
+          </blockquote>
+        </div>
+      </section>
+
+      <section class="author wrap" id="author" aria-labelledby="author-title">
+        <div class="portrait" aria-hidden="true"><span>IV</span></div>
+        <div>
+          <p class="eyebrow">About the author</p>
+          <h2 id="author-title">Dr. Isidore Valme</h2>
+          <p>
+            Isidore Valme is a psychoanalyst, sleep researcher and the author of
+            thirty-three previous books, translated into forty-one languages.
+            For nineteen years he directed the Night Clinic at the Halden
+            Institute for the Study of Sleep, where he pioneered the “threshold
+            interview”: a conversation conducted in the minute between waking
+            and sleep.
+          </p>
+          <p>
+            He lives on a small island he declines to name and has not, by his
+            own account, had an ordinary dream since 1987. You have probably
+            read one of his books without knowing it.
+          </p>
+        </div>
+      </section>
+
+      <section class="works wrap" aria-labelledby="works-title">
+        <h2 id="works-title" class="eyebrow">Selected works</h2>
+        <ol class="works-grid" role="list">
+          {
+            works.map(([t, year]) => (
+              <li>
+                <span class="work-title">
+                  {typeof t === "string" ? (
+                    t
+                  ) : (
+                    <>
+                      {t[0]}
+                      <mark>{t[1]}</mark>
+                      {t[2]}
+                    </>
+                  )}
+                </span>
+                <span class="work-year">{year}</span>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="works-after" aria-hidden="true">— good. Keep going.</p>
+      </section>
+
+      <section
+        class="read"
+        id="read"
+        aria-labelledby="read-title"
+        data-depth="0"
+      >
+        <div class="wrap read-inner">
+          <p class="eyebrow">Free preview</p>
+          <h2 id="read-title">Read Chapter One, right here.</h2>
+          <p>No download, no email address. Just keep scrolling.</p>
+
+          <form class="read-form" id="name-form" autocomplete="off">
+            <label for="first-name"
+              >What should Dr. Valme call you? <span>(optional)</span></label
+            >
+            <div class="read-row">
+              <input
+                id="first-name"
+                name="first-name"
+                type="text"
+                maxlength="40"
+                autocomplete="given-name"
+              />
+              <button class="btn" type="submit">Begin Chapter One</button>
+            </div>
+            <p class="fine">
+              Your name stays on this page. It isn’t sent anywhere.
+            </p>
+          </form>
+          <p class="read-status" role="status" aria-live="polite"></p>
+
+          <div class="listen">
+            <button
+              class="btn btn-ghost"
+              type="button"
+              data-action="sound"
+              aria-pressed="false"
+            >
+              <span class="listen-icon" aria-hidden="true"></span>
+              <span class="sound-label">Play the reading soundscape</span>
+            </button>
+            <p class="fine">
+              Composed to accompany Chapter One. Best with headphones.
+            </p>
+          </div>
+
+          <p class="fine notice">
+            Chapter One includes a guided relaxation. Read it sitting or lying
+            down — never while driving. You can stop at any time: press <kbd
+              >Esc</kbd
+            > or choose “Wake up”.
+          </p>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────── Act II: the induction ─────────────────────────── -->
+      <div class="chapter" id="chapter-one" aria-labelledby="chapter-title">
+        <header class="chapter-head" data-depth="0.05">
+          <p class="chapter-num">Chapter One</p>
+          <h2 id="chapter-title">The Threshold</h2>
+        </header>
+
+        <div class="beat" data-depth="0.15">
+          <p>
+            Before we begin, make yourself comfortable<span
+              class="name-slot"
+              data-sep=", "></span>.
+          </p>
+        </div>
+        <div class="beat" data-depth="0.3">
+          <p>
+            Sit back a little. Let your shoulders drop. There is nowhere else
+            you need to be for the next few minutes.
+          </p>
+        </div>
+        <div class="beat" data-depth="0.45">
+          <p>
+            You’ve been reading this page the way you read everything — quickly,
+            skimming, a little guarded.
+          </p>
+        </div>
+        <div class="beat" data-depth="0.6">
+          <p>
+            That’s all right. You don’t need to do anything differently. You
+            only need to keep reading.
+          </p>
+        </div>
+        <div class="beat" data-depth="0.78">
+          <p>
+            And as you keep reading, you may notice that the page is growing
+            darker.
+          </p>
+        </div>
+        <div class="beat" data-depth="0.92"><p>That’s fine. Let it.</p></div>
+        <div class="beat" data-depth="1">
+          <p>Now let your eyes find the sign.</p>
+        </div>
+
+        <section
+          class="scene scene-fix"
+          data-depth-from="1"
+          data-depth-to="1"
+          data-focus
+          style="--n:4"
+          aria-label="Fixation"
+        >
+          <div class="stage">
+            <div class="stage-visual">
+              <div class="fix" data-breath>
+                <span class="ripple"></span><span class="ripple"></span><span
+                  class="ripple"></span>
+                <svg class="ticks" viewBox="0 0 200 200" aria-hidden="true">
+                  <circle cx="100" cy="100" r="92"></circle>
+                </svg>
+                <Sign class="fix-sign" />
+              </div>
+            </div>
+            <div class="caps">
+              <p class="cap">
+                Rest your eyes on the small circle at its centre.
+              </p>
+              <p class="cap">
+                If they wander, let them — then bring them back. Bringing them
+                back is the whole exercise.
+              </p>
+              <p class="cap">
+                Hold your gaze still, and notice how the edges of the screen
+                begin to soften on their own.
+              </p>
+              <p class="cap">
+                Your eyelids may feel heavier. Let them blink, slowly, whenever
+                they like.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="scene scene-breath"
+          data-depth-from="1"
+          data-depth-to="1"
+          style="--n:4"
+          aria-label="Breathing"
+        >
+          <div class="stage">
+            <div class="stage-visual">
+              <div class="breath" data-breath>
+                <div class="breath-ring"></div>
+                <span class="breath-label" aria-hidden="true">in</span>
+              </div>
+            </div>
+            <div class="caps">
+              <p class="cap">Now breathe with the circle. In as it grows…</p>
+              <p class="cap">…and out as it falls away.</p>
+              <p class="cap">
+                About five breaths a minute. Slower than you usually breathe.
+                Easier than you’d expect.
+              </p>
+              <p class="cap">Each breath out lets a little more go.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="beat" data-depth="1">
+          <p>Let the small muscles around your eyes go loose.</p>
+        </div>
+        <div class="beat" data-depth="1">
+          <p>Let your jaw unclench. Let your tongue rest.</p>
+        </div>
+        <div class="beat" data-depth="1">
+          <p>Let your shoulders drop another inch.</p>
+        </div>
+        <div class="beat" data-depth="1">
+          <p>
+            Feel the weight of your hands. Heavy, warm and still — all except
+            the one that scrolls.
+          </p>
+        </div>
+        <div class="beat" data-depth="1">
+          <p>That hand can keep moving. The rest of you doesn’t need to.</p>
+        </div>
+        <div class="beat" data-depth="1">
+          <p>
+            In a moment you’ll see a staircase. Ten steps down. With each step,
+            you’ll go twice as deep.
+          </p>
+        </div>
+
+        <section
+          class="scene scene-stairs"
+          data-depth-from="1"
+          data-depth-to="1"
+          data-chime="down"
+          style={`--n:${stairs.length}`}
+          aria-label="Ten steps down"
+        >
+          <div class="stage">
+            <div class="stage-visual">
+              <div class="stairs" aria-hidden="true">
+                <div class="stairs-run">
+                  {
+                    Array.from({ length: 14 }, (_, i) => (
+                      <div class="step" style={`--i:${i}`} />
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
+            <div class="caps caps-count">
+              {
+                stairs.map((line, i) => (
+                  <div class="cap">
+                    <span class="count" aria-hidden="true">
+                      {10 - i}
+                    </span>
+                    <p>{line}</p>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="scene scene-door"
+          data-depth-from="1"
+          data-depth-to="1"
+          style="--n:6"
+          aria-label="The door"
+        >
+          <div class="stage">
+            <div class="stage-visual">
+              <Sign class="door" />
+            </div>
+            <div class="caps">
+              <p class="cap">At the bottom of the stairs, there is a door.</p>
+              <p class="cap">
+                You’ve seen it before. On the cover. On every page. You’ve been
+                looking at it the whole time.
+              </p>
+              <p class="cap">It isn’t locked. It never was.</p>
+              <p class="cap">Let it open.</p>
+              <p class="cap">On the other side it is very quiet.</p>
+              <p class="cap">
+                And in the quiet you can hear one instruction, very clearly.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div class="task" aria-labelledby="task-title">
+          <h3 id="task-title" class="sr-only">Your task</h3>
+          <div class="beat" data-depth="1">
+            <p>
+              From now on, whenever you step through a doorway, you will pause —
+              only for a moment —
+            </p>
+          </div>
+          <div class="beat" data-depth="1"><p>look down at your hands,</p></div>
+          <div class="beat" data-depth="1">
+            <p>and ask yourself, quietly: <em>Am I dreaming?</em></p>
+          </div>
+          <div class="beat" data-depth="1">
+            <p>
+              Most of the time the answer will be no. One night the answer will
+              be yes — and you will know exactly where you are.
+            </p>
+          </div>
+          <div class="beat" data-depth="1">
+            <p>
+              And tonight, before you sleep, draw the sign on the back of your
+              hand. Small. Only you need to see it.
+            </p>
+          </div>
+
+          <div class="accept" data-depth="1">
+            <p class="accept-lede">If you accept, press and hold the sign.</p>
+            <button class="hold" type="button" aria-describedby="hold-help">
+              <svg class="hold-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="hold-track" cx="50" cy="50" r="46"></circle>
+                <circle class="hold-fill" cx="50" cy="50" r="46" pathLength="1"
+                ></circle>
+              </svg>
+              <Sign class="hold-sign" />
+              <span class="sr-only">Press and hold to accept the task</span>
+            </button>
+            <p id="hold-help" class="hold-help">
+              Hold for three seconds — with a mouse, a finger, or the Space key.
+            </p>
+            <p class="accept-done" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="beat" data-depth="1">
+            <p>
+              You can leave the door open behind you. It will be there when you
+              need it.
+            </p>
+          </div>
+          <div class="beat" data-depth="1" id="wake-point">
+            <p>
+              In a moment I’ll count from one to five. With each number you’ll
+              come back up, bringing the task with you and leaving everything
+              else behind.
+            </p>
+          </div>
+        </div>
+
+        <section
+          class="scene scene-rise"
+          data-depth-from="0.95"
+          data-depth-to="0.04"
+          data-chime="up"
+          style={`--n:${emergence.length}`}
+          aria-label="Counting up from one to five"
+        >
+          <div class="stage">
+            <div class="stage-visual">
+              <span class="rise-glow" aria-hidden="true"></span>
+            </div>
+            <div class="caps caps-count">
+              {
+                emergence.map((line, i) => (
+                  <div class="cap">
+                    <span class="count" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <p>{line}</p>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ─────────────────────────── Act III: daylight ─────────────────────────── -->
+      <section
+        class="welcome wrap"
+        id="welcome"
+        aria-labelledby="welcome-title"
+        data-depth="0"
+      >
+        <Sign class="welcome-sign" />
+        <h2 id="welcome-title">
+          Welcome back<span class="name-slot" data-sep=", "></span>.
+        </h2>
+        <p class="welcome-care">
+          Take a moment before you stand up. Have a glass of water. Notice the
+          room.
+        </p>
+        <p class="welcome-lede">
+          You’ve just finished Chapter One of <cite>Threshold</cite>.
+        </p>
+        <p class="welcome-status" data-status-pending>
+          You didn’t take the task. That’s all right. The door will wait.
+        </p>
+        <p class="welcome-status" data-status-done hidden>
+          You accepted the task. The next doorway you walk through, you’ll
+          remember.
+        </p>
+        <div class="hero-actions">
+          <button class="btn" type="button" data-preorder
+            >Pre-order Threshold</button
+          >
+          <a class="btn btn-ghost" href="#top">Back to the top</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-inner">
+        <p class="foot-mark">
+          <Sign class="wordmark-sign" /> Oneirograph Press
+        </p>
+        <p class="fine">
+          <cite>Threshold</cite>, Dr. Isidore Valme, Oneirograph Press, the
+          Halden Institute and every review on this page are fictional. This
+          page is an interactive story, not therapy or medical advice. The
+          doorway “reality check” it ends with is a real, harmless
+          lucid-dreaming habit; you’re free to ignore it. If you have epilepsy,
+          a dissociative condition or a history of psychosis, or if relaxation
+          exercises make you feel unwell, skip the guided section.
+        </p>
+        <p class="fine"><a href="/">An experiment by Erica Jaclyn</a></p>
+      </div>
+    </footer>
+
+    <div class="controls" role="group" aria-label="Reading controls">
+      <button type="button" data-action="sound" aria-pressed="false"
+        ><span class="sound-label">Sound</span></button
+      >
+      <button type="button" data-action="pause" aria-pressed="false"
+        >Pause motion</button
+      >
+      <button type="button" data-action="wake">Wake up <kbd>Esc</kbd></button>
+    </div>
+    <div class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
+
+<script>
+  const root = document.documentElement
+  const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v))
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)")
+
+  /* ── Soundscape ────────────────────────────────────────────────────────
+     A low drone plus filtered noise that swells with the breathing circle.
+     Nothing plays until the reader presses a sound button (browsers also
+     require that gesture). Volume follows depth, so it fades out on waking. */
+  class Soundscape {
+    ctx: AudioContext | null = null
+    master: GainNode | null = null
+    air: GainNode | null = null
+    on = false
+    depth = 0
+    breath = 0
+    lastAir = 0
+
+    start() {
+      const ctx = new AudioContext()
+      const master = ctx.createGain()
+      master.gain.value = 0
+      master.connect(ctx.destination)
+
+      const tone = ctx.createBiquadFilter()
+      tone.type = "lowpass"
+      tone.frequency.value = 520
+      tone.connect(master)
+      // A2 root, fifth, octave and sub — a soft, unresolved chord
+      for (const [f, g] of [
+        [55, 0.32],
+        [110, 0.42],
+        [164.81, 0.14],
+        [220.4, 0.08],
+      ]) {
+        const o = ctx.createOscillator()
+        o.frequency.value = f
+        const gn = ctx.createGain()
+        gn.gain.value = g
+        o.connect(gn).connect(tone)
+        o.start()
+      }
+      // Slow wobble on the filter so the drone never sits completely still
+      const lfo = ctx.createOscillator()
+      lfo.frequency.value = 0.05
+      const lfoAmt = ctx.createGain()
+      lfoAmt.gain.value = 140
+      lfo.connect(lfoAmt).connect(tone.frequency)
+      lfo.start()
+
+      // "Breath": looped noise through a band-pass, gain driven by the circle
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate)
+      const data = buf.getChannelData(0)
+      let last = 0
+      for (let i = 0; i < data.length; i++) {
+        last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02 // brown-ish
+        data[i] = last * 3.5
+      }
+      const noise = ctx.createBufferSource()
+      noise.buffer = buf
+      noise.loop = true
+      const band = ctx.createBiquadFilter()
+      band.type = "bandpass"
+      band.frequency.value = 420
+      band.Q.value = 0.6
+      const air = ctx.createGain()
+      air.gain.value = 0
+      noise.connect(band).connect(air).connect(master)
+      noise.start()
+
+      this.ctx = ctx
+      this.master = master
+      this.air = air
+    }
+
+    toggle() {
+      if (!this.ctx) this.start()
+      this.on = !this.on
+      this.ctx!.resume()
+      this.apply()
+      return this.on
+    }
+
+    setDepth(d: number) {
+      this.depth = d
+      this.apply()
+    }
+
+    apply() {
+      if (!this.ctx || !this.master) return
+      const target = this.on ? 0.05 + 0.2 * this.depth : 0
+      this.master.gain.setTargetAtTime(target, this.ctx.currentTime, 1.2)
+    }
+
+    setBreath(b: number, now: number) {
+      if (!this.ctx || !this.air || now - this.lastAir < 120) return
+      this.lastAir = now
+      this.air.gain.setTargetAtTime(
+        0.15 + 0.85 * b * this.depth,
+        this.ctx.currentTime,
+        0.25
+      )
+    }
+
+    // A soft bell; pitch falls on the way down and rises on the way up
+    chime(step: number, dir: "down" | "up") {
+      if (!this.ctx || !this.master || !this.on) return
+      const ctx = this.ctx
+      const semis = dir === "down" ? -2 * step : 2 * step - 8
+      const f = 392 * Math.pow(2, semis / 12)
+      const t = ctx.currentTime
+      const env = ctx.createGain()
+      env.gain.setValueAtTime(0.0001, t)
+      env.gain.exponentialRampToValueAtTime(0.35, t + 0.02)
+      env.gain.exponentialRampToValueAtTime(0.0001, t + 3.2)
+      env.connect(this.master)
+      for (const [ratio, g] of [
+        [1, 1],
+        [2.76, 0.25],
+        [5.4, 0.08],
+      ]) {
+        const o = ctx.createOscillator()
+        o.frequency.value = f * ratio
+        const gn = ctx.createGain()
+        gn.gain.value = g
+        o.connect(gn).connect(env)
+        o.start(t)
+        o.stop(t + 3.3)
+      }
+    }
+  }
+  const sound = new Soundscape()
+
+  /* ── Name ───────────────────────────────────────────────────────────── */
+  const form = document.getElementById("name-form") as HTMLFormElement
+  const readStatus = document.querySelector(".read-status") as HTMLElement
+  form.addEventListener("submit", (e) => {
+    e.preventDefault()
+    const name = (
+      form.elements.namedItem("first-name") as HTMLInputElement
+    ).value.trim()
+    document.querySelectorAll<HTMLElement>(".name-slot").forEach((el) => {
+      el.textContent = name ? (el.dataset.sep ?? "") + name : ""
+    })
+    readStatus.textContent = name
+      ? `Thank you, ${name}. Chapter One begins below. Settle in.`
+      : "Chapter One begins below. Settle in."
+    setTimeout(() => {
+      document.getElementById("chapter-one")!.scrollIntoView({
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      })
+    }, 900)
+  })
+
+  /* ── Depth: one number, 0 (daylight) → 1 (deepest), read from scroll ──
+     Elements carry data-depth; scenes carry data-depth-from/-to across
+     their sticky run. Depth at the viewport's centre is interpolated
+     between the nearest stops and drives colour, vignette, nav and sound. */
+  type Stop = { y: number; d: number }
+  type Scene = {
+    el: HTMLElement
+    caps: HTMLElement[]
+    top: number
+    h: number
+    last: number
+    chime?: "down" | "up"
+  }
+  let stops: Stop[] = []
+  const scenes: Scene[] = [
+    ...document.querySelectorAll<HTMLElement>(".scene"),
+  ].map((el) => ({
+    el,
+    caps: [...el.querySelectorAll<HTMLElement>(".cap")],
+    top: 0,
+    h: 0,
+    last: -1,
+    chime: el.dataset.chime as Scene["chime"],
+  }))
+  const docY = (el: Element) => el.getBoundingClientRect().top + scrollY
+
+  function measure() {
+    const ih = innerHeight
+    stops = [...document.querySelectorAll<HTMLElement>("[data-depth]")].map(
+      (el) => ({
+        y: docY(el) + el.offsetHeight / 2,
+        d: parseFloat(el.dataset.depth!),
+      })
+    )
+    for (const s of scenes) {
+      s.top = docY(s.el)
+      s.h = s.el.offsetHeight
+      const from = parseFloat(s.el.dataset.depthFrom ?? "")
+      const to = parseFloat(s.el.dataset.depthTo ?? "")
+      if (!isNaN(from)) stops.push({ y: s.top + ih / 2, d: from })
+      if (!isNaN(to)) stops.push({ y: s.top + s.h - ih / 2, d: to })
+    }
+    stops.sort((a, b) => a.y - b.y)
+  }
+
+  function depthAt(y: number) {
+    if (!stops.length || y <= stops[0].y) return stops[0]?.d ?? 0
+    for (let i = 1; i < stops.length; i++) {
+      const a = stops[i - 1]
+      const b = stops[i]
+      if (y <= b.y) return lerp(a.d, b.d, (y - a.y) / (b.y - a.y || 1))
+    }
+    return stops[stops.length - 1].d
+  }
+
+  let depth = 0
+  let awake = false
+  const welcome = document.getElementById("welcome")!
+
+  function update() {
+    depth = clamp(depthAt(scrollY + innerHeight / 2))
+    root.style.setProperty("--depth", depth.toFixed(4))
+    // Text flips light/dark where the background crosses mid-grey. Only
+    // large type sits in that zone, so contrast stays ≥ 3:1 throughout.
+    root.classList.toggle("is-dark", depth >= 0.48)
+    root.classList.toggle("is-under", depth > 0.1 && !awake)
+    sound.setDepth(depth)
+
+    let focus = false
+    for (const s of scenes) {
+      const p = clamp((scrollY - s.top) / (s.h - innerHeight || 1))
+      s.el.style.setProperty("--p", p.toFixed(4))
+      const inView = scrollY + innerHeight > s.top && scrollY < s.top + s.h
+      if (inView && s.el.hasAttribute("data-focus")) focus = true
+      const i = Math.min(s.caps.length - 1, Math.floor(p * s.caps.length))
+      if (i !== s.last) {
+        s.caps.forEach((c, k) => c.classList.toggle("on", k === i))
+        s.el.dataset.step = String(i)
+        if (s.chime && s.last !== -1 && inView) sound.chime(i, s.chime)
+        s.last = i
+      }
+    }
+    root.classList.toggle("is-focus", focus)
+
+    // Once the reader reaches daylight, the journey counts as complete
+    if (!awake && welcome.getBoundingClientRect().top < innerHeight * 0.6) {
+      awake = true
+      root.classList.add("is-awake")
+      root.classList.remove("is-under")
+    }
+  }
+
+  let ticking = false
+  const onScroll = () => {
+    if (ticking) return
+    ticking = true
+    requestAnimationFrame(() => {
+      ticking = false
+      update()
+    })
+  }
+  addEventListener("scroll", onScroll, { passive: true })
+  addEventListener("resize", () => {
+    measure()
+    update()
+  })
+  new ResizeObserver(() => {
+    measure()
+    update()
+  }).observe(document.body)
+  document.fonts?.ready.then(() => {
+    measure()
+    update()
+  })
+  measure()
+  update()
+
+  /* ── Lines fade in one at a time, at reading pace ──────────────────── */
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) e.target.classList.toggle("on", e.isIntersecting)
+    },
+    { rootMargin: "-20% 0px -20% 0px" }
+  )
+  document
+    .querySelectorAll(".beat p, .chapter-head")
+    .forEach((el) => io.observe(el))
+
+  // "Selected works" dims to the five marked words once the list is read
+  const works = document.querySelector(".works") as HTMLElement
+  new IntersectionObserver(
+    (entries, obs) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        setTimeout(() => works.classList.add("reveal"), 700)
+        obs.disconnect()
+      }
+    },
+    { rootMargin: "0px 0px -35% 0px" }
+  ).observe(document.querySelector(".works-after")!)
+
+  /* ── Breathing: ~5.5 breaths a minute (5.5 s in, 5.5 s out) ─────────── */
+  const BREATH_MS = 11000
+  const breathEls = [...document.querySelectorAll<HTMLElement>("[data-breath]")]
+  const breathLabel = document.querySelector(".breath-label") as HTMLElement
+  let paused = false
+  let breathT = 0
+  let lastNow = performance.now()
+  function tick(now: number) {
+    const dt = Math.min(100, now - lastNow)
+    lastNow = now
+    if (depth > 0.05 && !paused) {
+      breathT += dt
+      const phase = (breathT % BREATH_MS) / BREATH_MS
+      const b = 0.5 - 0.5 * Math.cos(2 * Math.PI * phase)
+      for (const el of breathEls) el.style.setProperty("--breath", b.toFixed(4))
+      const label = phase < 0.5 ? "in" : "out"
+      if (breathLabel.textContent !== label) breathLabel.textContent = label
+      sound.setBreath(b, now)
+    }
+    requestAnimationFrame(tick)
+  }
+  requestAnimationFrame(tick)
+
+  /* ── Controls ───────────────────────────────────────────────────────── */
+  const toast = document.querySelector(".toast") as HTMLElement
+  let toastTimer = 0
+  function say(msg: string) {
+    toast.textContent = msg
+    toast.classList.add("on")
+    clearTimeout(toastTimer)
+    toastTimer = window.setTimeout(() => toast.classList.remove("on"), 4200)
+  }
+
+  function wake() {
+    const target = document.getElementById("wake-point")!
+    window.scrollTo({
+      top: docY(target) - innerHeight * 0.3,
+      behavior: "instant",
+    })
+  }
+
+  document.addEventListener("click", (e) => {
+    const btn = (e.target as Element).closest<HTMLElement>(
+      "[data-action], [data-preorder]"
+    )
+    if (!btn) return
+    if (btn.hasAttribute("data-preorder")) {
+      say(
+        awake
+          ? "There’s nothing to buy. You already have what you came for."
+          : "Pre-orders open on February 2. Keep reading in the meantime."
+      )
+      return
+    }
+    const action = btn.dataset.action
+    if (action === "sound") {
+      const on = sound.toggle()
+      document
+        .querySelectorAll<HTMLElement>('[data-action="sound"]')
+        .forEach((b) => {
+          b.setAttribute("aria-pressed", String(on))
+        })
+      document.querySelectorAll<HTMLElement>(".sound-label").forEach((l) => {
+        const big = l.closest(".listen")
+        l.textContent = big
+          ? on
+            ? "Pause the reading soundscape"
+            : "Play the reading soundscape"
+          : on
+            ? "Sound on"
+            : "Sound"
+      })
+    } else if (action === "pause") {
+      paused = !paused
+      root.classList.toggle("is-paused", paused)
+      btn.setAttribute("aria-pressed", String(paused))
+      btn.textContent = paused ? "Resume motion" : "Pause motion"
+    } else if (action === "wake") {
+      wake()
+    }
+  })
+
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && root.classList.contains("is-under")) wake()
+  })
+
+  /* ── Press and hold to accept ───────────────────────────────────────── */
+  const HOLD_MS = 3000
+  const hold = document.querySelector(".hold") as HTMLButtonElement
+  const accept = document.querySelector(".accept") as HTMLElement
+  const acceptDone = document.querySelector(".accept-done") as HTMLElement
+  let holdStart = 0
+  let holdRaf = 0
+  let accepted = false
+
+  function holdFrame(now: number) {
+    const p = clamp((now - holdStart) / HOLD_MS)
+    hold.style.setProperty("--hold", p.toFixed(4))
+    if (p >= 1) return complete()
+    holdRaf = requestAnimationFrame(holdFrame)
+  }
+  function beginHold() {
+    if (accepted || holdRaf) return
+    holdStart = performance.now()
+    hold.classList.add("holding")
+    holdRaf = requestAnimationFrame(holdFrame)
+  }
+  function endHold() {
+    if (accepted) return
+    cancelAnimationFrame(holdRaf)
+    holdRaf = 0
+    hold.classList.remove("holding")
+    hold.style.setProperty("--hold", "0")
+  }
+  function complete() {
+    accepted = true
+    holdRaf = 0
+    hold.classList.remove("holding")
+    accept.classList.add("accepted")
+    hold.setAttribute("aria-disabled", "true")
+    acceptDone.textContent = "Good. It’s done. It’s yours now."
+    document.querySelector<HTMLElement>("[data-status-pending]")!.hidden = true
+    document.querySelector<HTMLElement>("[data-status-done]")!.hidden = false
+    sound.chime(0, "up")
+  }
+
+  hold.addEventListener("pointerdown", (e) => {
+    hold.setPointerCapture(e.pointerId)
+    beginHold()
+  })
+  hold.addEventListener("pointerup", endHold)
+  hold.addEventListener("pointercancel", endHold)
+  hold.addEventListener("lostpointercapture", endHold)
+  hold.addEventListener("contextmenu", (e) => e.preventDefault())
+  hold.addEventListener("keydown", (e) => {
+    if ((e.key === " " || e.key === "Enter") && !e.repeat) {
+      e.preventDefault()
+      beginHold()
+    }
+  })
+  hold.addEventListener("keyup", (e) => {
+    if (e.key === " " || e.key === "Enter") endHold()
+  })
+  hold.addEventListener("blur", endHold)
+  // Swallow the synthetic click so a short press doesn't count as consent
+  hold.addEventListener("click", (e) => e.preventDefault())
+</script>
