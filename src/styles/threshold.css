@@ -256,6 +256,11 @@ html.is-under .nav {
   align-items: center;
   gap: clamp(32px, 6vw, 88px);
   padding-block: clamp(48px, 9vw, 120px);
+  overflow-x: clip; /* the book's aura reaches wide; never let it scroll */
+}
+.hero-copy {
+  position: relative;
+  z-index: 1;
 }
 .hero h1 {
   font: 500 clamp(3.5rem, 2rem + 7vw, 7.5rem) / 0.95 var(--serif);
@@ -286,63 +291,540 @@ html.is-under .nav {
   color: var(--muted);
 }
 
+/* ── The book ─────────────────────────────────────────────────
+   A 3D hardcover: two boards with real thickness and a page
+   block set back between them, seen from just above so the top
+   edge of the pages shows and verticals stay vertical.
+
+   Every --ap-* is 0 → 1 and written by the script ("The
+   apparition"). At 0 it's a plain product shot. At 1 it floats
+   in a pool of night, ajar, lit from inside, its words gone and
+   only the sign left. --b is the breath (already scaled by how
+   far the apparition has come), --sway / --roll a slow drift. */
 .book {
-  perspective: 1400px;
-  justify-self: center;
-  width: min(340px, 78vw);
-}
-.book-cover {
+  --w: min(340px, 33vw);
+  --h: calc(var(--w) * 1.5);
+  --t: calc(var(--w) * 0.17); /* overall thickness */
+  --bt: calc(var(--w) * 0.017); /* board thickness */
+  --oh: calc(var(--w) * 0.018); /* boards overhang the pages */
+  --d: calc(var(--t) - 2 * var(--bt)); /* page-block depth */
+
+  --ap-pose: 0;
+  --ap-pool: 0;
+  --ap-text: 0;
+  --ap-glow: 0;
+  --ap-open: 0;
+  --b: 0;
+  --sway: 0;
+  --roll: 0;
+  --spin: 0;
+  --drift-x: 0;
+  --drift-y: 0;
+
+  --yaw: calc(-34deg + var(--ap-pose) * 16deg + var(--sway) * 1deg);
+  --lift: calc(var(--ap-pose) * 0.05 + var(--b) * 0.012);
+  --open: calc(var(--ap-open) * 11deg + var(--b) * 3deg);
+
+  --foil-a: color-mix(in oklab, #a77a37, #fff0d2 calc(var(--ap-glow) * 78%));
+  --foil-b: color-mix(in oklab, #ddb96f, #fff7e6 calc(var(--ap-glow) * 82%));
+  --foil-c: color-mix(in oklab, #fbe7b4, #ffffff calc(var(--ap-glow) * 85%));
+
+  --ap-fade: 0;
+
   position: relative;
-  aspect-ratio: 2 / 3;
+  justify-self: center;
+  width: var(--w);
+  height: var(--h);
+  pointer-events: none;
+}
+.book-defs {
+  position: absolute;
+}
+.foil-a {
+  stop-color: var(--foil-a);
+}
+.foil-b {
+  stop-color: var(--foil-b);
+}
+.foil-c {
+  stop-color: var(--foil-c);
+}
+/* The camera lives on .book-world, which stays flat so the whole
+   rendered book can take a glow and a mask: a soft backlight that
+   hugs its silhouette, and a base that thins into mist. The box is
+   oversized so neither clips the shadows or the glow. */
+.book-world {
+  position: absolute;
+  inset: calc(var(--h) * -0.25) calc(var(--w) * -0.5);
+  perspective: calc(var(--w) * 6.5);
+  perspective-origin: calc(var(--w) * 1.16) calc(var(--h) * -0.05);
+  filter: drop-shadow(
+    0 0 calc(var(--ap-glow) * (14px + var(--b) * 10px))
+      rgb(200 184 255 / calc(var(--ap-glow) * 0.7))
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / calc(1 - var(--ap-fade))) 8%,
+    rgb(0 0 0 / calc(1 - var(--ap-fade) * 0.82)) 18%,
+    #000 calc(18% + var(--ap-fade) * 30%)
+  );
+  mask-image: linear-gradient(
+    to top,
+    rgb(0 0 0 / calc(1 - var(--ap-fade))) 8%,
+    rgb(0 0 0 / calc(1 - var(--ap-fade) * 0.82)) 18%,
+    #000 calc(18% + var(--ap-fade) * 30%)
+  );
+}
+.book-body,
+.book-lift,
+.board,
+.block {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.book-body {
+  inset: auto;
+  top: calc(var(--h) * 0.25);
+  left: calc(var(--w) * 0.5);
+  width: var(--w);
+  height: var(--h);
+  transform: rotateY(var(--yaw));
+}
+.book-lift {
+  transform: translateY(calc(var(--h) * var(--lift) * -1))
+    rotateZ(calc(var(--roll) * 1deg));
+}
+.board-front {
+  transform-origin: 0 50%;
+  transform: translateZ(calc(var(--t) / 2)) rotateY(calc(var(--open) * -1));
+}
+.board-back {
+  transform: translateZ(calc(var(--t) / -2 + var(--bt)));
+}
+.block {
+  transform: translateZ(calc(var(--t) / 2 - var(--bt)));
+}
+.edge,
+.board-inner,
+.board-face,
+.block > span,
+.book-contact,
+.book-cast,
+.book-cover {
+  position: absolute;
+  display: block;
+}
+
+/* Board edges: cloth over board, lit from above and to the left */
+.edge-r {
+  top: 0;
+  left: 100%;
+  width: var(--bt);
+  height: 100%;
+  transform-origin: 0 50%;
+  transform: rotateY(90deg);
+  background: linear-gradient(#2a2156, #120e27);
+}
+.edge-t {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--bt);
+  transform-origin: 50% 0;
+  transform: translateZ(calc(var(--bt) * -1)) rotateX(90deg);
+  background: linear-gradient(90deg, #1b1540, #3a3070 30%, #2c2460);
+}
+/* Inside of the back board. The pages stop short of the boards, so
+   this is what fills the overhang beside them. */
+.board-face {
+  inset: 0;
+  backface-visibility: hidden;
+  background: linear-gradient(
+    90deg,
+    #1a1436 70%,
+    color-mix(in oklab, #ffd9a0 calc(var(--ap-glow) * 45%), #2a2152)
+  );
+}
+.board-inner {
+  inset: 0;
+  transform: translateZ(calc(var(--bt) * -1)) rotateY(180deg);
+  backface-visibility: hidden;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, #ffe1ad calc(var(--ap-glow) * 60%), #2a2152),
+      #1a1436 55%
+    ),
+    #1a1436;
+}
+
+/* Page block: fine, uneven page lines; shaded where the boards overhang */
+.block-page {
+  left: 0;
+  top: var(--oh);
+  width: calc(100% - var(--oh));
+  height: calc(100% - 2 * var(--oh));
+  backface-visibility: hidden;
+  background: radial-gradient(
+    110% 80% at 100% 50%,
+    color-mix(in oklab, #fffaf0, #fff4dc calc(var(--ap-glow) * 100%)),
+    #efe5cf 65%,
+    #ddd1b8
+  );
+}
+.block-fore {
+  left: calc(100% - var(--oh));
+  top: var(--oh);
+  width: var(--d);
+  height: calc(100% - 2 * var(--oh));
+  transform-origin: 0 50%;
+  transform: rotateY(90deg);
+  background:
+    linear-gradient(
+      90deg,
+      rgb(38 28 18 / 0.42),
+      rgb(38 28 18 / 0) 12%,
+      rgb(38 28 18 / 0) 88%,
+      rgb(38 28 18 / 0.36)
+    ),
+    linear-gradient(
+      rgb(38 28 18 / 0.3),
+      rgb(38 28 18 / 0) 2.5%,
+      rgb(38 28 18 / 0) 97%,
+      rgb(38 28 18 / 0.3)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(110 88 58 / 0.2) 0 0.6px,
+      transparent 0.6px 1.9px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(110 88 58 / 0.12) 0 0.5px,
+      transparent 0.5px 3.1px
+    ),
+    linear-gradient(#e6ddc9, #d6cbb3);
+}
+.block-top {
+  left: 0;
+  top: var(--oh);
+  width: calc(100% - var(--oh));
+  height: var(--d);
+  transform-origin: 50% 0;
+  transform: translateZ(calc(var(--d) * -1)) rotateX(90deg);
+  background:
+    linear-gradient(90deg, rgb(38 28 18 / 0.25), rgb(38 28 18 / 0) 5%),
+    linear-gradient(
+      rgb(38 28 18 / 0.28),
+      rgb(38 28 18 / 0) 18%,
+      rgb(38 28 18 / 0) 82%,
+      rgb(38 28 18 / 0.32)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgb(110 88 58 / 0.16) 0 0.6px,
+      transparent 0.6px 1.9px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgb(110 88 58 / 0.1) 0 0.5px,
+      transparent 0.5px 3.1px
+    ),
+    #f3ecdc;
+}
+/* Light from inside the book leaks out between the pages */
+.block-fore::after,
+.block-top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  opacity: calc(var(--ap-glow) * (0.85 + var(--b) * 0.3));
+}
+.block-fore::after {
+  background: linear-gradient(
+    90deg,
+    rgb(255 236 196),
+    rgb(255 214 150 / 0.4) 45%,
+    rgb(255 214 150 / 0) 90%
+  );
+}
+.block-top::after {
+  background: linear-gradient(
+    0deg,
+    rgb(255 236 196),
+    rgb(255 214 150 / 0.4) 45%,
+    rgb(255 214 150 / 0) 90%
+  );
+}
+
+/* Shadows: contact under the book, a soft cast falling back and right.
+   An apparition casts none, so both lift away as it rises. */
+.book-contact {
+  left: -5%;
+  top: 100%;
+  width: 110%;
+  height: calc(var(--t) * 2.4);
+  transform-origin: 50% 0;
+  transform: translateZ(calc(var(--t) * -1.2)) rotateX(90deg);
+  background: radial-gradient(
+    closest-side,
+    rgb(24 17 46 / 0.72),
+    rgb(24 17 46 / 0.3) 55%,
+    rgb(24 17 46 / 0)
+  );
+  filter: blur(calc(3px + var(--ap-pose) * 16px));
+  opacity: calc(1 - var(--ap-pose) * 0.92);
+}
+.book-cast {
+  left: calc(var(--w) * 0.72);
+  top: calc(var(--h) * 1.25);
+  width: calc(var(--w) * 1.1);
+  height: calc(var(--w) * 0.95);
+  transform-origin: 50% 0;
+  transform: translateZ(calc(var(--w) * -0.85)) rotateX(90deg);
+  background: radial-gradient(
+    55% 50% at 32% 82%,
+    rgb(24 17 46 / 0.3),
+    rgb(24 17 46 / 0) 100%
+  );
+  filter: blur(12px);
+  opacity: calc(1 - var(--ap-pose));
+}
+
+/* The cover. Type is sized in cqi so it can never spill off the board. */
+.book-cover {
+  inset: 0;
+  container-type: inline-size;
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   justify-items: center;
-  padding: 11% 10% 13%;
+  padding: 11% 8% 13%;
   text-align: center;
-  color: var(--gold);
+  backface-visibility: hidden;
+  border-radius: 0 3px 3px 0;
   background:
+    radial-gradient(
+      62% 40% at 50% 41%,
+      rgb(190 172 255 / calc(var(--ap-glow) * (0.34 + var(--b) * 0.18))),
+      transparent 70%
+    ),
     radial-gradient(120% 70% at 50% 42%, #3a2f73 0%, transparent 62%),
-    linear-gradient(160deg, #241c4a, var(--cover) 55%, #0e0b1f);
-  border-radius: 3px 8px 8px 3px;
-  transform: rotateY(-20deg) rotateX(3deg);
-  transform-style: preserve-3d;
+    linear-gradient(160deg, #271e52, var(--cover) 55%, #0d0a1d);
   box-shadow:
-    inset 6px 0 10px -4px rgb(0 0 0 / 0.55),
-    inset -1px 0 0 rgb(255 255 255 / 0.08),
-    28px 36px 60px -18px rgb(20 14 40 / 0.55),
-    8px 10px 18px -6px rgb(20 14 40 / 0.35);
+    inset 0 0 0 1px rgb(220 208 255 / calc(var(--ap-glow) * 0.4)),
+    inset 0 0 6cqi rgb(185 166 255 / calc(var(--ap-glow) * 0.3));
 }
-.book-cover::before {
-  /* spine */
+.book-cover::before,
+.book-cover::after {
   content: "";
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 26px;
-  transform: translateX(-100%) rotateY(-90deg);
-  transform-origin: right;
-  background: linear-gradient(90deg, #0b0918, #1d1740);
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.book-cover::before {
+  /* cloth grain */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.32;
+}
+.book-cover::after {
+  /* hinge groove by the spine, then the key light's sheen */
+  background:
+    linear-gradient(
+      90deg,
+      rgb(0 0 0 / 0.42),
+      rgb(0 0 0 / 0) 3%,
+      rgb(0 0 0 / 0) 4.4%,
+      rgb(0 0 0 / 0.45) 5%,
+      rgb(255 255 255 / 0.12) 5.7%,
+      rgb(255 255 255 / 0) 8.5%
+    ),
+    linear-gradient(
+      112deg,
+      rgb(255 255 255 / 0.11),
+      rgb(255 255 255 / 0) 34%,
+      rgb(255 255 255 / 0) 64%,
+      rgb(255 255 255 / 0.05) 82%,
+      rgb(0 0 0 / 0.16)
+    );
+}
+.cover-author,
+.cover-title,
+.cover-sub {
+  position: relative;
+  background: linear-gradient(
+    100deg,
+    var(--foil-a),
+    var(--foil-b) 30%,
+    var(--foil-c) 46%,
+    var(--foil-b) 60%,
+    var(--foil-a)
+  );
+  background-size: 280% 100%;
+  background-position: calc(18% + var(--ap-pose) * 46% + var(--sway) * 5%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .cover-author {
-  font: 500 0.8rem/1 var(--sans);
-  letter-spacing: 0.32em;
+  font: 500 3.5cqi/1 var(--sans);
+  letter-spacing: 0.34em;
+  margin-right: -0.34em;
   text-transform: uppercase;
+  opacity: calc(1 - var(--ap-text));
+  filter: blur(calc(var(--ap-text) * 2.5px));
+}
+.cover-mark {
+  position: relative;
+  align-self: center;
+  width: 41cqi;
 }
 .cover-sign {
-  align-self: center;
-  width: 42%;
-  stroke-width: 2.2;
-  filter: drop-shadow(0 0 10px rgb(217 180 106 / 0.35));
+  position: relative;
+  width: 100%;
+  stroke: url(#thr-foil);
+  stroke-width: 2.4;
+  filter: drop-shadow(
+    0 0 calc(2.4cqi + var(--ap-glow) * 5cqi)
+      rgb(255 222 168 / calc(0.32 + var(--ap-glow) * 0.5))
+  );
 }
+/* The door on the cover lets the light through, as it did in the dark */
+.cover-sign .sign-glow {
+  color: #fff4de;
+  opacity: calc(var(--ap-glow) * (0.8 + var(--b) * 0.2));
+}
+.cover-sign :is(circle, path:nth-of-type(3)) {
+  stroke: color-mix(in oklab, #e4c27c, #1b1633 calc(var(--ap-glow) * 100%));
+}
+.cover-ticks {
+  position: absolute;
+  left: 50%;
+  top: 46.7%;
+  width: 158%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  rotate: calc(var(--spin) * 1turn);
+  overflow: visible;
+  fill: none;
+  stroke: #e7dcff;
+  stroke-width: 1.3;
+  stroke-dasharray: 1 11.06;
+  stroke-linecap: round;
+  opacity: calc(var(--ap-glow) * 0.6);
+}
+/* THRESHOLD: font size is solved from the tracking so the word always
+   spans the same 76% of the board, however far it has spread. */
 .cover-title {
-  font: 500 clamp(1.9rem, 1rem + 3vw, 2.6rem) / 1 var(--serif);
+  --track: calc(0.08 + var(--ap-text) * 0.16);
+  font: 500 calc(76cqi / (5.95 + 9 * var(--track))) / 1 var(--serif);
   font-variation-settings: "opsz" 72;
-  letter-spacing: 0.08em;
+  letter-spacing: calc(var(--track) * 1em);
+  margin-right: calc(var(--track) * -1em);
   text-transform: uppercase;
+  opacity: calc(1 - var(--ap-text) * 0.45);
+  filter: drop-shadow(
+    0 0 calc(var(--ap-glow) * 2.5cqi)
+      rgb(255 226 176 / calc(var(--ap-glow) * 0.6))
+  );
 }
 .cover-sub {
-  margin-top: 10px;
-  font: italic 400 0.8rem/1.35 var(--serif);
-  color: color-mix(in oklab, var(--gold) 80%, white);
+  margin-top: 3cqi;
+  font: italic 400 3.8cqi/1.38 var(--serif);
+  opacity: calc(1 - var(--ap-text));
+  filter: blur(calc(var(--ap-text) * 2.5px));
+}
+
+/* Behind the book: a pool of night, faint stars, door-shaped rings
+   drifting in toward it, and the light that rims its silhouette. */
+.aura {
+  position: absolute;
+  inset: -30% -46%;
+  opacity: var(--ap-pool);
+  -webkit-mask-image: radial-gradient(closest-side, #000 52%, transparent);
+  mask-image: radial-gradient(closest-side, #000 52%, transparent);
+}
+.aura-pool,
+.aura-pool::before,
+.aura-pool::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.aura-pool {
+  background: radial-gradient(
+    closest-side,
+    #07060d,
+    #0c0920 46%,
+    rgb(24 18 66 / 0.92) 60%,
+    rgb(64 48 168 / 0.4) 79%,
+    rgb(120 100 230 / 0.12) 90%,
+    rgb(120 100 230 / 0)
+  );
+  scale: calc(0.75 + var(--ap-pool) * 0.25);
+}
+.aura-pool::before,
+.aura-pool::after {
+  content: "";
+  inset: 14% 10%;
+  background: radial-gradient(
+    closest-side,
+    rgb(58 47 115 / 0.55),
+    rgb(58 47 115 / 0)
+  );
+  translate: calc(var(--drift-x) * 9%) calc(var(--drift-y) * 6%);
+}
+.aura-pool::after {
+  inset: 22% 18%;
+  background: radial-gradient(
+    closest-side,
+    rgb(20 14 48 / 0.7),
+    rgb(20 14 48 / 0)
+  );
+  translate: calc(var(--drift-y) * -8%) calc(var(--drift-x) * 7%);
+}
+.aura-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #efe9ff;
+  opacity: calc(var(--ap-glow) * 0.75);
+}
+.aura-rings {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: calc(var(--w) * 3);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  overflow: visible;
+  fill: none;
+  stroke: url(#thr-ring);
+  stroke-width: 1.25;
+}
+.aura-rings path {
+  opacity: 0;
+}
+.aura-halo {
+  position: absolute;
+  left: 52%;
+  top: 46%;
+  width: calc(var(--w) * 1.3);
+  height: calc(var(--h) * 1.12);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      26% 34% at 80% 50%,
+      rgb(255 226 176 / calc(var(--ap-open) * 0.5)),
+      transparent
+    ),
+    radial-gradient(closest-side, rgb(150 128 240 / 0.38), rgb(150 128 240 / 0));
+  opacity: calc(var(--ap-glow) * (0.8 + var(--b) * 0.4));
 }
 
 @media (max-width: 860px) {
@@ -351,7 +833,11 @@ html.is-under .nav {
   }
   .book {
     order: -1;
-    width: min(250px, 62vw);
+    --w: min(250px, 62vw);
+    margin-bottom: 8px;
+  }
+  .aura {
+    inset: -22% -60%;
   }
 }
 
@@ -1121,10 +1607,14 @@ html.is-focus .vignette {
     opacity 1.2s ease,
     visibility 0s 1.2s;
 }
-html.is-under .controls {
+html.is-under .controls,
+html.is-drifting .controls {
   opacity: 1;
   visibility: visible;
   transition: opacity 1.2s ease;
+}
+html.is-awake .controls [data-action="wake"] {
+  display: none;
 }
 .controls button {
   min-height: 36px;
@@ -1203,9 +1693,6 @@ html.is-paused .ripple {
     transition-duration: 1.2s;
   }
   .rise-glow {
-    transform: none;
-  }
-  .book-cover {
     transform: none;
   }
 }

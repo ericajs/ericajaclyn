@@ -55,6 +55,24 @@ const emergence = [
   "Four. Take a deeper breath. Almost there.",
   "Five. Eyes wide open. Wide awake, clear-headed, feeling good.",
 ]
+
+// The hero book's apparition: faint stars in the pool of night that gathers
+// behind it, and the door-shaped rings that drift in toward it. The stars use
+// a fixed seed so the sky is the same on every build.
+const RINGS = 6
+let seed = 7
+const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
+const stars = Array.from({ length: 46 }, () => {
+  // Kept inside the darkest part of the pool, where a star can read
+  const a = rand() * Math.PI * 2
+  const d = 0.17 + Math.sqrt(rand()) * 0.17
+  return [
+    +(50 + Math.cos(a) * d * 72).toFixed(2),
+    +(48 + Math.sin(a) * d * 100).toFixed(2),
+    +(0.1 + rand() * 0.16).toFixed(2),
+    +(0.3 + rand() * 0.7).toFixed(2),
+  ]
+})
 ---
 
 <html lang="en" dir="ltr">
@@ -129,15 +147,99 @@ const emergence = [
           </p>
         </div>
 
+        {
+          /* The cover is a real 3D hardcover: two boards with thickness and a
+            page block between them. The script drives --ap-* (0 → 1) across
+            the reader's round trip, so by the time they're back up here the
+            book has become an apparition. See "The apparition" in the script. */
+        }
         <div class="book" aria-hidden="true">
-          <div class="book-cover">
-            <span class="cover-author">Isadora Kali</span>
-            <Sign class="cover-sign" />
-            <span class="cover-title">Threshold</span>
-            <span class="cover-sub"
-              >Lucid Dreaming, Mind Control<br />&amp; the Hypnotic Language of
-              Symbols</span
+          <svg class="book-defs" width="0" height="0">
+            <defs>
+              <linearGradient
+                id="thr-foil"
+                gradientUnits="userSpaceOnUse"
+                x1="10"
+                y1="20"
+                x2="90"
+                y2="110"
+              >
+                <stop class="foil-a" offset="0"></stop>
+                <stop class="foil-b" offset="0.38"></stop>
+                <stop class="foil-c" offset="0.55"></stop>
+                <stop class="foil-a" offset="1"></stop>
+              </linearGradient>
+              <linearGradient id="thr-ring" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e2d8ff"></stop>
+                <stop offset="0.5" stop-color="#e2d8ff" stop-opacity="0.7"
+                ></stop>
+                <stop offset="0.92" stop-color="#e2d8ff" stop-opacity="0"
+                ></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div class="aura">
+            <span class="aura-pool"></span>
+            <svg
+              class="aura-stars"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="xMidYMid slice"
             >
+              {
+                stars.map(([x, y, r, o]) => (
+                  <circle cx={x} cy={y} r={r} opacity={o} />
+                ))
+              }
+            </svg>
+            <svg class="aura-rings" viewBox="-150 -150 300 300">
+              {
+                Array.from({ length: RINGS }, () => (
+                  <path
+                    d="M-28 48 V-12 A28 28 0 0 1 28 -12 V48"
+                    vector-effect="non-scaling-stroke"
+                  />
+                ))
+              }
+            </svg>
+            <span class="aura-halo"></span>
+          </div>
+
+          <div class="book-world">
+            <span class="book-cast"></span>
+            <div class="book-body">
+              <span class="book-contact"></span>
+              <div class="book-lift">
+                <div class="board board-back">
+                  <span class="board-face"></span>
+                  <span class="edge edge-r"></span>
+                </div>
+                <div class="block">
+                  <span class="block-page"></span>
+                  <span class="block-fore"></span>
+                  <span class="block-top"></span>
+                </div>
+                <div class="board board-front">
+                  <span class="board-inner"></span>
+                  <span class="edge edge-r"></span>
+                  <span class="edge edge-t"></span>
+                  <div class="book-cover">
+                    <span class="cover-author">Isadora Kali</span>
+                    <span class="cover-mark">
+                      <svg class="cover-ticks" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="92"></circle>
+                      </svg>
+                      <Sign class="cover-sign" />
+                    </span>
+                    <span class="cover-title">Threshold</span>
+                    <span class="cover-sub"
+                      >Lucid Dreaming, Mind Control<br />&amp; the Hypnotic
+                      Language of Symbols</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -838,6 +940,97 @@ const emergence = [
     }, 900)
   })
 
+  /* ── The apparition ────────────────────────────────────────────────────
+     Subliminal means below the threshold of perception, so the hero book
+     only changes while the reader can't see it. Its progress follows their
+     round trip instead of a clock: most of it on the way down to the end of
+     the chapter, the rest on the way back up, reaching 1 exactly at the top
+     however long the journey took. While the book is on screen, progress
+     eases far too slowly to watch. At ~1 it floats, breathing with the
+     induction's 11-second breath, and the door-shaped rings drift inward. */
+  const book = document.querySelector(".book") as HTMLElement
+  const rings = [...book.querySelectorAll<SVGPathElement>(".aura-rings path")]
+  const smooth = (a: number, b: number, x: number) => {
+    const t = clamp((x - a) / (b - a))
+    return t * t * (3 - 2 * t)
+  }
+  const RING_MS = 52000 // one ring's journey in; a new one every RING_MS / 6
+  let apTarget = 0
+  let ap = 0
+  let maxReach = 0
+  let turn: { reach: number; ap: number } | null = null
+  let bookSeen = true
+  let ambT = 0
+  const written = new Map<string, string>()
+  const setVar = (name: string, v: number) => {
+    const s = v.toFixed(4)
+    if (written.get(name) === s) return
+    written.set(name, s)
+    book.style.setProperty(name, s)
+  }
+
+  // Called on every scroll update. Never runs backwards.
+  function apparitionTarget() {
+    const range = root.scrollHeight - innerHeight
+    const reach = range > 0 ? clamp(scrollY / range) : 0
+    maxReach = Math.max(maxReach, reach)
+    let t = 0.92 * smooth(0, 0.96, maxReach)
+    if (awake) {
+      turn ??= { reach: Math.max(reach, 0.001), ap: Math.max(t, apTarget) }
+      t = Math.max(t, lerp(1, turn.ap, clamp(reach / turn.reach)))
+    }
+    apTarget = Math.max(apTarget, t)
+  }
+
+  // Called every animation frame from tick().
+  function apparitionFrame(dt: number) {
+    const still = reduceMotion.matches
+    if (!bookSeen || still) ap = apTarget
+    else ap += (apTarget - ap) * (1 - Math.exp(-dt / 6000))
+    if (!bookSeen) return
+
+    const amb = smooth(0.25, 0.85, ap)
+    if (amb > 0 && !paused && !still) ambT += dt
+    const wave = (ms: number, off = 0) =>
+      Math.sin((2 * Math.PI * ambT) / ms + off)
+    setVar("--ap-pose", smooth(0.2, 0.8, ap))
+    setVar("--ap-pool", smooth(0.1, 0.7, ap))
+    setVar("--ap-text", smooth(0.15, 0.6, ap))
+    setVar("--ap-glow", smooth(0.3, 0.9, ap))
+    setVar("--ap-open", smooth(0.45, 1, ap))
+    setVar("--ap-fade", smooth(0.35, 0.95, ap))
+    setVar(
+      "--b",
+      amb * (0.5 - 0.5 * Math.cos((2 * Math.PI * ambT) / BREATH_MS))
+    )
+    setVar("--sway", amb * 1.6 * wave(23000))
+    setVar("--roll", amb * 0.5 * wave(31000, 1))
+    setVar("--spin", (ambT / 96000) % 1)
+    setVar("--drift-x", amb * wave(41000))
+    setVar("--drift-y", amb * wave(57000, 2))
+
+    // Rings scale geometrically, so the flow inward looks endless
+    const phase = (ambT / RING_MS) % 1
+    rings.forEach((r, i) => {
+      const u = (i / rings.length + phase) % 1
+      const scale = 5 * Math.pow(1.55 / 5, u)
+      const o = 0.85 * amb * smooth(0, 0.18, u) * (1 - smooth(0.82, 1, u))
+      r.setAttribute("transform", `scale(${scale.toFixed(4)})`)
+      r.style.opacity = o.toFixed(3)
+    })
+
+    // WCAG 2.2.2: once it moves on its own, the pause control stays in reach
+    root.classList.toggle("is-drifting", amb > 0.3 && !still)
+  }
+
+  new IntersectionObserver(
+    ([e]) => {
+      bookSeen = e.isIntersecting
+      if (!bookSeen) root.classList.remove("is-drifting")
+    },
+    { rootMargin: "25% 0px" }
+  ).observe(book)
+
   /* ── Depth: one number, 0 (daylight) → 1 (deepest), read from scroll ──
      Elements carry data-depth; scenes carry data-depth-from/-to across
      their sticky run. Depth at the viewport's centre is interpolated
@@ -928,6 +1121,7 @@ const emergence = [
       root.classList.add("is-awake")
       root.classList.remove("is-under")
     }
+    apparitionTarget()
   }
 
   let ticking = false
@@ -997,6 +1191,7 @@ const emergence = [
       if (breathLabel.textContent !== label) breathLabel.textContent = label
       sound.setBreath(b, now)
     }
+    apparitionFrame(dt)
     requestAnimationFrame(tick)
   }
   requestAnimationFrame(tick)
