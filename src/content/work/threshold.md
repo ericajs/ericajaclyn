@@ -1,9 +1,9 @@
 ---
 title: "Threshold"
-subtitle: "Interactive fiction and scroll-driven narrative"
+subtitle: "Interactive AI experiment and scroll-driven narrative"
 description: "A marketing microsite for a fictional book that, as you scroll, becomes a guided induction and brings you back out."
 year: 2026
-role: "Concept, UX and Interaction Design"
+role: "Concept, UX Direction, and Interaction Design"
 scope: "Interactive web experience"
 disciplines: ["Interaction Design", "Scroll-driven Narrative", "Accessibility"]
 tags: ["Interactive Fiction", "Motion", "Accessibility"]
