@@ -52,6 +52,10 @@ const work = defineCollection({
     ogImage: z.string().optional(),
     // "full" = dedicated case study page; "card" = work index only
     treatment: z.enum(["full", "card"]),
+    // Where the work index card links when the project lives at its own
+    // route rather than a /uxdesign/[id] case study (e.g. "/threshold").
+    // Takes precedence over the treatment-based link.
+    href: z.string().optional(),
     // A "full" entry without case study content yet: its page renders the
     // Coming Soon empty state (pageHero with a "Coming Soon" brow + cover)
     comingSoon: z.boolean().default(false),

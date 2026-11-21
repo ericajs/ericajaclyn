@@ -23,6 +23,18 @@ type Card = {
 }
 
 const cards: Record<string, Card> = {
+  threshold: {
+    layout: "stack",
+    title: "Threshold",
+    description: "Interactive AI experiment and scroll-driven narrative",
+    images: [
+      {
+        src: "/ux-design/threshold/21x9-Threshold-Cover.jpg",
+        alt: "The Threshold book launch page: the headline “Threshold”, the subtitle “Lucid Dreaming, Mind Control & the Hypnotic Language of Symbols”, a short description, Pre-order and Read Chapter One buttons, and a navy hardcover with a gold door symbol on cream paper.",
+        aspect: "aspect-[21/9]",
+      },
+    ],
+  },
   naacpldf: {
     layout: "stack",
     title: "NAACP LDF",
@@ -130,12 +142,16 @@ const projects = allWork
   {/* ── Case study cards ──────────────────────────────────────── */}
   {projects.map((entry, i) => {
     const card = cards[entry.id]
-    // Only `treatment: "full"` entries have a case study page
-    const isFull = entry.data.treatment === "full"
+    // `href` sends the card to a project's own route (e.g. /threshold);
+    // otherwise only `treatment: "full"` entries have a case study page
+    const href =
+      entry.data.href ??
+      (entry.data.treatment === "full" ? `/uxdesign/${entry.id}` : undefined)
+    const isFull = href !== undefined
     const Tag = isFull ? "a" : "div"
     const linkProps = isFull
       ? {
-          href: `/uxdesign/${entry.id}`,
+          href,
           "aria-labelledby": `${entry.id}-title`,
           "aria-describedby": `${entry.id}-description`,
         }
