@@ -862,7 +862,7 @@ html.is-under .nav {
   }
 }
 
-/* ── Praise ───────────────────────────────────────────────── */
+/* ── Praise: three cards, each with its own quiet character ── */
 .praise {
   background: var(--paper-2);
   border-block: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
@@ -871,21 +871,190 @@ html.is-under .nav {
 .praise-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(24px, 4vw, 56px);
+  gap: clamp(16px, 2.4vw, 28px);
+}
+.praise-card {
+  --trace: 0;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 30px 28px 26px;
+  background: var(--paper);
+  border: 1px solid color-mix(in oklab, var(--ink) 9%, transparent);
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgb(28 26 36 / 0.04),
+    0 18px 36px -24px rgb(28 26 36 / 0.32);
+  overflow: hidden;
+}
+.praise-card.seen {
+  --trace: 1;
 }
 .praise blockquote {
+  position: relative;
   font: 400 1.25rem/1.4 var(--serif);
 }
-.praise figcaption {
-  margin-top: 14px;
-  font-size: 0.875rem;
+.praise-by {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.praise-who {
+  display: grid;
+  gap: 2px;
+}
+.praise-name {
+  font-size: 0.9375rem;
   font-weight: 600;
+  color: var(--ink);
+}
+.praise-role {
+  font-size: 0.8125rem;
   color: var(--muted);
 }
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+.avatar svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* The trace layer sits behind the text and fades in once */
+.praise-trace {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--trace);
+  transition: opacity 2.4s ease 0.3s;
+}
+
+/* 1 · The Somnolent Review: sleep that never quite came back */
+.avatar-moon {
+  background: var(--cover);
+  color: var(--gold);
+}
+.avatar-moon svg {
+  fill: currentColor;
+}
+.praise-night .praise-trace {
+  /* dusk gathering at the foot of the card */
+  background: linear-gradient(
+    to bottom,
+    transparent 45%,
+    rgb(58 47 115 / 0.1)
+  );
+}
+.trace-moon {
+  /* tucked into the corner, half cropped by the card's edge */
+  position: absolute;
+  top: -16px;
+  right: -14px;
+  width: 84px;
+  fill: rgb(58 47 115 / 0.12);
+}
+.praise-night blockquote {
+  /* keep the quote clear of the moon */
+  padding-right: 34px;
+}
+
+/* 2 · Interior Quarterly: a lantern, and a room you didn't know was there */
+.avatar-lantern {
+  background: #f3e2bf;
+  box-shadow: 0 0 0 4px rgb(231 169 67 / 0.12);
+}
+.lantern-frame {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lantern-flame {
+  fill: #e09a32;
+}
+.praise-lantern .praise-trace {
+  /* warm light thrown from the lantern in the avatar */
+  background: radial-gradient(
+    circle at 50px calc(100% - 48px),
+    rgb(240 190 110 / 0.34),
+    rgb(240 190 110 / 0.1) 38%,
+    transparent 68%
+  );
+}
+.praise-lantern .praise-trace::after {
+  /* the inner room: visible only where the light reaches */
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent);
+  border-radius: 11px;
+  -webkit-mask-image: radial-gradient(
+    circle at 40px calc(100% - 38px),
+    black,
+    transparent 62%
+  );
+  mask-image: radial-gradient(
+    circle at 40px calc(100% - 38px),
+    black,
+    transparent 62%
+  );
+}
+
+/* 3 · Margit Oyelaran: she remembers the door */
+.praise-door {
+  /* a gentle lintel instead of a square top */
+  border-radius: 50% 50% 18px 18px / 30px 30px 18px 18px;
+}
+.avatar-door {
+  width: 36px;
+  border-radius: 999px 999px 6px 6px;
+  background:
+    radial-gradient(70% 50% at 50% 36%, #d9b9b0 0%, transparent 72%),
+    linear-gradient(180deg, #9a7a83, #4a3a4e);
+  font: 500 0.6875rem/1 var(--serif);
+  letter-spacing: 0.14em;
+  color: rgb(255 255 255 / 0.9);
+  place-items: end center;
+  padding: 0 0 7px 2px;
+  box-sizing: border-box;
+}
+.trace-door {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  height: 64px;
+  width: auto;
+  color: color-mix(in oklab, var(--accent) 22%, transparent);
+  stroke-width: 3;
+}
+.praise-door .praise-by {
+  /* keep the byline clear of the door */
+  padding-right: 52px;
+}
+
 @media (max-width: 760px) {
   .praise-grid {
     grid-template-columns: 1fr;
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .praise-trace {
+    transition: none;
+  }
+}
+html:not(.js) .praise-card {
+  --trace: 1;
 }
 
 /* ── About ────────────────────────────────────────────────── */
