@@ -1006,36 +1006,88 @@ html.is-under .nav {
   );
 }
 
-/* 3 · Margit Oyelaran: she remembers the door */
-.praise-door {
+/* 3 · Margit Oyelaran, author of The Glass Orchard: she remembers the
+   door (the arched lintel), and brings her own orchard of glass fruit */
+.praise-orchard {
   /* a gentle lintel instead of a square top */
   border-radius: 50% 50% 18px 18px / 30px 30px 18px 18px;
 }
-.avatar-door {
-  width: 36px;
-  border-radius: 999px 999px 6px 6px;
+.avatar-glass {
+  /* sea glass: cool, translucent, lit from the top left */
   background:
-    radial-gradient(70% 50% at 50% 36%, #d9b9b0 0%, transparent 72%),
-    linear-gradient(180deg, #9a7a83, #4a3a4e);
-  font: 500 0.6875rem/1 var(--serif);
-  letter-spacing: 0.14em;
-  color: rgb(255 255 255 / 0.9);
-  place-items: end center;
-  padding: 0 0 7px 2px;
-  box-sizing: border-box;
+    radial-gradient(circle at 32% 28%, #f4fbf8 0%, transparent 46%),
+    radial-gradient(circle at 50% 55%, #b9dcd2, #79aca2 78%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.5);
 }
-.trace-door {
+.glass-apple {
+  fill: rgb(255 255 255 / 0.38);
+  stroke: rgb(255 255 255 / 0.95);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+.glass-stem,
+.glass-glint {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.95);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+.glass-leaf {
+  fill: rgb(255 255 255 / 0.7);
+}
+.praise-orchard .praise-trace {
+  /* light catching a pane of glass, once, on the diagonal */
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.34) 44%,
+    transparent 56%
+  );
+}
+.trace-orchard {
+  /* a branch reaching in from the card's edge, hung with glass fruit */
   position: absolute;
-  right: 22px;
-  bottom: 20px;
-  height: 64px;
-  width: auto;
-  color: color-mix(in oklab, var(--accent) 22%, transparent);
-  stroke-width: 3;
+  right: 0;
+  bottom: 16px;
+  width: 86px;
+  height: auto;
+  --glass: rgb(70 130 118 / 0.26);
 }
-.praise-door .praise-by {
-  /* keep the byline clear of the door */
-  padding-right: 52px;
+.orchard-branch,
+.orchard-glint {
+  fill: none;
+  stroke: var(--glass);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.orchard-fruit {
+  fill: rgb(121 172 162 / 0.08);
+  stroke: var(--glass);
+  stroke-width: 1.4;
+}
+.praise-orchard .praise-by {
+  /* keep the byline clear of the branch */
+  padding-right: 58px;
+}
+.praise-role cite {
+  /* never break the book's title across lines */
+  white-space: nowrap;
+}
+.praise-orchard {
+  container-type: inline-size;
+}
+@container (max-width: 240px) {
+  /* Too narrow for avatar, byline and branch together (a card's inner
+     width, padding excluded, under 240px: three columns from ~760px to
+     ~1020px): the branch steps aside. The arch, the glass avatar and
+     the sheen still carry the card. */
+  .trace-orchard {
+    display: none;
+  }
+  .praise-orchard .praise-by {
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 760px) {
