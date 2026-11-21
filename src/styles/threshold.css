@@ -183,6 +183,18 @@ html.is-dark :focus-visible {
   padding: 0 1.1em;
   font-size: 0.9375rem;
 }
+/* ericajaclyn.com's standard: up to 640px, a button in the content flow
+   fills its row instead of hugging its label (the contact form and footer
+   use w-full → min-[641px]:w-auto). Only width changes; the nav's
+   Pre-order and the floating reading controls keep their own sizing. */
+@media (max-width: 640px) {
+  .hero-actions .btn,
+  .read-row .btn,
+  .listen .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 /* ── Nav: dissolves as the page darkens ───────────────────── */
 .nav {
@@ -207,7 +219,11 @@ html.is-under .nav {
 }
 .wordmark {
   display: inline-flex;
-  align-items: center;
+  /* The door's sill sits on the text baseline. Chrome aligns an SVG flex
+     item by its bottom edge (margins don't move it), and the sill's outer
+     edge is 9/120 of the way up the 24px box, so the sign is nudged down
+     1.8px below. Measured: sill and baseline coincide. */
+  align-items: baseline;
   gap: 10px;
   font: 600 1.25rem/1 var(--serif);
   letter-spacing: 0.02em;
@@ -220,6 +236,10 @@ html.is-under .nav {
   stroke-width: 6;
   display: inline-block;
   vertical-align: middle;
+}
+.wordmark .wordmark-sign {
+  position: relative;
+  top: 1.8px;
 }
 .nav nav {
   margin-left: auto;
@@ -975,6 +995,10 @@ html.is-under .nav {
   .author {
     grid-template-columns: 1fr;
   }
+  /* Stacked above the bio: centre the portrait, keep the text left */
+  .portrait {
+    justify-self: center;
+  }
 }
 
 /* ── Selected works: dims to the hidden sentence ──────────── */
@@ -1025,7 +1049,8 @@ html.is-under .nav {
 }
 .works-after {
   margin-top: 24px;
-  font: italic 400 1.25rem/1.4 var(--serif);
+  font: italic 400 1.625rem/1.4 var(--serif);
+  text-align: center;
   color: var(--accent);
   opacity: 0;
   transition: opacity 2.4s ease 2s;
