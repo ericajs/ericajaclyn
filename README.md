@@ -1,4 +1,4 @@
-# Erica Jaclyn Portfolio Website
+# ericajaclyn.com
 
 This is a production-deployed Astro project with React, TypeScript + shadcn/ui (Maia preset) + Tailwind + RTL portfolio, on Vercel, auto-deploying from GitHub, with cursor-pointer patched on Button.
 
@@ -6,7 +6,7 @@ This is a production-deployed Astro project with React, TypeScript + shadcn/ui (
 
 ## Adding components
 
-To add components to your app, run the following command:
+To add components to, run the following command:
 
 ```bash
 npx shadcn@latest add button
@@ -16,7 +16,7 @@ This will place the ui components in the `src/components` directory.
 
 ## Using components
 
-To use the components in your app, import them in an `.astro` file:
+To use the components, import them in an `.astro` file:
 
 ```astro
 ---
@@ -40,19 +40,20 @@ import { Button } from "@/components/ui/button"
 ---
 
 
-## Project Files
+## Important Project Files!
 
 ### `pnpm-lock.yaml`
 
+**Most importantly:** 
+- `pnpm-lock.yaml` records the specific versions that got installed, ensuring consistency across machines.
+- `package.json` lists the dependencies.
+
+**What `pnpm-lock.yaml` is:**
 `pnpm-lock.yaml` is a machine-generated file that records the exact dependency tree installed in the project.
 
-**In short:**  
-- `package.json` lists the dependencies you want.  
-- `pnpm-lock.yaml` records the specific versions that got installed, ensuring consistency across machines.
-
 **Why the lockfile matters:**
-- **Reproducible installs** – Ensures everyone (your laptop, teammates, CI) gets exactly the same dependency versions.
-- **Fewer "works on my machine" bugs** – Prevents unexpected transitive dependency updates from breaking your build.
+- **Reproducible installs** – Ensures everyone (laptop, contributors, CI) gets exactly the same dependency versions.
+- **Fewer "works on my machine" bugs** – Prevents unexpected transitive dependency updates from breaking the build.
 - **Faster installs** – pnpm uses the lockfile so it doesn't need to resolve dependencies from scratch.
 
 **What's inside the lockfile:**
@@ -70,11 +71,13 @@ import { Button } from "@/components/ui/button"
 
 ### `package.json`
 
-`package.json` is a human-edited manifest that defines your project for tools like pnpm, npm, and Vercel. When someone clones the repository and runs `pnpm install`, pnpm reads this file and installs the listed dependencies.  
-If `pnpm-lock.yaml` is the receipt for what was actually installed, `package.json` is the shopping list and set of instructions.
+**Most importantly:**
+- This is the single source of truth for this project’s identity, dependencies, and scripts. 
+- It's the first file every tool examines.
 
-**In short:**  
-- The single source of truth for your project’s identity, dependencies, and scripts—the first file every tool examines.
+**What `package.json` is:**
+- `package.json` is a human-edited manifest that defines this project for tools like pnpm, npm, and Vercel. When someone clones the repository and runs `pnpm -install`, pnpm reads this file and installs the listed dependencies.  
+- If `pnpm-lock.yaml` is the receipt for what was actually installed, `package.json` is the shopping list and set of instructions.
 
 **What `package.json` does:**
 - Declares project metadata (name, version, etc.)
@@ -91,4 +94,3 @@ If `pnpm-lock.yaml` is the receipt for what was actually installed, `package.jso
 - Sets project rules:
   - `"type": "module"` — Enables ES module syntax (import/export)
   - `engines` — Recommends Node.js version 22.12+ for this project
-  
