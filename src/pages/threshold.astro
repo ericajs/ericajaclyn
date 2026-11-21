@@ -249,8 +249,9 @@ const stars = Array.from({ length: 46 }, () => {
           /* Each card carries a quiet trace of its own quote: a reviewer who
             no longer sleeps (a crescent, stars, dusk gathering at the foot),
             a lantern lighting a room you didn't know was there (warm light
-            from the avatar that reveals an inner frame), and the door (an
-            arched lintel, a door-shaped avatar, the sign as a watermark).
+            from the avatar that reveals an inner frame), and the door and her
+            glass orchard (an arched lintel, a sea-glass apple, a branch of
+            glass fruit).
             The traces fade in once as a card enters view; nothing loops. */
         }
         <div class="wrap praise-grid">
@@ -307,15 +308,40 @@ const stars = Array.from({ length: 46 }, () => {
               </span>
             </figcaption>
           </figure>
-          <figure class="praise-card praise-door">
+          <figure class="praise-card praise-orchard">
             <span class="praise-trace" aria-hidden="true">
-              <Sign class="trace-door" />
+              <svg class="trace-orchard" viewBox="0 0 120 92">
+                <path
+                  class="orchard-branch"
+                  d="M124 14C100 16 78 24 52 22M88 19c-4-8-12-11-20-10 4 7 12 11 20 10ZM70 21c2 7 9 12 17 12-2-7-9-12-17-12ZM98 18v22M62 22v26"
+                ></path>
+                <circle class="orchard-fruit" cx="98" cy="51" r="11"></circle>
+                <circle class="orchard-fruit" cx="62" cy="57" r="9"></circle>
+                <path
+                  class="orchard-glint"
+                  d="M91 47a8 8 0 0 1 5-5M57 54a6 6 0 0 1 4-4"></path>
+              </svg>
             </span>
             <blockquote>
               “I don’t remember finishing it. I remember the door.”
             </blockquote>
             <figcaption class="praise-by">
-              <span class="avatar avatar-door" aria-hidden="true">MO</span>
+              <span class="avatar avatar-glass" aria-hidden="true">
+                <svg viewBox="0 0 44 44">
+                  <path
+                    class="glass-apple"
+                    d="M22 16c-2-2.4-6.8-2.6-8.6 1.2-1.9 4 .3 11.6 4.4 13.4 1.6.7 2.8-.2 4.2-.2s2.6.9 4.2.2c4.1-1.8 6.3-9.4 4.4-13.4C28.8 13.4 24 13.6 22 16Z"
+                  ></path>
+                  <path class="glass-stem" d="M22 16c0-2.6.8-4.4 2.4-5.6"
+                  ></path>
+                  <path
+                    class="glass-leaf"
+                    d="M23.4 12.4c1.6-2.4 4.4-3 6.6-2.4-1.2 2.2-3.8 3.2-6.6 2.4Z"
+                  ></path>
+                  <path class="glass-glint" d="M16.4 20.4a5 5 0 0 1 2.8-3.4"
+                  ></path>
+                </svg>
+              </span>
               <span class="praise-who">
                 <span class="praise-name">Margit Oyelaran</span>
                 <span class="praise-role"
