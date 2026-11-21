@@ -948,11 +948,7 @@ html.is-under .nav {
 }
 .praise-night .praise-trace {
   /* dusk gathering at the foot of the card */
-  background: linear-gradient(
-    to bottom,
-    transparent 45%,
-    rgb(58 47 115 / 0.1)
-  );
+  background: linear-gradient(to bottom, transparent 45%, rgb(58 47 115 / 0.1));
 }
 .trace-moon {
   /* tucked into the corner, half cropped by the card's edge */
