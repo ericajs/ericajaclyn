@@ -8,7 +8,7 @@ scope: "Interactive web experience"
 disciplines: ["Interaction Design", "Scroll-driven Narrative", "Accessibility"]
 tags: ["Interactive Fiction", "Motion", "Accessibility"]
 coverImage: "/ux-design/threshold/21x9-Threshold-Cover.jpg"
-coverAlt: "Two copies of the Threshold hardcover on cream paper: on the left the plain navy book with its gold door symbol; on the right the same book after the reader returns from the guided section, floating in a violet glow with its door lit from within."
+coverAlt: "The Threshold book launch page: the headline “Threshold”, the subtitle “Lucid Dreaming, Mind Control & the Hypnotic Language of Symbols”, a short description, Pre-order and Read Chapter One buttons, and a navy hardcover with a gold door symbol on cream paper."
 coverAspect: "21:9"
 # The project lives at its own route, so the work index card links there and
 # no /uxdesign/threshold case study page is generated ("card" treatment).
