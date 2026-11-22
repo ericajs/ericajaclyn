@@ -1013,11 +1013,8 @@ html.is-under .nav {
   border-radius: 50% 50% 18px 18px / 30px 30px 18px 18px;
 }
 .avatar-glass {
-  /* sea glass: cool, translucent, lit from the top left */
-  background:
-    radial-gradient(circle at 32% 28%, #f4fbf8 0%, transparent 46%),
-    radial-gradient(circle at 50% 55%, #b9dcd2, #79aca2 78%);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.5);
+  /* sea glass, flat like the other avatars */
+  background: #8fb9af;
 }
 .glass-apple {
   fill: rgb(255 255 255 / 0.38);
@@ -1025,8 +1022,7 @@ html.is-under .nav {
   stroke-width: 1.3;
   stroke-linejoin: round;
 }
-.glass-stem,
-.glass-glint {
+.glass-stem {
   fill: none;
   stroke: rgb(255 255 255 / 0.95);
   stroke-width: 1.3;
@@ -1034,15 +1030,6 @@ html.is-under .nav {
 }
 .glass-leaf {
   fill: rgb(255 255 255 / 0.7);
-}
-.praise-orchard .praise-trace {
-  /* light catching a pane of glass, once, on the diagonal */
-  background: linear-gradient(
-    115deg,
-    transparent 30%,
-    rgb(255 255 255 / 0.34) 44%,
-    transparent 56%
-  );
 }
 .trace-orchard {
   /* a branch reaching in from the card's edge, hung with glass fruit */
@@ -1053,8 +1040,7 @@ html.is-under .nav {
   height: auto;
   --glass: rgb(70 130 118 / 0.26);
 }
-.orchard-branch,
-.orchard-glint {
+.orchard-branch {
   fill: none;
   stroke: var(--glass);
   stroke-width: 1.4;
@@ -1080,8 +1066,8 @@ html.is-under .nav {
 @container (max-width: 240px) {
   /* Too narrow for avatar, byline and branch together (a card's inner
      width, padding excluded, under 240px: three columns from ~760px to
-     ~1020px): the branch steps aside. The arch, the glass avatar and
-     the sheen still carry the card. */
+     ~1020px): the branch steps aside. The arch and the glass apple
+     still carry the card. */
   .trace-orchard {
     display: none;
   }
