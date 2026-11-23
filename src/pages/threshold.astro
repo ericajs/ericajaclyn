@@ -741,21 +741,23 @@ const stars = Array.from({ length: 46 }, () => {
       >
         <Sign class="welcome-sign" />
         <h2 id="welcome-title" tabindex="-1">
-          Welcome back<span class="name-slot" data-sep=", "></span>.
+          <span class="if-read">Welcome back</span><span class="if-skipped"
+            >You stayed on this side</span
+          ><span class="name-slot" data-sep=", "></span>.
         </h2>
         <p class="welcome-care">
-          Take a moment before you stand up. Have a glass of water. Notice the
-          room.
+          Take a moment before you stand up. Notice the room.
         </p>
         <p class="welcome-lede">
           <span class="if-read"
             >You’ve just finished Chapter One of <cite>Threshold</cite>.</span
           ><span class="if-skipped"
-            >You skipped Chapter One of <cite>Threshold</cite>. It will keep.</span
+            >You skipped Chapter One of <cite>Threshold</cite>.</span
           >
         </p>
         <p class="welcome-status" data-status-pending>
-          You didn’t take the task. That’s all right. The door will wait.
+          <span class="if-read">You didn’t accept the task.</span> That’s all right.
+          The door will wait.
         </p>
         <p class="welcome-status" data-status-done hidden>
           You accepted the task. The next doorway you walk through, you’ll
