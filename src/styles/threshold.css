@@ -190,7 +190,8 @@ html.is-dark :focus-visible {
 @media (max-width: 640px) {
   .hero-actions .btn,
   .read-row .btn,
-  .listen .btn {
+  .listen .btn,
+  .content-note .btn {
     width: 100%;
     justify-content: center;
   }
@@ -1143,8 +1144,32 @@ html.is-under .nav {
   border: 0;
   border-inline: 3px solid currentColor;
 }
-.notice {
-  margin-top: 28px;
+/* A publisher's content note: it sits above the form because "Begin
+   Chapter One" scrolls the reader straight past anything below it. */
+.content-note {
+  margin-top: 32px;
+  padding: 20px 22px 22px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+.content-note p:not(.eyebrow) {
+  margin-top: 8px;
+  max-width: 62ch;
+}
+.content-note .btn {
+  margin-top: 16px;
+}
+.if-skipped,
+html.is-skipped .if-read,
+html.is-skipped .welcome-care {
+  display: none;
+}
+html.is-skipped .if-skipped {
+  display: inline;
+}
+.welcome h2:focus {
+  outline: none;
 }
 
 /* ── The chapter: one line at a time ──────────────────────── */
