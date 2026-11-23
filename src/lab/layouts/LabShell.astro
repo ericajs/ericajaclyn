@@ -1,0 +1,35 @@
+---
+// Full-viewport shell for the lab app and its component frames. No site nav
+// or footer; noindex everywhere (the lab is excluded from production builds,
+// and Vercel previews also send X-Robots-Tag: noindex).
+import "@/styles/global.css"
+
+interface Props {
+  title: string
+  /** Frames inherit the saved site theme; the lab app keeps its own */
+  themeKey?: "theme" | "lab-theme"
+  bodyClass?: string
+}
+const { title, themeKey = "theme", bodyClass = "" } = Astro.props
+---
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script is:inline define:vars={{ themeKey }}>
+      try {
+        if (localStorage.getItem(themeKey) === "dark")
+          document.documentElement.classList.add("dark")
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="stylesheet" href="https://use.typekit.net/pjj2hzl.css" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class:list={["bg-background text-foreground antialiased", bodyClass]}>
+    <slot />
+  </body>
+</html>

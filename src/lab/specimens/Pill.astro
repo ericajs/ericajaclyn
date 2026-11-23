@@ -1,0 +1,11 @@
+---
+// Specimen wrapper for the global .pill classes (global.css), so they can be
+// permuted like a component.
+interface Props {
+  style?: "primary" | "outline" | "ghost" | "link"
+  size?: "md" | "sm" | "fluid"
+}
+const { style = "primary", size = "md" } = Astro.props
+---
+
+<a href="#" class:list={["pill", `pill-${style}`, `pill-${size}`]}><slot /></a>

@@ -1,0 +1,998 @@
+{
+  "schema": 1,
+  "id": "portfolio",
+  "name": "ericajaclyn.com",
+  "description": "Portfolio site: accessibility baseline, token refinement and flow polish.",
+  "prodOrigin": "https://ericajaclyn.com",
+  "prodProxy": "/_prod",
+  "targets": [
+    {
+      "id": "home",
+      "kind": "route",
+      "name": "Home",
+      "path": "/",
+      "group": "Pages"
+    },
+    {
+      "id": "uxdesign",
+      "kind": "route",
+      "name": "UX Design",
+      "path": "/uxdesign",
+      "group": "Pages"
+    },
+    {
+      "id": "case-naacp",
+      "kind": "route",
+      "name": "Case study · NAACP LDF",
+      "path": "/uxdesign/naacpldf",
+      "group": "Pages"
+    },
+    {
+      "id": "case-morgan",
+      "kind": "route",
+      "name": "Case study · Morgan Stanley",
+      "path": "/uxdesign/morganstanley",
+      "group": "Pages"
+    },
+    {
+      "id": "space",
+      "kind": "route",
+      "name": "Space",
+      "path": "/space",
+      "group": "Pages"
+    },
+    {
+      "id": "about",
+      "kind": "route",
+      "name": "About",
+      "path": "/about",
+      "group": "Pages"
+    },
+    {
+      "id": "contact",
+      "kind": "route",
+      "name": "Contact",
+      "path": "/contact",
+      "group": "Pages"
+    },
+    {
+      "id": "button",
+      "kind": "component",
+      "name": "Button (shadcn)",
+      "component": "button",
+      "group": "Components"
+    },
+    {
+      "id": "pill",
+      "kind": "component",
+      "name": "Pill buttons",
+      "component": "pill",
+      "group": "Components"
+    },
+    {
+      "id": "accordion",
+      "kind": "component",
+      "name": "Accordion item",
+      "component": "accordion",
+      "group": "Components"
+    },
+    {
+      "id": "token-specimen",
+      "kind": "component",
+      "name": "Token contrast specimen",
+      "component": "token-specimen",
+      "group": "Components"
+    },
+    {
+      "id": "img-naacp-cover",
+      "kind": "image",
+      "name": "NAACP LDF cover (image)",
+      "src": "/ux-design/naacp-ldf/21x9-Tri-Overhead-Blue-01.jpg",
+      "group": "Images"
+    }
+  ],
+  "flows": [
+    {
+      "id": "work-to-contact",
+      "name": "Browse work → get in touch",
+      "goal": "A hiring manager lands on Home, reads one case study and sends a message.",
+      "steps": [
+        {
+          "target": "home",
+          "label": "Land on Home",
+          "action": "Activate View Work"
+        },
+        {
+          "target": "uxdesign",
+          "label": "Browse work",
+          "action": "Open the NAACP LDF case study"
+        },
+        {
+          "target": "case-naacp",
+          "label": "Read a case study",
+          "action": "Activate Contact in the nav"
+        },
+        {
+          "target": "contact",
+          "label": "Write a message"
+        }
+      ]
+    }
+  ],
+  "toggles": [
+    {
+      "id": "accent-dark",
+      "label": "Candidate: dark-mode accent",
+      "description": "Dark-mode values for --accent at the brand hue (OKLCH 270°). Light mode is unchanged.",
+      "hypothesis": "H-01",
+      "options": [
+        {
+          "value": "current",
+          "label": "Current #3131f5",
+          "varsDark": {
+            "--accent": "#3131f5"
+          }
+        },
+        {
+          "value": "v1",
+          "label": "v1 #5e7dff (L 0.63)",
+          "varsDark": {
+            "--accent": "#5e7dff"
+          }
+        },
+        {
+          "value": "v2",
+          "label": "v2 #6e8dff (L 0.67)",
+          "varsDark": {
+            "--accent": "#6e8dff"
+          }
+        }
+      ]
+    },
+    {
+      "id": "muted-fg",
+      "label": "Candidate: muted-foreground",
+      "description": "Muted text values that clear 4.5:1 on --muted as well as --background.",
+      "hypothesis": "H-02",
+      "options": [
+        {
+          "value": "current",
+          "label": "Current #747478 / #8e8e94",
+          "vars": {
+            "--muted-foreground": "#747478"
+          },
+          "varsDark": {
+            "--muted-foreground": "#8e8e94"
+          }
+        },
+        {
+          "value": "candidate",
+          "label": "Candidate #707074 / #949499",
+          "vars": {
+            "--muted-foreground": "#707074"
+          },
+          "varsDark": {
+            "--muted-foreground": "#949499"
+          }
+        }
+      ]
+    },
+    {
+      "id": "coarse-targets",
+      "label": "Candidate: 44px nav targets",
+      "description": "Raises desktop nav links and the theme toggle to 44px. 'Preview' applies everywhere so you can see it here; 'Ship' is the CSS that would ship, scoped to coarse pointers.",
+      "hypothesis": "H-06",
+      "options": [
+        {
+          "value": "preview",
+          "label": "Preview (all pointers)",
+          "css": "header nav a.pill{min-height:44px}header [role=group] .theme-seg{min-height:40px}"
+        },
+        {
+          "value": "ship",
+          "label": "Ship (pointer: coarse only)",
+          "css": "@media (pointer:coarse){header nav a.pill{min-height:44px}header [role=group] .theme-seg{min-height:40px}}"
+        }
+      ]
+    },
+    {
+      "id": "heading-wrap",
+      "label": "Candidate: heading wrap",
+      "description": "Lets long words in display headings wrap, so headings never widen the layout under text spacing or zoom.",
+      "hypothesis": "H-04",
+      "options": [
+        {
+          "value": "candidate",
+          "label": "overflow-wrap: anywhere + hyphens",
+          "css": ".heading-md,.heading-lg,.heading-xl{overflow-wrap:anywhere;hyphens:auto}"
+        }
+      ]
+    }
+  ],
+  "people": [
+    {
+      "id": "erica",
+      "name": "Erica",
+      "role": "owner"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "role": "claude"
+    }
+  ],
+  "iterations": [
+    {
+      "id": "it-0",
+      "name": "v1.0 Launch",
+      "goal": "Ship the Figma-synced portfolio.",
+      "start": "2026-10-26",
+      "end": "2026-11-15",
+      "status": "done",
+      "version": "1.0"
+    },
+    {
+      "id": "it-1",
+      "name": "v1.1 Accessibility baseline",
+      "goal": "Verify the shipped site against WCAG 2.2 AA and turn every gap into a token or component decision.",
+      "start": "2026-11-16",
+      "end": "2026-11-29",
+      "status": "active",
+      "version": "1.1"
+    },
+    {
+      "id": "it-2",
+      "name": "v1.2 Token refinement",
+      "goal": "Decide dark-mode accent, muted text and touch-target tokens from the v1.1 evidence.",
+      "start": "2026-11-30",
+      "end": "2026-12-13",
+      "status": "planned",
+      "version": "1.2"
+    },
+    {
+      "id": "it-3",
+      "name": "v1.3 Flows & content",
+      "goal": "Test the hiring-manager flow end to end: keyboard, screen reader, images off.",
+      "start": "2026-12-14",
+      "end": "2026-12-27",
+      "status": "planned",
+      "version": "1.3"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H-01",
+      "title": "Dark-mode brand accent is legible as text",
+      "statement": "We believe giving --accent its own dark-mode value at the same OKLCH hue lets the brand blue be used for taglines in dark mode without changing light mode. We'll know we're right when accent text measures at least 4.5:1 on every dark surface and still reads as the brand blue.",
+      "successCriteria": [
+        "Accent text ≥ 4.5:1 on --background in dark mode",
+        "Accent text ≥ 4.5:1 on --card and --popover in dark mode",
+        "Accent text ≥ 4.5:1 on --muted / --secondary in dark mode",
+        "Reads as the same blue next to light mode (same OKLCH hue)",
+        "Light mode unchanged (7.27:1)"
+      ],
+      "stage": "tentative",
+      "iteration": "it-2",
+      "priority": "p1",
+      "wcag": ["1.4.3"],
+      "tags": ["tokens", "dark mode"],
+      "test": {
+        "mode": "matrix",
+        "target": "token-specimen",
+        "switches": {
+          "contrast": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        },
+        "matrix": [
+          {
+            "kind": "switch",
+            "key": "dt.accent-dark",
+            "values": ["current", "v1", "v2"]
+          },
+          {
+            "kind": "switch",
+            "key": "theme",
+            "values": ["light", "dark"]
+          }
+        ]
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "tentative",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Modify: give dark mode --accent: #6e8dff (v2). Keep #3131f5 in light mode.",
+        "rationale": "#3131f5 is 7.27:1 on white but 2.65:1 on the dark background, 2.33:1 on cards and 1.91:1 on --muted — it fails even the 3:1 large-text bar, so any dark-mode tagline in --accent fails 1.4.3. Holding OKLCH hue at 270° and raising lightness: v1 (#5e7dff, L 0.63) passes on background and card (5.38 / 4.74) but fails on --muted / --secondary (3.88). v2 (#6e8dff, L 0.67) passes on every dark surface (6.36 / 5.60 / 4.59). Recommend v2 because a token should be safe wherever it can land; take v1 only if you'll document accent as background-and-card only. Nothing on the main site sets text in --accent today, so this is a guard before the token gets used, as global.css reserves it for taglines.",
+        "confidence": "high",
+        "measured": "Text contrast check on the token specimen, dark theme, each candidate (WCAG 2.2 luminance). Candidates found by an OKLCH lightness search at fixed hue with gamut-clipped chroma.",
+        "sources": [
+          {
+            "label": "WCAG 1.4.3",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html"
+          },
+          {
+            "label": "CSS Color 4: OKLCH",
+            "url": "https://www.w3.org/TR/css-color-4/#ok-lab"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-02",
+      "title": "Muted and error text hold 4.5:1 on every surface they can land on",
+      "statement": "We believe pairing each text token only with surfaces where it clears 4.5:1 — and nudging --muted-foreground — removes contrast failures that today only show up in fallback and hover states. We'll know we're right when the token specimen shows no text-token failures in either theme.",
+      "successCriteria": [
+        "--muted-foreground ≥ 4.5:1 on --muted (light and dark)",
+        "No muted or destructive text placed on --secondary",
+        "--destructive ≥ 4.5:1 on every surface error text can appear on",
+        "Live pages: zero contrast failures on /uxdesign and case studies in both themes"
+      ],
+      "stage": "testing",
+      "iteration": "it-1",
+      "priority": "p2",
+      "wcag": ["1.4.3"],
+      "tags": ["tokens"],
+      "test": {
+        "mode": "review",
+        "target": "token-specimen",
+        "switches": {
+          "contrast": "on",
+          "theme": "light",
+          "dt.muted-fg": "candidate"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "testing",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Modify: adopt the muted candidate (#707074 light / #949499 dark) and treat --secondary as a fill for interaction states only, never a text surface for muted or error text.",
+        "rationale": "Light: --muted-foreground is 4.65:1 on white but 4.34:1 on --muted and 3.86:1 on --secondary; --destructive is 4.77:1 on white but 4.45:1 on --muted and 3.96:1 on --secondary. Dark: --muted-foreground is 4.27:1 on --muted/--secondary (both #2c2c2e). The candidate muted values fix --muted in both themes (4.60 / 4.62) at a shift you won't see at caption sizes; with them, the dark specimen has zero failures. Light --secondary still fails for muted (4.09) and destructive (3.96), which is why the rule matters more than the value. Exposure today is low: the live pages measured 0 failures in both themes, and muted-on-muted only appears in WorkTile and hero image-missing fallbacks. But the lab's own first axe run failed on exactly this pairing (#747478 on #f7f7f7, 4.34:1), so it's an easy trap. If error text ever needs to sit on --muted, darken light --destructive to oklch(0.54 0.245 27.3) ≈ #d90000 (5.30:1 on white, 4.95:1 on --muted).",
+        "confidence": "high",
+        "measured": "Text contrast check on the token specimen (light, dark, with and without the candidate) and on /uxdesign and /uxdesign/naacpldf in both themes.",
+        "sources": [
+          {
+            "label": "WCAG 1.4.3",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-03",
+      "title": "Case studies reflow at 400% zoom without horizontal scrolling",
+      "statement": "We believe the case-study layout reflows to one column at 320 CSS px (1280 at 400%) with nothing lost or scrolling sideways. We'll know when the reflow check reports no page-level horizontal scroll on every case study.",
+      "successCriteria": [
+        "No horizontal page scroll at 320 CSS px on /uxdesign/naacpldf",
+        "Same on /uxdesign/morganstanley",
+        "No content clipped or overlapping"
+      ],
+      "stage": "testing",
+      "iteration": "it-1",
+      "priority": "p1",
+      "wcag": ["1.4.10"],
+      "tags": ["layout"],
+      "test": {
+        "mode": "review",
+        "target": "case-naacp",
+        "switches": {
+          "reflow": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 4
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "testing",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Accept: NAACP LDF reflows cleanly at 320 CSS px. Run Morgan Stanley the same way (swap the target), then move to Verified.",
+        "rationale": "With the frame at 1280×800 and 400% zoom (a 320 CSS px viewport, which is how browser zoom works), the document is exactly 320px wide and no leaf element extends past the viewport. The fluid --page-px padding and single-column grid below 769px do their job. The case for doubt is text spacing at the same width — that's H-04, and it fails.",
+        "confidence": "medium",
+        "measured": "Reflow & clipping check at 1280×800 @ 400%. Measured in Claude's sandbox, where Typekit is blocked, so text rendered in the TASA Explorer fallback — re-run in your browser with Caecilia loaded before deciding anything width-sensitive.",
+        "sources": [
+          {
+            "label": "WCAG 1.4.10",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/reflow.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-04",
+      "title": "User text spacing doesn't break the case-study layout",
+      "statement": "We believe case-study text survives the WCAG 1.4.12 spacing override at 320 CSS px without clipping or horizontal scroll. We'll know when the reflow check is clean with the text-spacing switch on.",
+      "successCriteria": [
+        "No horizontal scroll with text spacing at 320 CSS px",
+        "No clipped headings or body text",
+        "Long words wrap instead of widening the grid"
+      ],
+      "stage": "testing",
+      "iteration": "it-1",
+      "priority": "p1",
+      "wcag": ["1.4.12", "1.4.10"],
+      "tags": ["layout", "type"],
+      "test": {
+        "mode": "review",
+        "target": "case-naacp",
+        "switches": {
+          "text-spacing": "on",
+          "reflow": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 4
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "testing",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Modify: add overflow-wrap: anywhere (with hyphens: auto) to .heading-md, .heading-lg and .heading-xl. Toggle 'Candidate: heading wrap' to see it.",
+        "rationale": "With text spacing on at 320 CSS px, the page scrolls sideways by 3px. Cause: in FeatureCaseStudy the single-column grid track sizes to its widest unbreakable word, and 'Challenges' in a 32px heading-md with 0.12em tracking is 199px against a 184px content box (296px column minus p-14 padding). Fixing the grid track alone (minmax(0,1fr)) stops the page scroll but lets the word spill 15px into the card padding. overflow-wrap: anywhere fixes both, because unlike break-word it also lowers the min-content size the grid uses. hyphens: auto adds a hyphen where the browser has an English dictionary (html lang=en is set).",
+        "confidence": "medium",
+        "measured": "Reflow & clipping check with text spacing at 1280×800 @ 400%; widest-word measurement on .heading-md; both fixes tested by injecting CSS. Measured in Claude's sandbox, where Typekit is blocked, so text rendered in the TASA Explorer fallback — re-run in your browser with Caecilia loaded before deciding anything width-sensitive.",
+        "sources": [
+          {
+            "label": "WCAG 1.4.12",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html"
+          },
+          {
+            "label": "MDN: overflow-wrap",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-05",
+      "title": "Every page has a sequential heading outline",
+      "statement": "We believe each page's headings form an outline without skipped levels, so screen-reader users can navigate by heading. We'll know when the headings check shows no skips or empty headings across all pages in one batch.",
+      "successCriteria": [
+        "No skipped heading levels on any page",
+        "Exactly one h1 per page",
+        "Heading text makes sense out of context (rotor / headings list)"
+      ],
+      "stage": "testing",
+      "iteration": "it-1",
+      "priority": "p2",
+      "wcag": ["1.3.1", "2.4.6"],
+      "tags": ["structure"],
+      "test": {
+        "mode": "matrix",
+        "target": "home",
+        "switches": {
+          "headings": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        },
+        "matrix": [
+          {
+            "kind": "target",
+            "key": "target",
+            "values": [
+              "home",
+              "uxdesign",
+              "case-naacp",
+              "space",
+              "about",
+              "contact"
+            ]
+          }
+        ]
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "testing",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Accept the structure. Optionally make the repeated case-study h3s unique ('Discovery: design challenges').",
+        "rationale": "All six pages have one h1 and no skipped levels; case studies and Space nest h2 → h3 correctly. Two notes for your judgment: (1) each case study repeats 'Design Challenges' and 'Design Goals' as h3 three times — valid nesting, but a screen reader's headings list shows identical entries without their parent, which slows scanning. (2) Home, UX Design and About have only the h1, so heading navigation can't reach the hero pager or the project list; that's acceptable for short pages.",
+        "confidence": "high",
+        "measured": "Headings check on /, /uxdesign, /uxdesign/naacpldf, /space, /about and /contact.",
+        "sources": [
+          {
+            "label": "WCAG 1.3.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html"
+          },
+          {
+            "label": "WCAG 2.4.6",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-06",
+      "title": "Header targets are comfortable on touch tablets",
+      "statement": "We believe raising header targets to 44px for coarse pointers makes the desktop nav comfortable on an iPad in landscape (1024px gets the desktop header) without changing it for mouse users. We'll know when every header target measures at least 44px tall under the candidate and nothing in the header wraps.",
+      "successCriteria": [
+        "All header targets ≥ 24×24 (2.5.8 AA)",
+        "Header targets ≥ 44px tall on coarse pointers",
+        "Hero pager link meets 2.5.8 on size, not only by the spacing exception",
+        "Header height and layout unchanged for mouse users"
+      ],
+      "stage": "tentative",
+      "iteration": "it-2",
+      "priority": "p3",
+      "wcag": ["2.5.8", "2.5.5"],
+      "tags": ["touch", "nav"],
+      "test": {
+        "mode": "review",
+        "target": "home",
+        "switches": {
+          "target-size": "on",
+          "dt.coarse-targets": "preview"
+        },
+        "viewport": {
+          "w": 1024,
+          "h": 768,
+          "zoom": 1
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "tentative",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Modify: ship the coarse-pointer bump, and give the hero pager link vertical padding so it's at least 24px tall.",
+        "rationale": "AA already passes in the header: nav links are 32px tall (UX Design 90×32, Space 62×32, About 64×32, Contact 73×32), theme segments 46×32, logo 40×40. All are under the 44×44 of 2.5.5 (AAA) and Apple's HIG, and 1024px — iPad landscape — gets this desktop header. The one size failure is on Home: the pager link ('NAACP LDF') is 72×20. It likely passes 2.5.8 through the spacing exception, since nothing else is within its 24px circle, but that's fragile; py-0.5 makes it pass on size. The 'Ship' option scopes the bump to @media (pointer: coarse) so mouse users see no change.",
+        "confidence": "medium",
+        "measured": "Target size check at 1280×800 and 1024×768. Measured in Claude's sandbox, where Typekit is blocked, so text rendered in the TASA Explorer fallback — re-run in your browser with Caecilia loaded before deciding anything width-sensitive.",
+        "sources": [
+          {
+            "label": "WCAG 2.5.8",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+          },
+          {
+            "label": "WCAG 2.5.5",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-07",
+      "title": "A keyboard user can go from Home to sending a message",
+      "statement": "We believe a first-time visitor using only a keyboard can reach a case study and then the contact form with visible focus at every step. We'll know when a keyboard-only run of the flow completes with no step marked failed.",
+      "successCriteria": [
+        "Every step completes keyboard-only",
+        "Focus is visible on every stop (pill links, nav, form fields)",
+        "Contact is reachable within 6 tab stops from any page top",
+        "Form errors are announced and focus moves to the first invalid field"
+      ],
+      "stage": "tentative",
+      "iteration": "it-3",
+      "priority": "p2",
+      "wcag": ["2.1.1", "2.4.3", "2.4.7"],
+      "tags": ["keyboard", "flow"],
+      "test": {
+        "mode": "flow",
+        "flow": "work-to-contact",
+        "target": "home",
+        "switches": {
+          "keyboard-only": "on",
+          "focus-tracker": "on",
+          "tab-order": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "tentative",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Likely passes. Run the flow keyboard-only (Flow → Run it) and record the time per step as evidence.",
+        "rationale": "Every step is a native link or form control, with no custom widgets in the path. On Home there are 21 tab stops; the skip link is first and Contact is 6th, after UX Design, Space, the logo and About. Things to watch during the run: the pill links' focus ring is ring-2 in --ring (#747478, 4.65:1 on white — enough for 1.4.11); 'focus jumps back up the page' is flagged once in the footer, which is a two-row layout and probably fine; and the contact form's error handling is untested.",
+        "confidence": "medium",
+        "measured": "Tab order and accessible-name checks on /. The flow itself has not been run.",
+        "sources": [
+          {
+            "label": "WCAG 2.1.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html"
+          },
+          {
+            "label": "WCAG 2.4.3",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html"
+          },
+          {
+            "label": "WCAG 2.4.7",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-08",
+      "title": "Hero slide changes are announced once, meaningfully",
+      "statement": "We believe announcing 'Project 2 of 5: Morgan Stanley' when the hero slide changes tells screen-reader users more than the new image's alt text does. We'll know when VoiceOver and NVDA announce the position and project name, once per change.",
+      "successCriteria": [
+        "Slide change announces position and project name",
+        "Announced once, not twice",
+        "Nothing announced on page load"
+      ],
+      "stage": "idea",
+      "iteration": "it-3",
+      "priority": "p3",
+      "wcag": ["4.1.3"],
+      "tags": ["screen reader", "carousel"],
+      "test": {
+        "mode": "review",
+        "target": "home",
+        "switches": {
+          "names": "on",
+          "screen-reader": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "idea",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Modify: move aria-live off #hero-media, and add a visually hidden live status that reads 'Project N of 5: <title>'.",
+        "rationale": "#hero-media has aria-live='polite' and holds the slides. Changing slides un-hides an <img>, so screen readers announce its alt text — a long photo description — while the position and project name sit in #hero-count and #hero-link outside the live region. How screen readers handle an image appearing in a live region varies, which is why confidence is medium; the screen-reader pass will settle it.",
+        "confidence": "medium",
+        "measured": "Read from src/pages/index.astro (the hero markup and script). Not yet verified with a screen reader.",
+        "sources": [
+          {
+            "label": "WCAG 4.1.3",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-09",
+      "title": "This branch changes nothing on shipped pages",
+      "statement": "We believe adding the lab leaves every production page unchanged. We'll know when Compare shows no difference between this build and production on Home, UX Design and Contact at 375 and 1280.",
+      "successCriteria": [
+        "No visual difference on / at 375 and 1280",
+        "No visual difference on /uxdesign",
+        "No visual difference on /contact",
+        "Production build contains no /lab routes"
+      ],
+      "stage": "testing",
+      "iteration": "it-1",
+      "priority": "p2",
+      "wcag": [],
+      "tags": ["regression"],
+      "test": {
+        "mode": "compare",
+        "target": "uxdesign",
+        "switches": {},
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        },
+        "compare": "diff"
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "testing",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Accept once the difference view is black on all three pages. The production-build criterion is already met.",
+        "rationale": "The lab is injected by an Astro integration only in `astro dev` and Vercel preview builds. A build with VERCEL_ENV=production emits no /lab pages, no axe-core bundle and no /lab sitemap entries. vercel.json gains a /_prod rewrite that is skipped on the ericajaclyn.com host. Shipped pages and components are untouched; the only shared change is that Astro config now registers the integration.",
+        "confidence": "high",
+        "measured": "VERCEL_ENV=production build output listing; sitemap grep.",
+        "sources": [],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-10",
+      "title": "Button variants read as buttons in both themes",
+      "statement": "We believe every Button variant is recognisable as a control in light and dark, even in grayscale. We'll know when each variant in the matrix is identifiable as a button without relying on hue.",
+      "successCriteria": [
+        "Every variant identifiable as a control in light and dark",
+        "Outline/ghost don't read as plain text in grayscale",
+        "Focus ring visible on every variant"
+      ],
+      "stage": "idea",
+      "iteration": "it-2",
+      "priority": "p3",
+      "wcag": ["1.4.11", "1.4.1"],
+      "tags": ["components"],
+      "test": {
+        "mode": "matrix",
+        "target": "button",
+        "switches": {
+          "grayscale": "on"
+        },
+        "viewport": {
+          "w": 320,
+          "h": 120,
+          "zoom": 1
+        },
+        "matrix": [
+          {
+            "kind": "prop",
+            "key": "variant",
+            "values": [
+              "default",
+              "outline",
+              "secondary",
+              "ghost",
+              "destructive",
+              "link"
+            ]
+          },
+          {
+            "kind": "switch",
+            "key": "theme",
+            "values": ["light", "dark"]
+          }
+        ]
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "idea",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Not a conformance failure — a design call. Avoid outline and ghost for the primary action.",
+        "rationale": "The outline variant's border is --border (#eaeaea), 1.20:1 on white and 1.73:1 in dark — below 3:1. But 1.4.11 doesn't require a visible boundary when the text label identifies the control (see Understanding 1.4.11), so this is an affordance question, not a failure. Use the grayscale and squint lenses on the matrix: if outline and ghost read as text, reserve them for secondary actions.",
+        "confidence": "medium",
+        "measured": "Token values from global.css; contrast computed, not rendered.",
+        "sources": [
+          {
+            "label": "WCAG 1.4.11",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    },
+    {
+      "id": "H-11",
+      "title": "Pages still make sense with images off",
+      "statement": "We believe every image that carries information has alt text that stands in for it, so the work pages still communicate on a slow connection or with images blocked. We'll know when, with images off, each project card still says what the work is.",
+      "successCriteria": [
+        "Every informative image has alt text",
+        "Alt text describes the work, not the file",
+        "Layout holds when images fail"
+      ],
+      "stage": "idea",
+      "iteration": "it-3",
+      "priority": "p3",
+      "wcag": ["1.1.1"],
+      "tags": ["content"],
+      "test": {
+        "mode": "review",
+        "target": "uxdesign",
+        "switches": {
+          "images-off": "on",
+          "alt-text": "on"
+        },
+        "viewport": {
+          "w": 1280,
+          "h": 800,
+          "zoom": 1
+        }
+      },
+      "evidence": [],
+      "stageHistory": [
+        {
+          "stage": "idea",
+          "at": "2026-11-22T07:40:00.000Z",
+          "by": "claude"
+        }
+      ],
+      "createdBy": "claude",
+      "createdAt": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z",
+      "recommendation": {
+        "answer": "Presence passes; quality needs your read. With images off, the alt text is what people get — judge it with the overlay on.",
+        "rationale": "All 11 images on /uxdesign and all 3 on / have alt text; none is empty, filename-like or a placeholder. Whether each describes the work well enough is a human call. The Images off switch makes the browser render alt text exactly as it does when images fail, so you can read the page the way those visitors do.",
+        "confidence": "high",
+        "measured": "Alt text check on / and /uxdesign; axe-core WCAG 2.2 AA clean on /, /uxdesign, /uxdesign/naacpldf and /contact.",
+        "sources": [
+          {
+            "label": "WCAG 1.1.1",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html"
+          }
+        ],
+        "author": "claude",
+        "at": "2026-11-22T07:40:00.000Z"
+      }
+    }
+  ],
+  "annotations": [],
+  "notes": [
+    {
+      "id": "N-seed-1",
+      "title": "How these tests were prepared",
+      "body": "Each hypothesis carries a test link: open it from the left rail, or copy it from the Decisions tab. Claude ran every analyzer behind its recommendation with Playwright against a dev build; numbers in the recommendations are measured, not estimated, except where a recommendation says it was read from code.\n\nKnown measurement limits:\n- Typekit is blocked in Claude's sandbox, so measurements used the TASA Explorer fallback. Width-sensitive results (H-03, H-04, H-06) should be re-run in your browser.\n- Production compare in Claude's sandbox used a local build of the main branch, because ericajaclyn.com isn't reachable from there. On a Vercel preview, /_prod proxies the real site.",
+      "images": [],
+      "author": "claude",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    }
+  ],
+  "improvements": [
+    {
+      "id": "I-seed-1",
+      "scope": "design-system",
+      "title": "Document allowed text/surface pairings next to the tokens",
+      "body": "From H-02: a table in global.css (or the Figma variables description) listing which text tokens may sit on which surfaces, with measured ratios. --secondary becomes fill-only for muted and error text.",
+      "status": "open",
+      "hypothesis": "H-02",
+      "author": "claude",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    },
+    {
+      "id": "I-seed-2",
+      "scope": "design-system",
+      "title": "Display headings should wrap long words",
+      "body": "From H-04: overflow-wrap: anywhere + hyphens: auto on .heading-md/.heading-lg/.heading-xl.",
+      "status": "open",
+      "hypothesis": "H-04",
+      "author": "claude",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    },
+    {
+      "id": "I-seed-3",
+      "scope": "lab",
+      "title": "Live multi-user sync",
+      "body": "Today collaboration runs on handoff files: honest and zero-infra, but asynchronous. Next step is a storage adapter on Supabase (magic-link invites + row-level security + realtime) so invited contributors and Claude see each other's comments live. Needs a Supabase project and a decision from you.",
+      "status": "open",
+      "author": "claude",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    },
+    {
+      "id": "I-seed-4",
+      "scope": "lab",
+      "title": "Run the checks in CI on every preview",
+      "body": "The analyzers are plain DOM code: a Playwright job could run each hypothesis's test link on the Vercel preview URL and attach findings as evidence automatically. Removes the manual 'did anyone run it' gap.",
+      "status": "open",
+      "author": "claude",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    },
+    {
+      "id": "I-seed-5",
+      "scope": "lab",
+      "title": "Pixel diff with a threshold in Compare",
+      "body": "Difference blend shows changes visually; a numeric pixel diff (changed-pixel %) would let 'no regression' be a pass/fail criterion.",
+      "status": "open",
+      "author": "claude",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "C-seed-1",
+      "thread": "H-02",
+      "author": "claude",
+      "body": "Dogfooding note: the lab's own UI failed axe on exactly this pairing the first time I ran it (#747478 on #f7f7f7 = 4.34:1 in the frame caption bar). I gave the lab a --lab-muted-text that clears 4.5:1 on every lab surface. That's the case for a pairing rule over a one-off value fix: the trap is easy to fall into.",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    },
+    {
+      "id": "C-seed-2",
+      "thread": "H-04",
+      "author": "claude",
+      "body": "Caveat on the 3px: I measured with the fallback font because Typekit is blocked in my sandbox. Caecilia's 'Challenges' at 32px may be slightly narrower or wider. Run this test in your browser first; if it passes with Caecilia, the fix is still worth having as a guard, but it drops to P3.",
+      "at": "2026-11-22T07:40:00.000Z",
+      "updatedAt": "2026-11-22T07:40:00.000Z"
+    }
+  ]
+}

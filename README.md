@@ -4,6 +4,10 @@ This is a production-deployed Astro project with React, TypeScript + shadcn/ui (
 
 
 
+## Design Lab
+
+A private design review and testing tool lives at `/lab` in `pnpm dev` and on Vercel preview deployments (never in production builds). See [`src/lab/README.md`](src/lab/README.md).
+
 ## Adding components
 
 To add components to, run the following command:
