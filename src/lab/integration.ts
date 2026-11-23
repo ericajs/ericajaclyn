@@ -1,23 +1,19 @@
-// Design Lab Astro integration.
+// AI Design Lab Astro integration.
 //
-// The lab is a private review tool, so it is only built where it is useful:
-//   • `astro dev` — always
-//   • Vercel preview deployments (VERCEL_ENV=preview) — yes; Vercel
-//     Deployment Protection decides who can open them
-//   • Vercel production (VERCEL_ENV=production) — no
-// Override with LAB=1 (force on) or LAB=0 (force off).
+// AI Design Lab is a standalone app hosted on ericajaclyn.com at LAB_BASE
+// (/aidesignlab), like /threshold. It is built everywhere: `astro dev`, Vercel
+// previews and production. LAB=0 turns it off for a build.
 //
-// Candidate designs: any src/lab/designs/<name>.astro becomes /lab/designs/<name>.
+// Candidate designs: any src/lab/designs/<name>.astro becomes
+// <LAB_BASE>/designs/<name>.
 
 import { readdirSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import type { AstroIntegration } from "astro"
+import { LAB_BASE } from "./base"
 
-export function labEnabled(command: string): boolean {
-  const flag = process.env.LAB
-  if (flag === "1") return true
-  if (flag === "0") return false
-  return command === "dev" || process.env.VERCEL_ENV !== "production"
+export function labEnabled(): boolean {
+  return process.env.LAB !== "0"
 }
 
 export default function designLab(opts: {
@@ -26,23 +22,17 @@ export default function designLab(opts: {
   return {
     name: "design-lab",
     hooks: {
-      "astro:config:setup": ({
-        command,
-        injectRoute,
-        updateConfig,
-        logger,
-        config,
-      }) => {
-        if (!labEnabled(command)) {
-          logger.info("Design Lab is off for this build (production)")
+      "astro:config:setup": ({ injectRoute, updateConfig, logger, config }) => {
+        if (!labEnabled()) {
+          logger.info("AI Design Lab is off for this build (LAB=0)")
           return
         }
         injectRoute({
-          pattern: "/lab",
+          pattern: LAB_BASE,
           entrypoint: new URL("./pages/index.astro", import.meta.url),
         })
         injectRoute({
-          pattern: "/lab/frame/[component]/[perm]",
+          pattern: `${LAB_BASE}/frame/[component]/[perm]`,
           entrypoint: new URL("./pages/frame.astro", import.meta.url),
         })
 
@@ -51,7 +41,7 @@ export default function designLab(opts: {
           for (const f of readdirSync(fileURLToPath(designs))) {
             if (!f.endsWith(".astro")) continue
             injectRoute({
-              pattern: `/lab/designs/${f.replace(/\.astro$/, "")}`,
+              pattern: `${LAB_BASE}/designs/${f.replace(/\.astro$/, "")}`,
               entrypoint: new URL(f, designs),
             })
           }
@@ -76,7 +66,7 @@ export default function designLab(opts: {
           },
         })
         logger.info(
-          `Design Lab on at ${config.base.replace(/\/$/, "")}/lab — production proxy → ${target}`
+          `AI Design Lab on at ${config.base.replace(/\/$/, "")}${LAB_BASE} — production proxy → ${target}`
         )
       },
     },

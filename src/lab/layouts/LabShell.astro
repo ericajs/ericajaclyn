@@ -1,7 +1,7 @@
 ---
 // Full-viewport shell for the lab app and its component frames. No site nav
-// or footer; noindex everywhere (the lab is excluded from production builds,
-// and Vercel previews also send X-Robots-Tag: noindex).
+// or footer. noindex while AI Design Lab is an unlaunched MVP; at launch, drop
+// it for the app page (frames stay noindex) and add it to the sitemap.
 import "@/styles/global.css"
 
 interface Props {

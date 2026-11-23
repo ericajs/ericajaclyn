@@ -64,7 +64,7 @@ export function Header({ onHelp }: { onHelp: () => void }) {
         <span className="lab-brand-mark" aria-hidden="true">
           ◐
         </span>
-        <span className="sr-only">Design Lab: </span>
+        <span className="sr-only">AI Design Lab: </span>
         {BASE_PROJECTS.length > 1 ? (
           <select
             aria-label="Project"

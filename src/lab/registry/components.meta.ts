@@ -1,6 +1,8 @@
 // Component permutation metadata — pure data, safe to import in the browser.
 // The matching component references live in components.ts (build time only).
-// Every combination of `axes` is pre-rendered at /lab/frame/<id>/<slug>.
+// Every combination of `axes` is pre-rendered at <LAB_BASE>/frame/<id>/<slug>.
+
+import { LAB_BASE } from "../base"
 
 export interface ComponentMeta {
   id: string
@@ -95,5 +97,7 @@ export function framePath(
   props: Record<string, string> = {}
 ): string | null {
   const meta = componentMeta(id)
-  return meta ? `/lab/frame/${meta.id}/${permutationSlug(meta, props)}` : null
+  return meta
+    ? `${LAB_BASE}/frame/${meta.id}/${permutationSlug(meta, props)}`
+    : null
 }

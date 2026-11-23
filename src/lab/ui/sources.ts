@@ -24,6 +24,10 @@ export function prodSource(
 ): FrameSource | null {
   if (!t || t.kind !== "route") return null
   const path = t.prodPath ?? t.path
+  // Served from production itself: same origin already, no proxy needed
+  // (vercel.json only rewrites /_prod on preview hosts)
+  if (window.location.origin === project.prodOrigin)
+    return { kind: "url", url: path }
   if (project.prodProxy)
     return {
       kind: "proxy",

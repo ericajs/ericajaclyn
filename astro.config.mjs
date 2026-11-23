@@ -19,15 +19,16 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    // Private design review tool at /lab — dev and preview builds only
+    // AI Design Lab at /aidesignlab — its own app, hosted here like /threshold
     designLab({ prodOrigin: "https://ericajaclyn.com" }),
     // /liquidglass stays out until we decide whether it should be public;
-    // /threshold is fiction (invented book and reviews) and is noindex
+    // /threshold is fiction (invented book and reviews) and is noindex;
+    // /aidesignlab stays out until the MVP launches
     sitemap({
       filter: (page) =>
         !page.includes("/liquidglass") &&
         !page.includes("/threshold") &&
-        !page.includes("/lab"),
+        !page.includes("/aidesignlab"),
     }),
   ],
 })

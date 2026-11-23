@@ -464,7 +464,7 @@ class LabStore {
     return id
   }
 
-  /** Contributors open `/lab?p=…&invite=<base64url JSON>`; the person travels in the link. */
+  /** Contributors open `/aidesignlab?p=…&invite=<base64url JSON>`; the person travels in the link. */
   acceptInvite(code: string) {
     try {
       const json = JSON.parse(atob(code.replace(/-/g, "+").replace(/_/g, "/")))

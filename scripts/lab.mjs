@@ -69,7 +69,10 @@ function save(project) {
 }
 const projectArg = () => opt("project", projectIds()[0])
 const base = () =>
-  (opt("base", "http://localhost:4321") + "/lab").replace(/\/+lab$/, "/lab")
+  (opt("base", "http://localhost:4321") + "/aidesignlab").replace(
+    /\/+aidesignlab$/,
+    "/aidesignlab"
+  )
 
 function preset(h, project) {
   const t = h.test ?? {}

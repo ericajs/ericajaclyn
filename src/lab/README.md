@@ -1,16 +1,16 @@
-# Design Lab
+# AI Design Lab
 
-A private review tool at `/lab` for testing design hypotheses against the real
+A review tool at `/aidesignlab` for testing design hypotheses against the real
 site: accessibility and UX-heuristic switches, annotations and diagrams,
 property specs, compare against production, flows, component permutations,
 and a decision lifecycle with Claude in the loop.
 
-It is built into `astro dev` and Vercel **preview** deployments only. Production
-builds (`VERCEL_ENV=production`) contain no lab routes, no axe-core and no
-sitemap entries. Force it on or off with `LAB=1` / `LAB=0`.
+It is a standalone app hosted on ericajaclyn.com, managed like `/threshold`:
+built in `astro dev`, Vercel previews and production. While it is an MVP it is
+noindex and out of the sitemap. Turn it off for a build with `LAB=0`.
 
 ```bash
-pnpm dev            # → http://localhost:4321/lab
+pnpm dev            # → http://localhost:4321/aidesignlab
 node scripts/lab.mjs links --base https://<preview>.vercel.app   # every hypothesis's test link
 node scripts/lab.mjs check                                     # validate the project file
 node scripts/lab.mjs merge lab-handoff-portfolio-….json        # merge a review handoff
@@ -74,9 +74,9 @@ candidate decisions: token values per theme (`vars` / `varsDark`) or raw CSS.
 - **A page**: add a `route` target to the project file.
 - **A component**: add it to `registry/components.meta.ts` (axes) and
   `registry/components.ts` (the import). Every permutation is pre-rendered at
-  `/lab/frame/<id>/<slug>`.
+  `/aidesignlab/frame/<id>/<slug>`.
 - **A candidate screen**: create `src/lab/designs/<name>.astro`; it is served at
-  `/lab/designs/<name>` and can be added as a route target.
+  `/aidesignlab/designs/<name>` and can be added as a route target.
 - **A project**: add `src/lab/projects/<id>.json`; the header shows a switcher.
 
 ## Production compare

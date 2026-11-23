@@ -1,7 +1,7 @@
 // Test links. Every rig state round-trips through the URL so a hypothesis's
 // test setup — or any manual variation of it — is one link away.
 //
-//   /lab?p=portfolio&h=H-04&m=review&t=case-naacp&vp=1280x800@4
+//   /aidesignlab?p=portfolio&h=H-04&m=review&t=case-naacp&vp=1280x800@4
 //       &sw=reflow,text-spacing,theme:dark
 //
 // Grammar (kept readable on purpose — Claude writes these by hand):

@@ -4,9 +4,9 @@ This is a production-deployed Astro project with React, TypeScript + shadcn/ui (
 
 
 
-## Design Lab
+## AI Design Lab
 
-A private design review and testing tool lives at `/lab` in `pnpm dev` and on Vercel preview deployments (never in production builds). See [`src/lab/README.md`](src/lab/README.md).
+AI Design Lab, a design review and accessibility testing app, is hosted from this site at `/aidesignlab` (like `/threshold`). See [`src/lab/README.md`](src/lab/README.md).
 
 ## Adding components
 

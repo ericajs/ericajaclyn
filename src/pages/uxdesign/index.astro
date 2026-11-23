@@ -19,7 +19,8 @@ type Card = {
   justify?: "start" | "end"
   title: string
   description: string
-  images: { src: string; alt: string; aspect: string; lgOnly?: boolean }[]
+  // No `src` renders WorkTile's empty placeholder tile (cover still to come)
+  images: { src?: string; alt: string; aspect: string; lgOnly?: boolean }[]
 }
 
 const cards: Record<string, Card> = {
@@ -31,6 +32,18 @@ const cards: Record<string, Card> = {
       {
         src: "/ux-design/threshold/21x9-Threshold-Cover.jpg",
         alt: "The Threshold book launch page: the headline “Threshold”, the subtitle “Lucid Dreaming, Mind Control & the Hypnotic Language of Symbols”, a short description, Pre-order and Read Chapter One buttons, and a navy hardcover with a gold door symbol on cream paper.",
+        aspect: "aspect-[21/9]",
+      },
+    ],
+  },
+  aidesignlab: {
+    layout: "stack",
+    title: "AI Design Lab",
+    description: "Collaborative AI UX QA workspace",
+    images: [
+      {
+        // Cover pending: add src (public/ux-design/aidesignlab/…) and alt
+        alt: "",
         aspect: "aspect-[21/9]",
       },
     ],
