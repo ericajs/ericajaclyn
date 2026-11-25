@@ -28,10 +28,12 @@ import {
 } from "../engine/switches"
 import { presetOf, store, useLab, type Tool } from "../store/store"
 import type { AnnotationCategory } from "../types"
+import { sameSetup } from "../engine/tests"
 import { toast } from "./bus"
-import { Icon, IconButton, Popover } from "./primitives"
+import { SavedCheck, SaveTestButton } from "./SavedTests"
+import { Icon, IconButton, Popover, TextField } from "./primitives"
 import { CATEGORIES, copy } from "./util"
-import { designSource, targetById } from "./sources"
+import { designSource, targetById, useMatchedRef } from "./sources"
 import { VIEWPORTS, ZOOMS } from "./viewports"
 
 const TOOLS: {
@@ -59,12 +61,9 @@ export function RigBar() {
   const h = project.hypotheses.find((x) => x.id === ui.hypothesisId)
   const preset = h ? presetOf(h, project) : null
   const diff = preset ? diffSwitches(rig.switches, preset.switches) : null
-  const setupDiffers =
-    preset &&
-    (diff!.deviates ||
-      preset.target !== rig.target ||
-      JSON.stringify(preset.viewport) !== JSON.stringify(rig.viewport) ||
-      preset.mode !== rig.mode)
+  // Any difference counts: props, matrix axes and flow as well as switches
+  const setupDiffers = preset && !sameSetup(preset, rig, project)
+  const matched = useMatchedRef()
   const groups = useMemo(
     () => [
       ...new Set(
@@ -98,6 +97,7 @@ export function RigBar() {
               store.setRig({ target: e.target.value, props: undefined })
             }
             aria-label="Target"
+            data-tip="What's on the canvas: a page, component or image"
           >
             {groups.map((g) => (
               <optgroup key={g} label={g}>
@@ -145,6 +145,7 @@ export function RigBar() {
               <span className="sr-only">Viewport</span>
               <select
                 aria-label="Viewport"
+                data-tip="Viewport size the design renders at"
                 value={`${vp.w}x${vp.h}`}
                 onChange={(e) => {
                   const [w, hh] = e.target.value.split("x").map(Number)
@@ -202,6 +203,7 @@ export function RigBar() {
             <span className="sr-only">Annotation type</span>
             <select
               aria-label="Annotation type"
+              data-tip="Category given to new annotations"
               value={ui.category}
               onChange={(e) =>
                 store.setUI({ category: e.target.value as AnnotationCategory })
@@ -321,9 +323,10 @@ export function RigBar() {
             </li>
           )}
         </ul>
-        {h && (
-          <div className="lab-row lab-gap-2 lab-push lab-xs">
-            {setupDiffers ? (
+        <div className="lab-row lab-gap-2 lab-push lab-xs">
+          <SavedCheck testRef={matched} />
+          {h &&
+            (setupDiffers ? (
               <>
                 <span
                   className="lab-chip lab-chip-warn"
@@ -344,24 +347,14 @@ export function RigBar() {
                 >
                   Reset to preset
                 </button>
-                <button
-                  type="button"
-                  className="lab-link-btn"
-                  onClick={() => {
-                    store.updateHypothesis(h.id, {
-                      test: { ...rig, switches: { ...rig.switches } },
-                    })
-                    toast(`Saved as ${h.id}'s test setup`)
-                  }}
-                >
-                  Save as preset
-                </button>
               </>
             ) : (
               <span className="lab-chip lab-chip-pass">
                 Running {h.id}&apos;s test setup
               </span>
-            )}
+            ))}
+          <SaveTestButton />
+          {h && (
             <IconButton
               icon={Copy01Icon}
               label={`Copy ${h.id} preset link`}
@@ -373,8 +366,8 @@ export function RigBar() {
                 )
               }
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )
@@ -402,11 +395,11 @@ function SwitchCatalog() {
     >
       {() => (
         <>
-          <input
+          <TextField
             type="search"
             className="lab-catalog-search"
+            label="Search switches"
             placeholder="Search switches, WCAG criteria…"
-            aria-label="Search switches"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             autoFocus

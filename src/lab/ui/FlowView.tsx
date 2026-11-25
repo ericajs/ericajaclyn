@@ -8,7 +8,7 @@ import { store, uid, useLab } from "../store/store"
 import type { Evidence, Flow } from "../types"
 import { frames } from "./bus"
 import { FrameView } from "./FrameView"
-import { Btn, Segmented } from "./primitives"
+import { Btn, Segmented, TextField } from "./primitives"
 import { designSource, targetById, useBox } from "./sources"
 import { failCounts } from "./util"
 
@@ -218,7 +218,7 @@ function FlowRun({ flow }: { flow: Flow }) {
       body: `${flow.name}: ${status.filter((s) => s === "done").length}/${flow.steps.length - 1} transitions completed, ${(total / 1000).toFixed(1)}s total${notes.length ? `. Issues: ${notes.join("; ")}` : ""}`,
       author: store.state.ui.identity,
       at: new Date().toISOString(),
-      snapshot: { ...rig, switches: { ...rig.switches } },
+      ...store.provenance(),
       data: {
         flow: flow.id,
         success: ok,
@@ -297,9 +297,9 @@ function FlowRun({ flow }: { flow: Flow }) {
             setNote("")
           }}
         >
-          <input
-            aria-label="Issue observed"
-            placeholder="Issue observed…"
+          <TextField
+            label="Issue"
+            placeholder="Issue observed"
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />

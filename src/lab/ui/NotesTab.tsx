@@ -7,7 +7,7 @@ import { personName, store, uid, useLab, type Tool } from "../store/store"
 import type { Note } from "../types"
 import { toast } from "./bus"
 import { FrameView } from "./FrameView"
-import { Btn, Dialog } from "./primitives"
+import { Btn, Dialog, TextField } from "./primitives"
 import { Thread } from "./Thread"
 import { CATEGORIES, timeAgo, useImageUrl } from "./util"
 
@@ -107,6 +107,7 @@ export function ImageMarkup({
         </div>
         <select
           aria-label="Annotation type"
+          data-tip="Category given to new annotations"
           value={ui.category}
           onChange={(e) =>
             store.setUI({ category: e.target.value as typeof ui.category })
@@ -176,18 +177,20 @@ function NoteEditor({ note }: { note: Note }) {
         }
       }}
     >
-      <input
-        className="lab-title-input"
-        aria-label="Note title"
+      <TextField
+        className="lab-tf-title"
+        inputClassName="lab-title-input"
+        label="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => title !== note.title && save({ title })}
       />
-      <textarea
-        aria-label="Note"
+      <TextField
+        multiline
+        label="Note"
+        placeholder="Write, or paste a screenshot (⌘V / Ctrl+V)"
         rows={6}
         value={body}
-        placeholder="Write, or paste a screenshot (⌘V / Ctrl+V)…"
         onChange={(e) => setBody(e.target.value)}
         onBlur={() => body !== note.body && save({ body })}
       />
@@ -226,6 +229,7 @@ function NoteEditor({ note }: { note: Note }) {
         </label>
         <select
           aria-label="Linked hypothesis"
+          data-tip="Question this note is linked to"
           value={note.hypothesis ?? ""}
           onChange={(e) => save({ hypothesis: e.target.value || undefined })}
         >
@@ -238,6 +242,7 @@ function NoteEditor({ note }: { note: Note }) {
         </select>
         <select
           aria-label="Linked target"
+          data-tip="Page, component or image this note is about"
           value={note.target ?? ""}
           onChange={(e) => save({ target: e.target.value || undefined })}
         >

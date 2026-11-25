@@ -7,7 +7,7 @@ import { personName, store, uid, useLab } from "../store/store"
 import type { Improvement, ImprovementScope } from "../types"
 import { toast } from "./bus"
 import { Thumb } from "./NotesTab"
-import { Btn, Segmented } from "./primitives"
+import { Btn, Segmented, TextField } from "./primitives"
 import { timeAgo } from "./util"
 import { Thread } from "./Thread"
 
@@ -82,6 +82,7 @@ export function SystemTab() {
         <div className="lab-row lab-gap-2">
           <select
             aria-label="Improvement scope"
+            data-tip="Design-system change or lab improvement"
             value={draft.scope}
             onChange={(e) =>
               setDraft({ ...draft, scope: e.target.value as ImprovementScope })
@@ -90,8 +91,8 @@ export function SystemTab() {
             <option value="design-system">Design system</option>
             <option value="lab">This lab app</option>
           </select>
-          <input
-            aria-label="Improvement title"
+          <TextField
+            label="Improvement"
             placeholder={
               draft.scope === "lab"
                 ? "What would make the lab better?"
@@ -101,10 +102,11 @@ export function SystemTab() {
             onChange={(e) => setDraft({ ...draft, title: e.target.value })}
           />
         </div>
-        <textarea
-          aria-label="Details"
-          rows={2}
+        <TextField
+          multiline
+          label="Details"
           placeholder="Why, and what good looks like. Paste a screenshot if it helps."
+          rows={2}
           value={draft.body}
           onChange={(e) => setDraft({ ...draft, body: e.target.value })}
         />

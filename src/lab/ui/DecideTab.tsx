@@ -14,10 +14,12 @@ import {
   type Verdict,
 } from "../types"
 import { toast } from "./bus"
-import { Btn, Segmented } from "./primitives"
+import { Btn, Segmented, TextField } from "./primitives"
 import { copy, timeAgo } from "./util"
 import { targetById, targetLabel } from "./sources"
 import { Thread } from "./Thread"
+import { VersionHistory } from "./SavedTests"
+import { findTest, vLabel } from "../engine/tests"
 import { vpLabel } from "./viewports"
 
 const VERDICTS: { value: Verdict; label: string }[] = [
@@ -86,6 +88,7 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
     h.criteriaResults ??
     h.successCriteria.map(() => "untested" as CriterionResult)
   const preset = presetOf(h, project)
+  const pinnedTest = findTest(project, h.testRef?.test)
   const target = targetById(project, preset.target)
   const rec = h.recommendation
   const hidden = rec && ui.blind && !h.decision && !revealed
@@ -94,14 +97,13 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
     stageIdx >= 0 && stageIdx < STAGES.length - 1 ? STAGES[stageIdx + 1] : null
 
   const record = () => {
-    const rig = store.state.ui.rig
     store.updateHypothesis(h.id, {
       decision: {
         verdict,
         answer: answer.trim(),
         author: ui.identity,
         at: new Date().toISOString(),
-        snapshot: { ...rig, switches: { ...rig.switches } },
+        ...store.provenance(),
       },
     })
     setEditingDecision(false)
@@ -114,6 +116,7 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
         <span className="lab-strong">{h.id}</span>
         <select
           aria-label="Priority"
+          data-tip="Priority: P1 is the most urgent"
           value={h.priority ?? ""}
           onChange={(e) =>
             store.updateHypothesis(h.id, {
@@ -128,6 +131,7 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
         </select>
         <select
           aria-label="Iteration"
+          data-tip="Iteration this question is planned for"
           value={h.iteration ?? ""}
           onChange={(e) =>
             store.updateHypothesis(h.id, {
@@ -146,9 +150,10 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
           by {personName(project, h.createdBy)}
         </span>
       </div>
-      <input
-        className="lab-title-input"
-        aria-label="Hypothesis title"
+      <TextField
+        className="lab-tf-title"
+        inputClassName="lab-title-input"
+        label="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() =>
@@ -199,12 +204,13 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
         <h3 id="h-statement" className="brow">
           Hypothesis
         </h3>
-        <textarea
-          className="lab-statement"
-          aria-labelledby="h-statement"
+        <TextField
+          multiline
+          inputClassName="lab-statement"
+          label="Statement"
+          placeholder="We believe [change] for [people] will [outcome]…"
           rows={4}
           value={statement}
-          placeholder="We believe [change] for [people] will [outcome]. We'll know we're right when [signal]."
           onChange={(e) => setStatement(e.target.value)}
           onBlur={() =>
             statement !== h.statement &&
@@ -275,9 +281,9 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
             setNewCrit("")
           }}
         >
-          <input
-            aria-label="New success criterion"
-            placeholder="Add a measurable criterion…"
+          <TextField
+            label="New criterion"
+            placeholder="Add a measurable criterion"
             value={newCrit}
             onChange={(e) => setNewCrit(e.target.value)}
           />
@@ -309,30 +315,85 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
             Copy link
           </Btn>
         </div>
-        <p className="lab-xs">
-          <strong>{preset.mode}</strong> · {targetLabel(target, preset.props)} ·{" "}
-          {vpLabel(preset.viewport!)}
-          {preset.matrix?.length
-            ? ` · axes: ${preset.matrix.map((a) => `${a.key} (${a.values.length})`).join(" × ")}`
-            : ""}
-          {preset.flow
-            ? ` · flow: ${project.flows.find((f) => f.id === preset.flow)?.name}`
-            : ""}
-        </p>
-        <ul className="lab-chips">
-          {Object.entries(preset.switches).map(([k, v]) => {
-            const def = findSwitch(k, project)
-            return (
-              <li
-                key={k}
-                className={`lab-switch-chip is-preset kind-${def?.kind}`}
-              >
-                {def?.label ?? k}
-                {v !== "on" ? `: ${optionLabel(def, v)}` : ""}
-              </li>
-            )
-          })}
-        </ul>
+        {/* One setting per row, name on the left and value on the right */}
+        <dl className="lab-setup">
+          <div>
+            <dt>Saved test</dt>
+            <dd>
+              {h.testRef ? (
+                <>
+                  <code>{h.testRef.test}</code> {vLabel(h.testRef.version)}
+                  {pinnedTest ? ` · ${pinnedTest.name}` : ""}
+                </>
+              ) : (
+                <span className="lab-muted">
+                  Not saved yet. Use Save test in the rig.
+                </span>
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt>Mode</dt>
+            <dd className="lab-cap">{preset.mode}</dd>
+          </div>
+          <div>
+            <dt>Target</dt>
+            <dd>{targetLabel(target, preset.props)}</dd>
+          </div>
+          <div>
+            <dt>Viewport</dt>
+            <dd>{vpLabel(preset.viewport!)}</dd>
+          </div>
+          {preset.matrix?.length ? (
+            <div>
+              <dt>Axes</dt>
+              {/* Raw axis IDs and every value, one axis per line */}
+              <dd>
+                <ul className="lab-setup-axes">
+                  {preset.matrix.map((a) => (
+                    <li key={`${a.kind}:${a.key}`}>
+                      <code>{a.key}</code>
+                      <span>{a.values.join(" / ")}</span>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ) : null}
+          {preset.flow ? (
+            <div>
+              <dt>Flow</dt>
+              <dd>{project.flows.find((f) => f.id === preset.flow)?.name}</dd>
+            </div>
+          ) : null}
+        </dl>
+        {Object.keys(preset.switches).length > 0 && (
+          <>
+            <h4 className="lab-setup-heading">Switches</h4>
+            <dl className="lab-setup lab-setup-switches">
+              {Object.entries(preset.switches).map(([k, v]) => {
+                const def = findSwitch(k, project)
+                // Green dot: this switch is live in the center right now,
+                // with the same value as the test setup
+                const running = ui.rig.switches[k] === v
+                return (
+                  <div key={k} className={running ? "is-running" : undefined}>
+                    <dt>{def?.label ?? k}</dt>
+                    <dd>{v === "on" ? "On" : optionLabel(def, v)}</dd>
+                  </div>
+                )
+              })}
+            </dl>
+          </>
+        )}
+        {h.testRef && (
+          <>
+            <h4 className="lab-setup-heading">
+              Versions of <code>{h.testRef.test}</code>
+            </h4>
+            <VersionHistory testId={h.testRef.test} />
+          </>
+        )}
       </section>
 
       {rec && (
@@ -447,8 +508,9 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
               options={VERDICTS}
               size="sm"
             />
-            <textarea
-              aria-label="Decision and rationale"
+            <TextField
+              multiline
+              label="Decision and rationale"
               rows={3}
               placeholder="What did you decide, and why? The current rig is saved with it."
               value={answer}
@@ -509,7 +571,6 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
           onSubmit={(e) => {
             e.preventDefault()
             if (!obs.trim()) return
-            const rig = store.state.ui.rig
             store.updateHypothesis(h.id, {
               evidence: [
                 ...(h.evidence ?? []),
@@ -519,16 +580,16 @@ function HypothesisDetail({ h }: { h: Hypothesis }) {
                   body: obs.trim(),
                   author: ui.identity,
                   at: new Date().toISOString(),
-                  snapshot: { ...rig, switches: { ...rig.switches } },
+                  ...store.provenance(),
                 },
               ],
             })
             setObs("")
           }}
         >
-          <input
-            aria-label="Add an observation"
-            placeholder="Add an observation (saved with the current rig)…"
+          <TextField
+            label="Observation"
+            placeholder="Add an observation (saved with the rig)"
             value={obs}
             onChange={(e) => setObs(e.target.value)}
           />

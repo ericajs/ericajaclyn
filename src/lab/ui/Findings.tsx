@@ -8,7 +8,7 @@ import { findSwitch, type SwitchDef } from "../engine/switches"
 import { store, uid, useLab } from "../store/store"
 import type { Annotation, Evidence } from "../types"
 import { frames, toast } from "./bus"
-import { Btn } from "./primitives"
+import { Btn, TextField } from "./primitives"
 import { designSource, targetById } from "./sources"
 
 const SEV_TEXT = { fail: "Fail", warn: "Check", info: "Info", pass: "Pass" }
@@ -23,14 +23,13 @@ function addEvidence(
     toast("Select a hypothesis to attach evidence to")
     return
   }
-  const rig = store.state.ui.rig
   const ev: Evidence = {
     id: uid("E"),
     kind,
     body,
     author: store.state.ui.identity,
     at: new Date().toISOString(),
-    snapshot: { ...rig, switches: { ...rig.switches } },
+    ...store.provenance(),
     data,
   }
   store.updateHypothesis(h.id, { evidence: [...(h.evidence ?? []), ev] })
@@ -344,8 +343,8 @@ function Guide({ def }: { def: SwitchDef }) {
           setObs("")
         }}
       >
-        <input
-          aria-label={`${def.label} observation`}
+        <TextField
+          label={`${def.label} observation`}
           placeholder="What did you observe?"
           value={obs}
           onChange={(e) => setObs(e.target.value)}

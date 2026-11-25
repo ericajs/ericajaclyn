@@ -13,6 +13,7 @@ import {
   type Comment,
   type Hypothesis,
   type Project,
+  type SavedTest,
 } from "../types"
 import { imageDataUrl, importDataUrl } from "./images"
 import { personName, store } from "./store"
@@ -139,6 +140,24 @@ export function digest(file: HandoffFile, project: Project): string {
       out.push(
         `- On ${title(c.thread)} — ${name(c.author)}: "${line(c.body).slice(0, 200)}"`
       )
+  }
+
+  // Saved test versions: the latest of each, ready to act on
+  const tests = (file.entities.tests ?? []) as unknown as SavedTest[]
+  if (tests.length) {
+    out.push(`\n### Saved test versions`)
+    for (const t of tests) {
+      const v = t.versions.at(-1)
+      if (!v) continue
+      out.push(
+        `\n**${t.id} v${v.version}** — ${t.name} · ${v.date} · ${name(v.author)}${v.hypothesis ? ` · ${v.hypothesis}` : ""}${v.message ? `\n> ${line(v.message)}` : ""}\n\n\`\`\`diff\n${v.changelog.join("\n")}\n\`\`\``
+      )
+      const failing = v.results.filter((r) => r.fail > 0)
+      if (v.results.length)
+        out.push(
+          `Results: ${v.results.length} checks, ${failing.length ? failing.map((r) => `${r.check}@${r.frame} fail ${r.fail}`).join("; ") : "no failures"}`
+        )
+    }
   }
 
   const count = (c: Collection) => file.entities[c]?.length ?? 0

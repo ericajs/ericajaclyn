@@ -18,6 +18,8 @@
      sits on --muted, so its secondary text uses a value that clears 4.5:1 on
      every lab surface. */
   --lab-muted-text: #69696d;
+  /* Saved-test checkmark: light gray, always paired with a text label */
+  --lab-saved-tick: #a3a3a8;
 }
 .dark {
   --lab-fail: #f87171;
@@ -29,6 +31,7 @@
   --lab-claude: #e0896a;
   --lab-surface: #161618;
   --lab-muted-text: #9d9da3;
+  --lab-saved-tick: #8a8a90;
 }
 
 .stage-idea {
@@ -257,6 +260,28 @@
   text-align: center;
 }
 
+/* ErrorBoundary fallback: holds the broken region's grid area */
+.lab-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 0;
+  padding: 24px;
+  text-align: center;
+}
+.lab-error-title {
+  font-weight: 600;
+  color: var(--lab-fail);
+}
+.lab-error-detail {
+  max-width: 48ch;
+  font-size: 13px;
+  color: var(--lab-muted-text);
+  overflow-wrap: anywhere;
+}
+
 .lab-btn {
   display: inline-flex;
   align-items: center;
@@ -359,17 +384,9 @@
   gap: 8px;
   font-size: 12px;
 }
-.lab-field {
-  display: grid;
-  gap: 4px;
-}
 .lab-field-label {
   font-size: 12px;
   font-weight: 700;
-}
-.lab-field-hint {
-  font-size: 12px;
-  color: var(--lab-muted-text);
 }
 
 .lab-seg {
@@ -762,16 +779,32 @@
   align-items: center;
   min-width: 0;
 }
+/* Long labels wrap inside the chip: min-height (not a fixed height) lets it
+   grow, and a 12px radius stays a pill on one line without turning a
+   two-line chip into a stadium */
 .lab-switch-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 24px;
-  padding: 0 4px 0 9px;
-  border-radius: 999px;
+  gap: 6px;
+  min-height: 24px;
+  max-width: 100%;
+  padding: 3px 4px 3px 8px;
+  border-radius: 12px;
   font-size: 12px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
   border: 1px solid var(--lab-line);
   background: var(--background);
+}
+/* Status marker (preset / added / changed): a dot, since an inset edge
+   shadow curves into an arc on a rounded chip */
+.lab-switch-chip:is(.is-preset, .is-added, .is-changed)::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lab-chip-marker);
 }
 .lab-switch-chip button {
   width: 20px;
@@ -788,20 +821,86 @@
   border-style: dashed;
 }
 .lab-switch-chip.is-preset {
-  box-shadow: inset 3px 0 0 var(--lab-pass);
+  --lab-chip-marker: var(--lab-pass);
 }
 .lab-switch-chip.is-added {
-  box-shadow: inset 3px 0 0 var(--lab-warn);
+  --lab-chip-marker: var(--lab-warn);
 }
 .lab-switch-chip.is-changed {
-  box-shadow: inset 3px 0 0 var(--lab-info);
+  --lab-chip-marker: var(--lab-info);
 }
 .lab-switch-chip.is-removed {
   border-style: dashed;
   color: var(--lab-muted-text);
 }
-.lab-decide .lab-switch-chip {
-  padding-inline-end: 9px;
+/* Test setup (Decisions tab): a plain vertical list of settings, one per
+   row with a hairline between rows; long values wrap in their own column */
+.lab-setup {
+  margin: 0;
+}
+.lab-setup > div {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--lab-line);
+  font-size: 13px;
+  line-height: 18px;
+}
+.lab-setup > div:last-child {
+  border-bottom: 1px solid var(--lab-line);
+}
+.lab-setup dt {
+  color: var(--lab-muted-text);
+  overflow-wrap: anywhere;
+}
+.lab-setup dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+/* Green dot: the switch is running in the center with this value. The slot
+   is always there so names stay aligned when a switch stops running. */
+.lab-setup-switches dt {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.lab-setup-switches dt::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  forced-color-adjust: none;
+}
+.lab-setup-switches > div.is-running dt::before {
+  background: var(--lab-pass);
+}
+.lab-setup-axes {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lab-setup-axes li {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+}
+.lab-setup-axes code {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+.lab-setup-heading {
+  margin: 16px 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lab-muted-text);
+}
+.lab-cap::first-letter {
+  text-transform: uppercase;
 }
 
 .lab-catalog {
@@ -1439,7 +1538,7 @@ td.sev-fail {
   line-height: 24px;
   border-color: transparent !important;
   background: transparent !important;
-  padding-inline: 4px !important;
+  padding-inline: var(--tf-px, 4px) !important;
   width: 100%;
 }
 .lab-title-input:hover {
@@ -1822,7 +1921,8 @@ td.sev-fail {
 @media (forced-colors: active) {
   .lab-dot,
   .lab-stagebar span,
-  .lab-progress span {
+  .lab-progress span,
+  .lab-switch-chip::before {
     forced-color-adjust: none;
   }
   .lab-switch-chip,
@@ -1830,5 +1930,376 @@ td.sev-fail {
   .lab-btn,
   .lab-seg button[aria-checked="true"] {
     border: 1px solid CanvasText;
+  }
+}
+
+/* ── Saved tests ─────────────────────────────────────────────────────────── */
+
+.lab-saved-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--lab-muted-text);
+  white-space: nowrap;
+}
+.lab-saved-tick {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--lab-saved-tick);
+}
+.lab-saved-check code,
+.lab-saved-title code,
+.lab-save-form code,
+.lab-setup code,
+.lab-versions code,
+.lab-results code {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+.lab-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.lab-count {
+  margin-inline-start: 2px;
+  font-size: 12px;
+  color: var(--lab-muted-text);
+}
+
+.lab-saved-menu {
+  width: min(420px, 90vw);
+  max-height: min(70vh, 560px);
+  overflow: auto;
+  padding: 8px;
+}
+.lab-saved-list-head {
+  padding: 4px 8px 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.lab-saved-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lab-saved-list li + li {
+  border-top: 1px solid var(--lab-line);
+}
+.lab-saved-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  text-align: start;
+  cursor: pointer;
+}
+.lab-saved-item:hover {
+  background: var(--secondary);
+}
+.lab-saved-item .lab-saved-tick {
+  margin-top: 2px;
+}
+.lab-saved-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.lab-saved-title {
+  font-size: 13px;
+  line-height: 18px;
+}
+.lab-saved-meta {
+  font-size: 12px;
+  color: var(--lab-muted-text);
+}
+.lab-saved-versions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 0 8px 8px 30px;
+  font-size: 12px;
+}
+
+.lab-save-form {
+  display: grid;
+  gap: 12px;
+}
+.lab-save-kind {
+  display: grid;
+  gap: 6px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.lab-save-target {
+  font-size: 13px;
+}
+.lab-save-actions {
+  justify-content: flex-end;
+}
+.lab-changelog {
+  margin: 0;
+  padding: 8px 10px;
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid var(--lab-line);
+  border-radius: 8px;
+  background: var(--lab-surface);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.lab-results {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.lab-results th,
+.lab-results td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--lab-line);
+  text-align: start;
+  vertical-align: top;
+}
+.lab-results th {
+  font-weight: 600;
+  color: var(--lab-muted-text);
+}
+
+.lab-versions {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lab-versions > li {
+  border-top: 1px solid var(--lab-line);
+}
+.lab-versions > li:last-child {
+  border-bottom: 1px solid var(--lab-line);
+}
+.lab-versions summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+.lab-versions summary .lab-muted {
+  font-size: 12px;
+}
+.lab-version-body {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 10px;
+  font-size: 13px;
+}
+.lab-version-body .lab-link-btn {
+  justify-self: start;
+}
+
+/* ── Tooltips (ui/Tooltips.tsx) ──────────────────────────────────────────
+   Dark rounded bubble with an arrow on whichever side faces the element.
+   --arrow is the arrow's offset along the edge, set from the element's center. */
+
+.lab-tooltip {
+  --tip-bg: #141416;
+  position: fixed;
+  z-index: 1000;
+  max-width: 280px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: var(--tip-bg);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: start;
+  overflow-wrap: anywhere;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.22);
+  pointer-events: auto;
+  animation: lab-tip-in 0.12s ease-out;
+}
+.dark .lab-tooltip {
+  --tip-bg: #2c2c30;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.1),
+    0 6px 20px rgb(0 0 0 / 0.5);
+}
+.lab-tooltip::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--tip-bg);
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+.lab-tooltip.side-top::after {
+  bottom: -4px;
+  left: calc(var(--arrow) - 5px);
+}
+.lab-tooltip.side-bottom::after {
+  top: -4px;
+  left: calc(var(--arrow) - 5px);
+}
+.lab-tooltip.side-left::after {
+  right: -4px;
+  top: calc(var(--arrow) - 5px);
+}
+.lab-tooltip.side-right::after {
+  left: -4px;
+  top: calc(var(--arrow) - 5px);
+}
+@keyframes lab-tip-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-tooltip {
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .lab-tooltip {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* ── Text fields (TextField in primitives.tsx) ───────────────────────────
+   Same look as every lab input (border, radius, surface, 13px text); only
+   the label behaves differently. Empty and unfocused, the label is the
+   placeholder, vertically centred (first line when multiline). Focused or
+   filled, it shrinks to 11px and moves to the top of the field, above the
+   input text, aligned to the text's left edge. --tf-px is the shared inline
+   padding that keeps label and text aligned. */
+
+.lab-tf {
+  --tf-px: 10px;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.lab-tf-box {
+  position: relative;
+  min-width: 0;
+}
+/* Repeated class: out-ranks the global input rule's :not() chain without
+   lowering it (which would let other rules start overriding it) */
+.lab-app
+  .lab-tf-box
+  > :is(input, textarea).lab-tf-input.lab-tf-input.lab-tf-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 19px var(--tf-px) 5px;
+  line-height: 18px;
+}
+.lab-app
+  .lab-tf.is-multiline
+  .lab-tf-box
+  > textarea.lab-tf-input.lab-tf-input.lab-tf-input {
+  /* Block, so no baseline gap makes the box taller than the field */
+  display: block;
+  padding-top: 21px;
+  line-height: 1.45;
+  /* The resize handle only appears while the field is focused */
+  resize: none;
+  transition: height 0.16s cubic-bezier(0.2, 0, 0, 1);
+  interpolate-size: allow-keywords;
+}
+/* Empty and unfocused: the same height as a single-line field. Focus expands
+   it to its rows; a filled field keeps its full height. */
+.lab-app
+  .lab-tf.is-multiline
+  .lab-tf-box
+  > textarea.lab-tf-input.lab-tf-input.lab-tf-input:placeholder-shown:not(
+    :focus
+  ) {
+  height: 44px !important;
+  min-height: 44px;
+  overflow: hidden;
+}
+.lab-app
+  .lab-tf.is-multiline
+  .lab-tf-box
+  > textarea.lab-tf-input.lab-tf-input.lab-tf-input:focus {
+  resize: vertical;
+}
+.lab-tf-label {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--tf-px) + 1px);
+  right: calc(var(--tf-px) + 1px);
+  transform: translateY(-50%);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--lab-muted-text);
+  white-space: nowrap;
+  pointer-events: none;
+  transition:
+    top 0.16s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.16s cubic-bezier(0.2, 0, 0, 1),
+    font-size 0.16s cubic-bezier(0.2, 0, 0, 1),
+    line-height 0.16s cubic-bezier(0.2, 0, 0, 1),
+    color 0.16s;
+}
+/* Floated: focused or filled */
+.lab-tf-input:is(:focus, :not(:placeholder-shown)) ~ .lab-tf-label {
+  top: 5px;
+  transform: none;
+  font-size: 11px;
+  line-height: 14px;
+}
+.lab-tf-input:focus ~ .lab-tf-label {
+  color: var(--input-ring);
+}
+/* Longer prompt only while empty; the short label once floated */
+.lab-tf.has-prompt
+  .lab-tf-input:placeholder-shown:not(:focus)
+  ~ .lab-tf-label
+  .lab-tf-label-text {
+  display: none;
+}
+.lab-tf-input:is(:focus, :not(:placeholder-shown))
+  ~ .lab-tf-label
+  .lab-tf-prompt {
+  display: none;
+}
+.lab-tf-prompt {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lab-tf-hint {
+  margin: 0;
+  padding-inline: calc(var(--tf-px) + 1px);
+  font-size: 12px;
+  color: var(--lab-muted-text);
+}
+.lab-row > .lab-tf {
+  flex: 1;
+}
+.lab-row.lab-align-start {
+  align-items: flex-start;
+}
+/* Borderless heading fields (titles) */
+.lab-tf.lab-tf-title {
+  --tf-px: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab-tf-label,
+  .lab-app .lab-tf-box > textarea.lab-tf-input.lab-tf-input.lab-tf-input {
+    transition: none;
   }
 }

@@ -19,6 +19,8 @@ import { DecideTab } from "./DecideTab"
 import { Header } from "./Header"
 import { NotesTab } from "./NotesTab"
 import { Dialog, Tabs } from "./primitives"
+import { ErrorBoundary } from "./ErrorBoundary"
+import { Tooltips } from "./Tooltips"
 import { RigBar } from "./RigBar"
 import { SystemTab } from "./SystemTab"
 import { frames, toasts } from "./bus"
@@ -125,9 +127,11 @@ function RightPanel() {
         aria-labelledby={`right-tab-${tab}`}
         tabIndex={0}
       >
-        {tab === "decide" && <DecideTab />}
-        {tab === "notes" && <NotesTab />}
-        {tab === "system" && <SystemTab />}
+        <ErrorBoundary area="This panel" resetKey={`${tab}:${hId ?? ""}`}>
+          {tab === "decide" && <DecideTab />}
+          {tab === "notes" && <NotesTab />}
+          {tab === "system" && <SystemTab />}
+        </ErrorBoundary>
       </div>
     </aside>
   )
@@ -136,6 +140,8 @@ function RightPanel() {
 export default function App() {
   const ui = useLab((s) => s.ui)
   const [help, setHelp] = useState(false)
+  // Any change to the test rig or question gives a crashed view a fresh try
+  const rigKey = `${ui.hypothesisId ?? ""}:${JSON.stringify(ui.rig)}`
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -182,14 +188,25 @@ export default function App() {
       className={`lab-app ${ui.leftOpen ? "" : "no-left"} ${ui.rightOpen ? "" : "no-right"}`}
     >
       <CvdFilters />
-      <Header onHelp={() => setHelp(true)} />
-      {ui.leftOpen && <LeftRail />}
+      <ErrorBoundary area="The header" className="lab-header">
+        <Header onHelp={() => setHelp(true)} />
+      </ErrorBoundary>
+      {ui.leftOpen && (
+        <ErrorBoundary area="The questions list" className="lab-rail">
+          <LeftRail />
+        </ErrorBoundary>
+      )}
       <main className="lab-center" aria-label="Design area">
-        <RigBar />
-        <Canvas />
+        <ErrorBoundary area="The test rig" resetKey={rigKey}>
+          <RigBar />
+        </ErrorBoundary>
+        <ErrorBoundary area={`The ${ui.rig.mode} view`} resetKey={rigKey}>
+          <Canvas />
+        </ErrorBoundary>
       </main>
       {ui.rightOpen && <RightPanel />}
       <Toasts />
+      <Tooltips />
       <Dialog
         open={help}
         onClose={() => setHelp(false)}

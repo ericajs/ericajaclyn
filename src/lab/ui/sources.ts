@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { matchingRef } from "../engine/tests"
+import { useLab } from "../store/store"
 import { componentMeta, framePath } from "../registry/components.meta"
-import type { Project, Target } from "../types"
+import type { Project, Target, TestRef } from "../types"
 import type { FrameSource } from "./FrameView"
 
 export function targetById(project: Project, id?: string): Target | undefined {
@@ -69,4 +71,15 @@ export function useBox<T extends HTMLElement>() {
     return () => ro.disconnect()
   }, [])
   return [ref, box] as const
+}
+
+/** The saved test version exactly on screen, if any (the loaded test wins ties). */
+export function useMatchedRef(): TestRef | undefined {
+  const project = useLab((s) => s.project)
+  const rig = useLab((s) => s.ui.rig)
+  const loaded = useLab((s) => s.ui.loadedTest)
+  return useMemo(
+    () => matchingRef(project, rig, loaded),
+    [project, rig, loaded]
+  )
 }

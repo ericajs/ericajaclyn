@@ -1,5 +1,14 @@
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useEffect, useId, useRef, useState, type ReactNode } from "react"
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type Ref,
+  type TextareaHTMLAttributes,
+} from "react"
 
 type IconSvg = Parameters<typeof HugeiconsIcon>[0]["icon"]
 
@@ -288,20 +297,99 @@ export function Dialog({
   )
 }
 
-export function Field({
-  label,
-  children,
-  hint,
-}: {
-  label: string
-  children: ReactNode
-  hint?: string
-}) {
+/**
+ * Text field with a floating label (every text field in the lab uses this).
+ *
+ *   Empty, not focused → the label sits inside the field, vertically centred
+ *   (first line for multiline), as the placeholder. `placeholder` can give a
+ *   longer prompt for this state only.
+ *   Focused or filled  → the label shrinks and moves to the top of the field,
+ *   above the input text, and shows only the short `label`.
+ *
+ * The label is the field's accessible name. `hint` is supporting text below
+ * the field, tied to it with aria-describedby. Behaviour is pure CSS
+ * (:focus / :placeholder-shown), so it works however the value is set.
+ */
+type InputProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "placeholder" | "className"
+>
+type AreaProps = Omit<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "placeholder" | "className"
+>
+export function TextField(
+  props: {
+    label: string
+    placeholder?: string
+    hint?: ReactNode
+    /** Class on the wrapper */
+    className?: string
+    /** Class on the input/textarea itself */
+    inputClassName?: string
+  } & (
+    | ({ multiline?: false } & InputProps & {
+          inputRef?: Ref<HTMLInputElement>
+        })
+    | ({ multiline: true } & AreaProps & {
+          inputRef?: Ref<HTMLTextAreaElement>
+        })
+  )
+) {
+  const auto = useId()
+  const {
+    label,
+    placeholder,
+    hint,
+    className = "",
+    inputClassName = "",
+    multiline,
+    inputRef,
+    id = auto,
+    ...rest
+  } = props as typeof props & { id?: string }
+  const hintId = hint ? `${id}-hint` : undefined
+  const describedBy =
+    [rest["aria-describedby"], hintId].filter(Boolean).join(" ") || undefined
+  const shared = {
+    id,
+    // A single space keeps :placeholder-shown meaningful without drawing text
+    placeholder: " ",
+    className: `lab-tf-input ${inputClassName}`,
+    "aria-describedby": describedBy,
+  }
   return (
-    <label className="lab-field">
-      <span className="lab-field-label">{label}</span>
-      {children}
-      {hint && <span className="lab-field-hint">{hint}</span>}
-    </label>
+    <div
+      className={`lab-tf ${multiline ? "is-multiline" : ""} ${placeholder ? "has-prompt" : ""} ${className}`}
+    >
+      <div className="lab-tf-box">
+        {multiline ? (
+          <textarea
+            {...(rest as AreaProps)}
+            {...shared}
+            ref={inputRef as Ref<HTMLTextAreaElement>}
+          />
+        ) : (
+          <input
+            {...(rest as InputProps)}
+            {...shared}
+            ref={inputRef as Ref<HTMLInputElement>}
+          />
+        )}
+        <label htmlFor={id} className="lab-tf-label">
+          <span className="lab-tf-label-text">{label}</span>
+          {placeholder && (
+            <span className="lab-tf-prompt" aria-hidden="true">
+              {placeholder}
+            </span>
+          )}
+        </label>
+      </div>
+      {hint && (
+        <p className="lab-tf-hint" id={hintId}>
+          {hint}
+        </p>
+      )}
+    </div>
   )
 }

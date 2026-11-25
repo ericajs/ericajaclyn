@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { personName, store, useLab } from "../store/store"
+import { TextField } from "./primitives"
 import { timeAgo } from "./util"
 
 /**
@@ -69,11 +70,14 @@ export function Thread({
           send()
         }}
       >
-        <textarea
-          aria-label="Add a comment"
+        <TextField
+          multiline
+          label="Comment"
           rows={compact ? 1 : 2}
           placeholder={
-            compact ? "Comment…" : "Comment, question or decision rationale…"
+            compact
+              ? "Add a comment"
+              : "Comment, question or decision rationale"
           }
           value={body}
           onChange={(e) => setBody(e.target.value)}

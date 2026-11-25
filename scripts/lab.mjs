@@ -24,6 +24,7 @@ const COLLECTIONS = [
   "comments",
   "people",
   "iterations",
+  "tests",
 ]
 const STAGES = [
   "idea",
@@ -74,8 +75,16 @@ const base = () =>
     "/aidesignlab"
   )
 
+// A question runs its pinned saved test version; unsaved ones keep `test`
+function pinnedSetup(h, project) {
+  if (!h.testRef) return undefined
+  return (project.tests ?? [])
+    .find((t) => t.id === h.testRef.test)
+    ?.versions.find((v) => v.version === h.testRef.version)?.setup
+}
+
 function preset(h, project) {
-  const t = h.test ?? {}
+  const t = pinnedSetup(h, project) ?? h.test ?? {}
   return {
     mode: t.mode ?? "review",
     target: t.target ?? project.targets[0]?.id,
@@ -171,7 +180,11 @@ function check(id = projectArg(), quiet = false) {
     if (!h.statement) warn.push(`${where}: no statement`)
     if (!h.successCriteria?.length)
       warn.push(`${where}: no success criteria — not falsifiable yet`)
-    const t = h.test ?? {}
+    if (h.testRef && !pinnedSetup(h, project))
+      errors.push(
+        `${where}: pinned to ${h.testRef.test} v${h.testRef.version}, which doesn't exist`
+      )
+    const t = pinnedSetup(h, project) ?? h.test ?? {}
     if (t.target && !targets.has(t.target))
       errors.push(`${where}: unknown target ${t.target}`)
     if (t.flow && !flows.has(t.flow))
@@ -198,6 +211,27 @@ function check(id = projectArg(), quiet = false) {
     )
       errors.push(`${where}: compare needs a route target`)
   }
+  // Saved tests: append-only versions, semver majors, date-only, messages from v2
+  for (const t of project.tests ?? []) {
+    const where = `Test ${t.id}`
+    if (!/^T-\d+$/.test(t.id)) warn.push(`${where}: id should look like T-01`)
+    if (!t.versions?.length) errors.push(`${where}: has no versions`)
+    ;(t.versions ?? []).forEach((v, i) => {
+      const at = `${where} v${v.version}`
+      if (v.version !== `${i + 1}.0.0`)
+        errors.push(`${at}: expected v${i + 1}.0.0 at position ${i + 1}`)
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v.date ?? ""))
+        errors.push(`${at}: date must be YYYY-MM-DD (no time of day)`)
+      if (i > 0 && !v.message?.trim())
+        errors.push(`${at}: versions after v1.0.0 need a message`)
+      if (v.setup?.target && !targets.has(v.setup.target))
+        errors.push(`${at}: unknown target ${v.setup.target}`)
+      for (const k of Object.keys(v.setup?.switches ?? {}))
+        if (!switchIds.has(k)) errors.push(`${at}: unknown switch ${k}`)
+      if (v.author && !people.has(v.author))
+        warn.push(`${at}: author ${v.author} isn't in people`)
+    })
+  }
   for (const c of project.comments) {
     if (!ids.has(c.thread))
       warn.push(`Comment ${c.id}: thread ${c.thread} not found`)
@@ -213,7 +247,7 @@ function check(id = projectArg(), quiet = false) {
     console.log(
       errors.length
         ? `\n${errors.length} error(s)`
-        : `✓ ${project.id}: ${project.hypotheses.length} hypotheses, ${project.targets.length} targets, ${switchIds.size} switches — valid${warn.length ? ` (${warn.length} warnings)` : ""}`
+        : `✓ ${project.id}: ${project.hypotheses.length} hypotheses, ${(project.tests ?? []).length} saved tests, ${project.targets.length} targets, ${switchIds.size} switches — valid${warn.length ? ` (${warn.length} warnings)` : ""}`
     )
   }
   return errors.length === 0
@@ -255,7 +289,7 @@ function merge(file) {
   for (const c of COLLECTIONS) {
     const incoming = handoff.entities?.[c] ?? []
     if (!incoming.length) continue
-    const map = new Map(project[c].map((e) => [e.id, e]))
+    const map = new Map((project[c] ?? []).map((e) => [e.id, e]))
     let n = 0
     for (const e of incoming) {
       const cur = map.get(e.id)

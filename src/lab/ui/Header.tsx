@@ -12,8 +12,16 @@ import { BASE_PROJECTS, store, useLab } from "../store/store"
 import type { Mode } from "../types"
 import { toast } from "./bus"
 import { buildHandoff, digest, download, importHandoff } from "../store/handoff"
-import { Btn, Dialog, Field, Icon, IconButton, Segmented } from "./primitives"
+import {
+  Btn,
+  Dialog,
+  Icon,
+  IconButton,
+  Segmented,
+  TextField,
+} from "./primitives"
 import { copy } from "./util"
+import { SavedMenu } from "./SavedTests"
 
 const MODES: { value: Mode; label: string; title: string }[] = [
   {
@@ -68,6 +76,7 @@ export function Header({ onHelp }: { onHelp: () => void }) {
         {BASE_PROJECTS.length > 1 ? (
           <select
             aria-label="Project"
+            data-tip="Project under review"
             value={project.id}
             onChange={(e) => store.switchProject(e.target.value)}
           >
@@ -90,6 +99,7 @@ export function Header({ onHelp }: { onHelp: () => void }) {
         />
       </nav>
       <div className="lab-row lab-gap-2 lab-push">
+        <SavedMenu />
         <label
           className="lab-check"
           title="Hide Claude's recommendation until you've recorded your own decision — avoids anchoring"
@@ -339,26 +349,24 @@ function PeopleDialog({
           setName("")
         }}
       >
-        <Field
-          label="Invite an external contributor"
-          hint="They review in their own browser and send you a handoff file to import."
-        >
-          <div className="lab-row lab-gap-2">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Name"
-            />
-            <Btn type="submit" variant="primary">
-              Create invite
-            </Btn>
-          </div>
-        </Field>
+        <p className="lab-field-label">Invite an external contributor</p>
+        <div className="lab-row lab-gap-2 lab-align-start">
+          <TextField
+            label="Name"
+            placeholder="Contributor's name"
+            hint="They review in their own browser and send you a handoff file to import."
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Btn type="submit" variant="primary">
+            Create invite
+          </Btn>
+        </div>
         {link && (
-          <input
+          <TextField
+            label="Invite link"
             readOnly
             value={link}
-            aria-label="Invite link"
             onFocus={(e) => e.currentTarget.select()}
           />
         )}

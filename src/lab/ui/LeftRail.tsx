@@ -1,9 +1,9 @@
 // Left rail: every question's status at a glance, grouped by lifecycle stage.
 
 import { useMemo, useState } from "react"
-import { store, useLab } from "../store/store"
+import { presetOf, store, useLab } from "../store/store"
 import { STAGES, STAGE_META, type Hypothesis, type Stage } from "../types"
-import { Btn } from "./primitives"
+import { Btn, TextField } from "./primitives"
 import { awaitingClaude } from "./util"
 
 const ORDER: Stage[] = [
@@ -61,7 +61,7 @@ export function LeftRail() {
             <span className="lab-rail-meta">
               {h.id}
               {h.priority ? ` · ${h.priority.toUpperCase()}` : ""} ·{" "}
-              {h.test.mode}
+              {presetOf(h, project).mode}
               {h.decision ? ` · decided: ${h.decision.verdict}` : ""}
             </span>
           </span>
@@ -110,15 +110,16 @@ export function LeftRail() {
             ) : null
           })}
         </div>
-        <input
+        <TextField
           type="search"
+          label="Filter"
           placeholder="Filter by text, tag, WCAG…"
-          aria-label="Filter questions"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
         <select
           aria-label="Iteration"
+          data-tip="Show questions from one iteration"
           value={iteration}
           onChange={(e) => setIteration(e.target.value)}
         >

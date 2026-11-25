@@ -47,6 +47,31 @@ Stages: idea → tentative → testing → validated (right thing: evidence of u
 need) → verified (built right: spec, WCAG, production parity) → confirmed
 (decided, assigned to a version). Plus rejected and parked.
 
+## Saved tests and versions
+
+Test setups live in a shared library (`tests` in the project file): `T-01`,
+`T-02`… Each question pins one version (`testRef: { test, version }`), so a
+decision or piece of evidence always records exactly which test produced it.
+
+- **Saving is a commit.** "Save test" in the rig adds a version; nothing is
+  ever overwritten. The first save is `v1.0.0`; each later save is the next
+  major (`v2.0.0`, `v3.0.0`…) and requires a one-or-two-line message.
+- **Each version records** the setup; a changelog computed against the version
+  before it, with real ids (`~ setup.switches.theme: light → dark`,
+  `~ results.contrast@<frame>: fail 4 → 0`, `~ H-02.decision.verdict: — → modify`);
+  the check results on screen at save time, so it doubles as evidence; the
+  question's criteria, decision, notes and improvements; author; iteration.
+- **Dates only.** Versions carry `YYYY-MM-DD`, never a time of day. The test's
+  sync key is `<date>#<version count>` for the same reason.
+- **Light-gray checkmark** in the rig when the screen exactly matches a saved
+  version, and in the header's **Saved** menu beside the loaded test.
+- `node scripts/lab.mjs check` enforces versions in order, date-only dates and
+  messages from `v2.0.0` on. Handoffs list the latest version of each changed
+  test with its changelog.
+
+Known limit: versions sync like every other entity (last write wins), so two
+people saving a `v2.0.0` of the same test before a handoff keep only one.
+
 ## Switches
 
 `src/lab/registry/switches.json` is the catalog; behavior is in

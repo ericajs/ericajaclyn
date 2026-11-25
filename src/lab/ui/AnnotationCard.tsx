@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { store, personName } from "../store/store"
 import type { Annotation, AnnotationCategory, Project } from "../types"
+import { TextField } from "./primitives"
 import { Thread } from "./Thread"
 import { CATEGORIES } from "./util"
 
@@ -37,6 +38,7 @@ export function AnnotationCard({
         <strong>#{a.number}</strong>
         <select
           aria-label="Category"
+          data-tip="Category of this annotation"
           value={a.category}
           onChange={(e) =>
             save({ category: e.target.value as AnnotationCategory })
@@ -60,18 +62,20 @@ export function AnnotationCard({
           ✕
         </button>
       </div>
-      <textarea
-        ref={ref}
-        aria-label="Annotation text"
+      <TextField
+        multiline
+        inputRef={ref}
+        label={a.kind === "label" ? "Label" : "Annotation"}
+        placeholder={a.kind === "label" ? "Label text" : "What do you see?"}
         rows={2}
         value={text}
-        placeholder={a.kind === "label" ? "Label text" : "What do you see?"}
         onChange={(e) => setText(e.target.value)}
         onBlur={() => text !== (a.text ?? "") && save({ text })}
       />
       <div className="lab-row lab-gap-2 lab-wrap">
         <select
           aria-label="Hypothesis"
+          data-tip="Question this annotation belongs to"
           value={a.hypothesis ?? ""}
           onChange={(e) => save({ hypothesis: e.target.value || undefined })}
         >

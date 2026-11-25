@@ -5,17 +5,33 @@
 import { useSyncExternalStore } from "react"
 import { decodeLink, encodeLink } from "../engine/url"
 import {
+  captureContext,
+  changelog,
+  findTest,
+  findVersion,
+  matchingRef,
+  nextTestId,
+  nextVersion,
+  normalizeSetup,
+  syncKey,
+  today,
+} from "../engine/tests"
+import {
   COLLECTIONS,
   type AnnotationCategory,
   type Collection,
   type Comment,
   type Hypothesis,
   type Mode,
+  type CheckResult,
   type Person,
   type Project,
+  type SavedTest,
   type Stage,
   type SwitchState,
+  type TestRef,
   type TestSetup,
+  type TestVersion,
   type ViewportSpec,
 } from "../types"
 
@@ -25,7 +41,7 @@ const files = import.meta.glob<{ default: Project }>("../projects/*.json", {
   eager: true,
 })
 export const BASE_PROJECTS: Project[] = Object.values(files)
-  .map((m) => m.default)
+  .map((m) => ({ ...m.default, tests: m.default.tests ?? [] }))
   .sort((a, b) => a.name.localeCompare(b.name))
 
 type Entity = { id: string; updatedAt?: string; [k: string]: unknown }
@@ -62,6 +78,8 @@ export interface UIState {
   blind: boolean
   identity: string
   selectedAnnotation?: string
+  /** The saved test version last loaded into the rig (question pin or Saved menu) */
+  loadedTest?: TestRef
   /** Bumped to force frames to reload */
   reloadKey: number
 }
@@ -200,6 +218,7 @@ class LabStore {
         ...this.state.ui,
         hypothesisId: h.id,
         rig: presetOf(h, project),
+        loadedTest: h.testRef,
       }
     else if (!Object.keys(link.setup).length) {
       const first =
@@ -210,6 +229,7 @@ class LabStore {
           ...this.state.ui,
           hypothesisId: first.id,
           rig: presetOf(first, project),
+          loadedTest: first.testRef,
         }
     }
     // Anything explicit in the URL wins over the preset: that's how a modified link reproduces a deviation
@@ -262,7 +282,9 @@ class LabStore {
       : undefined
     this.setUI({
       hypothesisId: id,
-      ...(h && loadPreset ? { rig: presetOf(h, this.state.project) } : {}),
+      ...(h && loadPreset
+        ? { rig: presetOf(h, this.state.project), loadedTest: h.testRef }
+        : {}),
       rightTab: "decide",
       rightOpen: true,
     })
@@ -270,7 +292,92 @@ class LabStore {
 
   resetToPreset() {
     const h = this.hypothesis()
-    if (h) this.setUI({ rig: presetOf(h, this.state.project) })
+    if (h)
+      this.setUI({
+        rig: presetOf(h, this.state.project),
+        loadedTest: h.testRef,
+      })
+  }
+
+  // ── Saved tests ────────────────────────────────────────────────────────
+
+  /** What's on screen, for decisions and evidence: the rig plus the saved test version it matches. */
+  provenance(): { snapshot: TestSetup; testRef?: TestRef } {
+    const rig = this.state.ui.rig
+    const ref = matchingRef(this.state.project, rig, this.state.ui.loadedTest)
+    return {
+      snapshot: { ...rig, switches: { ...rig.switches } },
+      ...(ref ? { testRef: ref } : {}),
+    }
+  }
+
+  /** Put a saved test version on screen. */
+  loadTest(ref: TestRef) {
+    const v = findVersion(this.state.project, ref)
+    if (!v) return
+    this.setUI({
+      rig: normalizeSetup(v.setup, this.state.project),
+      loadedTest: ref,
+    })
+  }
+
+  /**
+   * Save what's on screen as a version: v1.0.0 of a new test, or the next
+   * major version of an existing one. Never overwrites an earlier version.
+   */
+  saveTest(opts: {
+    /** Existing test to add a version to; omit to create a new test */
+    testId?: string
+    /** Name for a new test */
+    name?: string
+    /** Why it changed. Required unless this is v1.0.0. */
+    message?: string
+    results: CheckResult[]
+    /** Point the current question at the new version */
+    pin: boolean
+  }): TestRef {
+    const project = this.state.project
+    const h = this.hypothesis()
+    const existing = findTest(project, opts.testId)
+    const version = nextVersion(existing)
+    const message = opts.message?.trim()
+    if (existing && !message)
+      throw new Error("A new version needs a description of what changed")
+    const setup = normalizeSetup(this.state.ui.rig, project)
+    const context = captureContext(project, h)
+    const entry: TestVersion = {
+      version,
+      setup,
+      ...(message ? { message } : {}),
+      changelog: changelog(
+        existing?.versions.at(-1),
+        { setup, results: opts.results, context },
+        project
+      ),
+      results: opts.results,
+      context,
+      author: this.state.ui.identity,
+      date: today(),
+      iteration:
+        h?.iteration ??
+        project.iterations.find((i) => i.status === "active")?.id,
+      ...(h ? { hypothesis: h.id } : {}),
+    }
+    const versions = [...(existing?.versions ?? []), entry]
+    const test: SavedTest = {
+      id: existing?.id ?? nextTestId(project),
+      name: existing?.name ?? (opts.name?.trim() || "Untitled test"),
+      versions,
+      createdBy: existing?.createdBy ?? this.state.ui.identity,
+      updatedAt: syncKey({ versions }),
+    }
+    // touch: false keeps the date-only sync key instead of a timestamp
+    this.upsert("tests", test, { touch: false })
+    const ref: TestRef = { test: test.id, version }
+    if (opts.pin && h)
+      this.updateHypothesis(h.id, { testRef: ref, test: undefined })
+    this.setUI({ loadedTest: ref })
+    return ref
   }
 
   hypothesis(): Hypothesis | undefined {
@@ -541,17 +648,22 @@ class LabStore {
   }
 }
 
-/** A hypothesis's test setup with defaults filled in. */
+/**
+ * A hypothesis's test setup with defaults filled in: its pinned saved test
+ * version if it has one, otherwise its inline (unsaved) setup.
+ */
 export function presetOf(h: Hypothesis, project: Project): TestSetup {
+  const t: Partial<TestSetup> =
+    findVersion(project, h.testRef)?.setup ?? h.test ?? {}
   return {
-    mode: h.test.mode ?? "review",
-    target: h.test.target ?? project.targets[0]?.id,
-    flow: h.test.flow,
-    props: h.test.props ? { ...h.test.props } : undefined,
-    switches: { ...(h.test.switches ?? {}) },
-    viewport: h.test.viewport ?? DEFAULT_VIEWPORT,
-    compare: h.test.compare,
-    matrix: h.test.matrix?.map((a) => ({ ...a, values: [...a.values] })),
+    mode: t.mode ?? "review",
+    target: t.target ?? project.targets[0]?.id,
+    flow: t.flow,
+    props: t.props ? { ...t.props } : undefined,
+    switches: { ...(t.switches ?? {}) },
+    viewport: t.viewport ?? DEFAULT_VIEWPORT,
+    compare: t.compare,
+    matrix: t.matrix?.map((a) => ({ ...a, values: [...a.values] })),
   }
 }
 

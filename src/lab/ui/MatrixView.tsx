@@ -189,9 +189,12 @@ function defaultAxes(
   if (t?.kind === "component") {
     const meta = componentMeta(t.component)
     const keys = Object.keys(meta?.axes ?? {})
-    return keys
-      .slice(0, 2)
-      .map((k) => ({ kind: "prop" as const, key: k, values: meta!.axes[k] }))
+    // A component with no props (e.g. the token specimen) has nothing to
+    // permute, so it gets the viewport grid like a route
+    if (keys.length)
+      return keys
+        .slice(0, 2)
+        .map((k) => ({ kind: "prop" as const, key: k, values: meta!.axes[k] }))
   }
   return [
     {
@@ -259,6 +262,7 @@ function AxisEditor({ axes }: { axes: MatrixAxis[] }) {
           <legend>{i === 0 ? "Columns" : "Rows"}</legend>
           <select
             aria-label="Axis kind"
+            data-tip="What this axis varies: prop, switch, viewport or target"
             value={axis.kind}
             onChange={(e) =>
               update(i, { kind: e.target.value as MatrixAxis["kind"] })
@@ -272,6 +276,7 @@ function AxisEditor({ axes }: { axes: MatrixAxis[] }) {
           {keyOptions(axis.kind).length > 1 && (
             <select
               aria-label="Axis key"
+              data-tip="Which prop, switch or target set this axis varies"
               value={axis.key}
               onChange={(e) => update(i, { key: e.target.value })}
             >

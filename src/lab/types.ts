@@ -96,6 +96,80 @@ export interface TestSetup {
   matrix?: MatrixAxis[]
 }
 
+// ── Saved tests ─────────────────────────────────────────────────────────
+//
+// A saved test is a named, versioned test setup in a shared library (T-01,
+// T-02…). Saving never overwrites: every save appends a version, like a git
+// commit. v1.0.0 needs no message; every later version requires one. Each
+// version records the setup, a computed changelog against the version before
+// it, the check results on screen when it was saved (so it doubles as
+// evidence), and the question context (decision, notes, improvements).
+// Dates are YYYY-MM-DD only: no times of day are recorded.
+
+/** Points at one version of a saved test. */
+export interface TestRef {
+  test: string
+  /** Semver, e.g. "2.0.0" */
+  version: string
+}
+
+/** One check's outcome in one frame at save time. */
+export interface CheckResult {
+  /** Frame label, e.g. "Design · Token contrast specimen" */
+  frame: string
+  /** Switch id of the check, e.g. "contrast" */
+  check: string
+  fail: number
+  warn: number
+  summary: string
+}
+
+/** What the question looked like when the version was saved. */
+export interface TestContext {
+  hypothesis?: {
+    id: string
+    stage: Stage
+    criteria: { text: string; result: CriterionResult }[]
+    decision?: { verdict: Verdict; answer: string; author: string }
+  }
+  /** Notes linked to the question, plus project-wide notes */
+  notes: { id: string; title: string; body: string }[]
+  /** Improvements linked to the question, plus project-wide ones */
+  improvements: {
+    id: string
+    title: string
+    status: Improvement["status"]
+    scope: ImprovementScope
+  }[]
+}
+
+export interface TestVersion {
+  version: string
+  setup: TestSetup
+  /** Why it changed. Required from v2.0.0 on. */
+  message?: string
+  /** Computed against the previous version: "+ switches.theme = dark" … */
+  changelog: string[]
+  results: CheckResult[]
+  context: TestContext
+  author: string
+  /** YYYY-MM-DD */
+  date: string
+  iteration?: string
+  /** The question it was saved from, if any */
+  hypothesis?: string
+}
+
+export interface SavedTest {
+  id: string
+  name: string
+  /** Oldest first; never rewritten */
+  versions: TestVersion[]
+  createdBy: string
+  /** Sync key only: "<YYYY-MM-DD>#<version count>", never a time of day */
+  updatedAt: string
+}
+
 export interface Source {
   label: string
   url: string
@@ -121,6 +195,8 @@ export interface Decision {
   at: string
   /** The rig at the moment of deciding — provenance for the evidence. */
   snapshot: TestSetup
+  /** The saved test version on screen when deciding, if the rig matched one */
+  testRef?: TestRef
 }
 
 export interface Evidence {
@@ -130,6 +206,8 @@ export interface Evidence {
   author: string
   at: string
   snapshot?: TestSetup
+  /** The saved test version on screen, if the rig matched one */
+  testRef?: TestRef
   /** Image refs: "idb:<id>" (local) or "asset:<file>" (merged into repo). */
   images?: string[]
   /** Optional structured result, e.g. a flow run. */
@@ -151,7 +229,10 @@ export interface Hypothesis {
   priority?: "p1" | "p2" | "p3"
   tags?: string[]
   wcag?: string[]
-  test: TestSetup
+  /** The saved test version this question runs. Wins over `test`. */
+  testRef?: TestRef
+  /** Inline, unsaved setup (new questions until their test is saved) */
+  test?: TestSetup
   recommendation?: Recommendation
   decision?: Decision
   evidence: Evidence[]
@@ -321,6 +402,8 @@ export interface Project {
   notes: Note[]
   improvements: Improvement[]
   comments: Comment[]
+  /** Saved test library (older project files without one load as []) */
+  tests: SavedTest[]
 }
 
 /** Collections that are merged entity-by-entity between repo and browser. */
@@ -332,5 +415,6 @@ export const COLLECTIONS = [
   "comments",
   "people",
   "iterations",
+  "tests",
 ] as const
 export type Collection = (typeof COLLECTIONS)[number]
