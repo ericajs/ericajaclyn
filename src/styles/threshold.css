@@ -190,7 +190,8 @@ html.is-dark :focus-visible {
 @media (max-width: 640px) {
   .hero-actions .btn,
   .read-row .btn,
-  .listen .btn {
+  .listen .btn,
+  .content-note .btn {
     width: 100%;
     justify-content: center;
   }
@@ -1143,8 +1144,71 @@ html.is-under .nav {
   border: 0;
   border-inline: 3px solid currentColor;
 }
-.notice {
-  margin-top: 28px;
+/* A publisher's content note: it sits above the form because "Begin
+   Chapter One" scrolls the reader straight past anything below it. */
+.content-note {
+  margin-top: 32px;
+  padding: 20px 22px 22px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+.content-note p:not(.eyebrow) {
+  margin-top: 8px;
+  max-width: 62ch;
+}
+.content-note .btn {
+  margin-top: 16px;
+}
+/* The quip is the disclosure trigger: the fiction reveal is the reader's to open */
+.note-more {
+  margin-top: 12px;
+}
+.note-more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  font: italic 400 1.125rem/1.3 var(--serif);
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+}
+/* A title inside italic type is set roman */
+.note-more summary cite {
+  font-style: normal;
+}
+.note-more summary::-webkit-details-marker {
+  display: none;
+}
+.note-more summary::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 6px solid currentColor;
+  border-block: 4.5px solid transparent;
+  transition: transform 0.2s ease;
+}
+.note-more[open] summary::after {
+  transform: rotate(90deg);
+}
+.note-more summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.note-more p {
+  margin-top: 4px;
+}
+.if-skipped,
+html.is-skipped .if-read,
+html.is-skipped .welcome-care {
+  display: none;
+}
+html.is-skipped .if-skipped {
+  display: inline;
+}
+.welcome h2:focus {
+  outline: none;
 }
 
 /* ── The chapter: one line at a time ──────────────────────── */

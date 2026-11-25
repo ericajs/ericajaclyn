@@ -388,6 +388,35 @@ const stars = Array.from({ length: 46 }, () => {
           <h2 id="read-title">Read Chapter One, right here.</h2>
           <p>No download, no email address. Just keep scrolling.</p>
 
+          <aside class="content-note" aria-labelledby="note-title">
+            <p class="eyebrow" id="note-title">Before you read</p>
+            <p>
+              Chapter One is a guided relaxation in the style of hypnosis. You
+              stay in control the whole time. Read it sitting or lying down,
+              never while driving. If you have epilepsy, a dissociative
+              condition or a history of psychosis, or if relaxation exercises
+              make you feel unwell, skip it. You can stop at any time: press
+              <kbd>Esc</kbd> or choose “Wake up”.
+            </p>
+            <a class="btn btn-ghost btn-sm" href="#welcome" data-action="skip"
+              >Skip Chapter One</a
+            >
+            <details class="note-more">
+              <summary
+                ><span>There is no book called <cite>Threshold</cite>.</span
+                ></summary
+              >
+              <p>
+                There is only Chapter One. This is an AI-engineered experience.
+                Dr. Isadora Kali, Oneirograph Press and the Halden Institute are
+                fictional. The page slowly darkens as you read, and there is an
+                optional soundscape. The doorway “reality check” and bedtime
+                intention it ends with are real, harmless lucid-dreaming habits;
+                you’re free to ignore them. It isn’t therapy or medical advice.
+              </p>
+            </details>
+          </aside>
+
           <form class="read-form" id="name-form" autocomplete="off">
             <label for="first-name"
               >What should Dr. Kali call you? <span>(optional)</span></label
@@ -422,13 +451,6 @@ const stars = Array.from({ length: 46 }, () => {
               Composed to accompany Chapter One. Best with headphones.
             </p>
           </div>
-
-          <p class="fine notice">
-            Chapter One includes a guided relaxation. Read it sitting or lying
-            down — never while driving. You can stop at any time: press <kbd
-              >Esc</kbd
-            > or choose “Wake up”.
-          </p>
         </div>
       </section>
 
@@ -728,18 +750,24 @@ const stars = Array.from({ length: 46 }, () => {
         data-depth="0"
       >
         <Sign class="welcome-sign" />
-        <h2 id="welcome-title">
-          Welcome back<span class="name-slot" data-sep=", "></span>.
+        <h2 id="welcome-title" tabindex="-1">
+          <span class="if-read"
+            >Welcome back<span class="name-slot" data-sep=", "></span>.</span
+          ><span class="if-skipped">Not tonight, then.</span>
         </h2>
         <p class="welcome-care">
-          Take a moment before you stand up. Have a glass of water. Notice the
-          room.
+          Take a moment before you stand up. Notice the room.
         </p>
         <p class="welcome-lede">
-          You’ve just finished Chapter One of <cite>Threshold</cite>.
+          <span class="if-read"
+            >You’ve just finished Chapter One of <cite>Threshold</cite>.</span
+          ><span class="if-skipped"
+            >You skipped Chapter One of <cite>Threshold</cite>.</span
+          >
         </p>
         <p class="welcome-status" data-status-pending>
-          You didn’t take the task. That’s all right. The door will wait.
+          <span class="if-read">You didn’t accept the task.</span> That’s all right.
+          The door will wait.
         </p>
         <p class="welcome-status" data-status-done hidden>
           You accepted the task. The next doorway you walk through, you’ll
@@ -762,11 +790,7 @@ const stars = Array.from({ length: 46 }, () => {
         <p class="fine">
           <cite>Threshold</cite>, Dr. Isadora Kali, Oneirograph Press, the
           Halden Institute and every review on this page are fictional. This
-          page is an interactive story, not therapy or medical advice. The
-          doorway “reality check” and bedtime intention it ends with are real,
-          harmless lucid-dreaming habits; you’re free to ignore them. If you
-          have epilepsy, a dissociative condition or a history of psychosis, or
-          if relaxation exercises make you feel unwell, skip the guided section.
+          page is an interactive story, not therapy or medical advice.
         </p>
         <p class="fine"><a href="/">An experiment by Erica Jaclyn</a></p>
       </div>
@@ -1088,6 +1112,7 @@ const stars = Array.from({ length: 46 }, () => {
 
   let depth = 0
   let awake = false
+  let skipped = false
   const welcome = document.getElementById("welcome")!
 
   function update() {
@@ -1096,7 +1121,11 @@ const stars = Array.from({ length: 46 }, () => {
     // Text flips light/dark where the background crosses mid-grey. Only
     // large type sits in that zone, so contrast stays ≥ 3:1 throughout.
     root.classList.toggle("is-dark", depth >= 0.48)
-    root.classList.toggle("is-under", depth > 0.1 && !awake)
+    // Daylight is checked every frame, not latched, so a reader who scrolls
+    // back down into the chapter gets Pause and Wake up (and Esc) again.
+    const daylight = welcome.getBoundingClientRect().top < innerHeight * 0.6
+    root.classList.toggle("is-under", depth > 0.1 && !daylight)
+    root.classList.toggle("is-awake", daylight)
     sound.setDepth(depth)
 
     let focus = false
@@ -1115,12 +1144,13 @@ const stars = Array.from({ length: 46 }, () => {
     }
     root.classList.toggle("is-focus", focus)
 
-    // Once the reader reaches daylight, the journey counts as complete
-    if (!awake && welcome.getBoundingClientRect().top < innerHeight * 0.6) {
-      awake = true
-      root.classList.add("is-awake")
-      root.classList.remove("is-under")
+    // A skipper who goes back and reads the chapter after all is a reader
+    if (skipped && depth > 0.5) {
+      skipped = false
+      root.classList.remove("is-skipped")
     }
+    // Reaching daylight through the chapter counts as complete; skipping doesn't
+    if (!awake && !skipped && daylight) awake = true
     apparitionTarget()
   }
 
@@ -1214,6 +1244,15 @@ const stars = Array.from({ length: 46 }, () => {
     })
   }
 
+  // Jumps straight to daylight. Instant, so the reader never passes through
+  // the dark scenes (no sweep of colour, no chimes) on the way.
+  function skip() {
+    skipped = true
+    root.classList.add("is-skipped")
+    window.scrollTo({ top: docY(welcome), behavior: "instant" })
+    document.getElementById("welcome-title")!.focus({ preventScroll: true })
+  }
+
   document.addEventListener("click", (e) => {
     const btn = (e.target as Element).closest<HTMLElement>(
       "[data-action], [data-preorder]"
@@ -1252,6 +1291,9 @@ const stars = Array.from({ length: 46 }, () => {
       btn.textContent = paused ? "Resume motion" : "Pause motion"
     } else if (action === "wake") {
       wake()
+    } else if (action === "skip") {
+      e.preventDefault()
+      skip()
     }
   })
 
