@@ -245,27 +245,104 @@ const stars = Array.from({ length: 46 }, () => {
       </section>
 
       <section class="praise" id="praise" aria-label="Praise for Threshold">
+        {
+          /* Each card carries a quiet trace of its own quote: a reviewer who
+            no longer sleeps (a crescent, stars, dusk gathering at the foot),
+            a lantern lighting a room you didn't know was there (warm light
+            from the avatar that reveals an inner frame), and the door and her
+            glass orchard (an arched lintel, a sea-glass apple, a branch of
+            glass fruit).
+            The traces fade in once as a card enters view; nothing loops. */
+        }
         <div class="wrap praise-grid">
-          <figure>
+          <figure class="praise-card praise-night">
+            <span class="praise-trace" aria-hidden="true">
+              <svg class="trace-moon" viewBox="0 0 80 80">
+                <path d="M52 14a28 28 0 1 0 14 40A24 24 0 0 1 52 14Z"></path>
+                <circle cx="20" cy="18" r="1.4"></circle>
+                <circle cx="34" cy="8" r="1"></circle>
+                <circle cx="70" cy="70" r="1.2"></circle>
+              </svg>
+            </span>
             <blockquote>
               “A disquieting, luminous book. I haven’t slept the same way
               since.”
             </blockquote>
-            <figcaption>The Somnolent Review</figcaption>
+            <figcaption class="praise-by">
+              <span class="avatar avatar-moon" aria-hidden="true">
+                <svg viewBox="0 0 44 44">
+                  <path d="M25 11a11 11 0 1 0 9 17A9.5 9.5 0 0 1 25 11Z"></path>
+                  <circle cx="13" cy="14" r="1"></circle>
+                </svg>
+              </span>
+              <span class="praise-who">
+                <span class="praise-name">The Somnolent Review</span>
+                <span class="praise-role">Literary review</span>
+              </span>
+            </figcaption>
           </figure>
-          <figure>
+          <figure class="praise-card praise-lantern">
+            <span class="praise-trace" aria-hidden="true"></span>
             <blockquote>
               “Kali writes like a woman holding a lantern in a room you didn’t
               know was in your house.”
             </blockquote>
-            <figcaption>Interior Quarterly</figcaption>
+            <figcaption class="praise-by">
+              <span class="avatar avatar-lantern" aria-hidden="true">
+                <svg viewBox="0 0 44 44">
+                  <path
+                    class="lantern-frame"
+                    d="M17 15h10M16 15v15a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V15M15 32h14M19 15a3 3 0 0 1 6 0M22 9v3"
+                  ></path>
+                  <ellipse
+                    class="lantern-flame"
+                    cx="22"
+                    cy="23"
+                    rx="2.4"
+                    ry="3.6"></ellipse>
+                </svg>
+              </span>
+              <span class="praise-who">
+                <span class="praise-name">Interior Quarterly</span>
+                <span class="praise-role">Essays on the inner life</span>
+              </span>
+            </figcaption>
           </figure>
-          <figure>
+          <figure class="praise-card praise-orchard">
+            <span class="praise-trace" aria-hidden="true">
+              <svg class="trace-orchard" viewBox="0 0 120 92">
+                <path
+                  class="orchard-branch"
+                  d="M124 14C100 16 78 24 52 22M88 19c-4-8-12-11-20-10 4 7 12 11 20 10ZM70 21c2 7 9 12 17 12-2-7-9-12-17-12ZM98 18v22M62 22v26"
+                ></path>
+                <circle class="orchard-fruit" cx="98" cy="51" r="11"></circle>
+                <circle class="orchard-fruit" cx="62" cy="57" r="9"></circle>
+              </svg>
+            </span>
             <blockquote>
               “I don’t remember finishing it. I remember the door.”
             </blockquote>
-            <figcaption>
-              Margit Oyelaran, author of <cite>The Glass Orchard</cite>
+            <figcaption class="praise-by">
+              <span class="avatar avatar-glass" aria-hidden="true">
+                <svg viewBox="0 0 44 44">
+                  <path
+                    class="glass-apple"
+                    d="M22 16c-2-2.4-6.8-2.6-8.6 1.2-1.9 4 .3 11.6 4.4 13.4 1.6.7 2.8-.2 4.2-.2s2.6.9 4.2.2c4.1-1.8 6.3-9.4 4.4-13.4C28.8 13.4 24 13.6 22 16Z"
+                  ></path>
+                  <path class="glass-stem" d="M22 16c0-2.6.8-4.4 2.4-5.6"
+                  ></path>
+                  <path
+                    class="glass-leaf"
+                    d="M23.4 12.4c1.6-2.4 4.4-3 6.6-2.4-1.2 2.2-3.8 3.2-6.6 2.4Z"
+                  ></path>
+                </svg>
+              </span>
+              <span class="praise-who">
+                <span class="praise-name">Margit Oyelaran</span>
+                <span class="praise-role"
+                  >Author of <cite>The Glass Orchard</cite></span
+                >
+              </span>
             </figcaption>
           </figure>
         </div>
@@ -1201,6 +1278,22 @@ const stars = Array.from({ length: 46 }, () => {
     },
     { rootMargin: "0px 0px -35% 0px" }
   ).observe(document.querySelector(".works-after")!)
+
+  // Each praise card's trace (moon, lantern light, door) fades in once,
+  // when most of the card is in view
+  const praiseIO = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue
+        e.target.classList.add("seen")
+        praiseIO.unobserve(e.target)
+      }
+    },
+    { threshold: 0.6 }
+  )
+  document
+    .querySelectorAll(".praise-card")
+    .forEach((el) => praiseIO.observe(el))
 
   /* ── Breathing: ~5.5 breaths a minute (5.5 s in, 5.5 s out) ─────────── */
   const BREATH_MS = 11000
