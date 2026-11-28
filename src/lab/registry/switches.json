@@ -1,0 +1,390 @@
+{
+  "$comment": "Built-in test switch catalog. Metadata only — behavior lives in src/lab/engine/switches.ts, keyed by id. kind: simulate = changes what you see; analyze = overlays measurements and findings; guide = a check the browser cannot emulate from a page, with exact manual steps. sameOrigin: true when the switch needs DOM access to the frame (production must go through the proxy for these to apply).",
+  "groups": [
+    { "id": "vision", "label": "Vision" },
+    { "id": "text", "label": "Text & reading" },
+    { "id": "motion", "label": "Motion" },
+    { "id": "input", "label": "Input & focus" },
+    { "id": "structure", "label": "Structure & semantics" },
+    { "id": "layout", "label": "Layout & spec" },
+    { "id": "content", "label": "Content stress" },
+    { "id": "heuristic", "label": "Heuristic lenses" },
+    { "id": "theme", "label": "Theme & direction" },
+    { "id": "manual", "label": "Manual checks" },
+    { "id": "design", "label": "Design toggles" }
+  ],
+  "switches": [
+    {
+      "id": "cvd",
+      "label": "Color vision",
+      "group": "vision",
+      "kind": "simulate",
+      "sameOrigin": false,
+      "description": "Simulates color vision deficiency with the Machado, Oliveira & Fernandes (2009) model, applied in linear RGB — the same model Chrome DevTools uses. Anomalous options interpolate toward the dichromat matrix and are approximations.",
+      "wcag": ["1.4.1", "1.4.3", "1.4.11"],
+      "options": [
+        { "value": "protanopia", "label": "Protanopia (no red cones)" },
+        { "value": "deuteranopia", "label": "Deuteranopia (no green cones)" },
+        { "value": "tritanopia", "label": "Tritanopia (no blue cones)" },
+        { "value": "achromatopsia", "label": "Achromatopsia (no color)" },
+        { "value": "protanomaly", "label": "Protanomaly (approx.)" },
+        {
+          "value": "deuteranomaly",
+          "label": "Deuteranomaly (approx., most common)"
+        },
+        { "value": "tritanomaly", "label": "Tritanomaly (approx.)" }
+      ],
+      "sources": [
+        {
+          "label": "Machado et al. 2009",
+          "url": "https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html"
+        }
+      ]
+    },
+    {
+      "id": "acuity",
+      "label": "Low acuity",
+      "group": "vision",
+      "kind": "simulate",
+      "sameOrigin": false,
+      "description": "Gaussian blur as a rough proxy for uncorrected refractive error. Not a clinical simulation — use it to judge whether hierarchy and key actions survive blur.",
+      "options": [
+        { "value": "1", "label": "Mild (1px)" },
+        { "value": "2", "label": "Moderate (2px)" },
+        { "value": "4", "label": "Severe (4px)" }
+      ]
+    },
+    {
+      "id": "glare",
+      "label": "Glare / low contrast",
+      "group": "vision",
+      "kind": "simulate",
+      "sameOrigin": false,
+      "description": "Reduces contrast to approximate bright sunlight on a phone, a dim projector or cataracts. A design that only just passes 4.5:1 falls apart here.",
+      "options": [
+        { "value": "mild", "label": "Mild (contrast 75%)" },
+        { "value": "severe", "label": "Severe (contrast 50%)" }
+      ]
+    },
+    {
+      "id": "text-spacing",
+      "label": "Text spacing override",
+      "group": "text",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Applies the WCAG 1.4.12 values: line height 1.5, paragraph spacing 2em, letter spacing 0.12em, word spacing 0.16em. Pair with the Reflow & clipping check to catch truncated or overlapping text.",
+      "wcag": ["1.4.12"],
+      "sources": [
+        {
+          "label": "Understanding 1.4.12",
+          "url": "https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html"
+        }
+      ]
+    },
+    {
+      "id": "root-text",
+      "label": "Root text size",
+      "group": "text",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Raises the root font size, which only grows type set in rem/em. Text that does not grow is set in px — it will still grow with browser zoom (use the zoom control for 1.4.4), but not with a user's default font size preference.",
+      "wcag": ["1.4.4"],
+      "options": [
+        { "value": "125", "label": "125%" },
+        { "value": "150", "label": "150%" },
+        { "value": "200", "label": "200%" }
+      ]
+    },
+    {
+      "id": "pseudo-loc",
+      "label": "Pseudo-localization",
+      "group": "content",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Rewrites visible text to stress the layout the way translation does. Expansion adds ~40% length (W3C i18n: many languages run 30%+ longer than English); long words mimic German compounds.",
+      "options": [
+        { "value": "expand", "label": "Expand +40%" },
+        { "value": "accents", "label": "Accents only" },
+        { "value": "long-words", "label": "Long compound words" }
+      ],
+      "sources": [
+        {
+          "label": "W3C i18n: text size in translation",
+          "url": "https://www.w3.org/International/articles/article-text-size"
+        }
+      ]
+    },
+    {
+      "id": "images-off",
+      "label": "Images off",
+      "group": "content",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Replaces every image with its alt text in a box, as a slow connection or a blocked CDN would. Shows what the page says without pictures.",
+      "wcag": ["1.1.1"]
+    },
+    {
+      "id": "motion-off",
+      "label": "Force reduced motion",
+      "group": "motion",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Forces animations and transitions to finish instantly. It shows what the page looks like with motion removed; it does NOT test whether the design honors prefers-reduced-motion — the Media feature support check and the OS setting do that.",
+      "wcag": ["2.3.3", "2.2.2"]
+    },
+    {
+      "id": "keyboard-only",
+      "label": "Keyboard only",
+      "group": "input",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Disables pointer input inside the frame so you have to reach everything with Tab, Shift+Tab, Enter, Space and arrow keys. Click into the frame once to give it focus.",
+      "wcag": ["2.1.1", "2.1.2", "2.4.7"]
+    },
+    {
+      "id": "focus-tracker",
+      "label": "Focus tracker",
+      "group": "input",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Draws a high-visibility ring around whatever has focus inside the frame, so you can tell when a component's own focus style is missing or obscured.",
+      "wcag": ["2.4.7", "2.4.11"]
+    },
+    {
+      "id": "tab-order",
+      "label": "Tab order",
+      "group": "input",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Numbers every keyboard stop in sequential focus order and connects them. Positive tabindex and order that jumps against reading order are flagged.",
+      "wcag": ["2.4.3"]
+    },
+    {
+      "id": "target-size",
+      "label": "Target size",
+      "group": "input",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Measures interactive targets. Under 24×24 CSS px fails 2.5.8 (AA) unless the spacing exception applies — the exception is not evaluated, so check those by eye. Under 44×44 is flagged against 2.5.5 (AAA) and platform guidance.",
+      "wcag": ["2.5.8", "2.5.5"],
+      "sources": [
+        {
+          "label": "Understanding 2.5.8",
+          "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+        }
+      ]
+    },
+    {
+      "id": "headings",
+      "label": "Headings outline",
+      "group": "structure",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Labels h1–h6 and role=heading in place and lists the outline. Flags skipped levels, missing or multiple h1 and empty headings.",
+      "wcag": ["1.3.1", "2.4.6"]
+    },
+    {
+      "id": "landmarks",
+      "label": "Landmarks",
+      "group": "structure",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Outlines banner, navigation, main, complementary, contentinfo, search, form and region landmarks. Flags a missing main and duplicate unlabeled navigation.",
+      "wcag": ["1.3.1", "2.4.1"]
+    },
+    {
+      "id": "alt-text",
+      "label": "Alt text",
+      "group": "structure",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Shows each image's alt text in place. Missing alt fails; empty alt is marked decorative; filename-like alt is flagged.",
+      "wcag": ["1.1.1"]
+    },
+    {
+      "id": "names",
+      "label": "Accessible names",
+      "group": "structure",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Shows the approximate accessible name of every button, link and form control (aria-labelledby, aria-label, label, content, title). Flags controls with no name. Approximate — the full accname algorithm has more cases; confirm doubtful ones with a screen reader.",
+      "wcag": ["4.1.2", "2.4.4", "2.5.3"]
+    },
+    {
+      "id": "contrast",
+      "label": "Text contrast",
+      "group": "structure",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Measures every visible text run against its effective background (semi-transparent layers composited). WCAG 2.x ratio decides pass/fail; APCA Lc is shown as a WCAG 3 draft second opinion. Text over images or gradients is reported as unknown, never as a pass.",
+      "wcag": ["1.4.3", "1.4.6"]
+    },
+    {
+      "id": "axe",
+      "label": "axe-core audit",
+      "group": "structure",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Runs Deque's axe-core rules engine (the engine behind Lighthouse's accessibility score) inside the frame. Automated rules catch roughly a third to a half of WCAG issues — a clean run is necessary, not sufficient.",
+      "options": [
+        { "value": "wcag22aa", "label": "WCAG 2.2 A + AA" },
+        { "value": "wcag21aa", "label": "WCAG 2.1 A + AA" },
+        { "value": "best-practice", "label": "WCAG 2.2 AA + best practices" }
+      ],
+      "sources": [
+        { "label": "axe-core", "url": "https://github.com/dequelabs/axe-core" }
+      ]
+    },
+    {
+      "id": "reflow",
+      "label": "Reflow & clipping",
+      "group": "layout",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Flags horizontal page scroll and elements whose text is clipped by overflow. Run it at 320 CSS px (1280 at 400% zoom) for 1.4.10, and with the text spacing override for 1.4.12.",
+      "wcag": ["1.4.10", "1.4.12"]
+    },
+    {
+      "id": "grid",
+      "label": "Grid overlay",
+      "group": "layout",
+      "kind": "analyze",
+      "sameOrigin": false,
+      "description": "Overlays a spacing grid for checking rhythm and alignment against the spec.",
+      "options": [
+        { "value": "4", "label": "4px baseline" },
+        { "value": "8", "label": "8px baseline" },
+        { "value": "cols-12", "label": "12 columns" }
+      ]
+    },
+    {
+      "id": "fold",
+      "label": "Fold lines",
+      "group": "layout",
+      "kind": "analyze",
+      "sameOrigin": false,
+      "description": "Marks where the first, second and third screens end at the current viewport height."
+    },
+    {
+      "id": "outlines",
+      "label": "Element outlines",
+      "group": "layout",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Outlines every element — the classic CSS debugging pass for spotting stray margins, overflow and nesting."
+    },
+    {
+      "id": "squint",
+      "label": "Squint test",
+      "group": "heuristic",
+      "kind": "simulate",
+      "sameOrigin": false,
+      "description": "Heavy blur plus reduced contrast. What still stands out is your visual hierarchy; if the primary action disappears, the hierarchy is wrong."
+    },
+    {
+      "id": "grayscale",
+      "label": "Grayscale",
+      "group": "heuristic",
+      "kind": "simulate",
+      "sameOrigin": false,
+      "description": "Removes hue so you can see whether state, status or meaning relies on color alone.",
+      "wcag": ["1.4.1"]
+    },
+    {
+      "id": "reading-level",
+      "label": "Reading level",
+      "group": "heuristic",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Flesch-Kincaid grade of the visible body copy, per block and for the page. 3.1.5 (AAA) asks for supplemental content beyond lower secondary level (about grade 9). English only; the syllable count is heuristic.",
+      "wcag": ["3.1.5"]
+    },
+    {
+      "id": "media-features",
+      "label": "Media feature support",
+      "group": "heuristic",
+      "kind": "analyze",
+      "sameOrigin": true,
+      "description": "Scans the frame's stylesheets for prefers-reduced-motion, prefers-color-scheme, prefers-contrast, forced-colors and pointer/hover rules. Tells you whether the design adapts to user settings at all, before you test how well."
+    },
+    {
+      "id": "nielsen",
+      "label": "Nielsen heuristics",
+      "group": "heuristic",
+      "kind": "guide",
+      "sameOrigin": false,
+      "description": "Jakob Nielsen's 10 usability heuristics as a scored checklist for this screen. Each pass or fail you mark is saved as evidence on the open hypothesis.",
+      "sources": [
+        {
+          "label": "NN/g: 10 Usability Heuristics",
+          "url": "https://www.nngroup.com/articles/ten-usability-heuristics/"
+        }
+      ]
+    },
+    {
+      "id": "theme",
+      "label": "Theme",
+      "group": "theme",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Sets light or dark by toggling the .dark class and color-scheme on the frame's root. Designs that only respond to prefers-color-scheme need the manual Emulate media check.",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
+    },
+    {
+      "id": "rtl",
+      "label": "Right-to-left",
+      "group": "theme",
+      "kind": "simulate",
+      "sameOrigin": true,
+      "description": "Sets dir=rtl on the frame root. Logical properties (ms-, ps-, start/end) should mirror; physical left/right will not."
+    },
+    {
+      "id": "forced-colors",
+      "label": "Forced colors",
+      "group": "manual",
+      "kind": "guide",
+      "sameOrigin": false,
+      "description": "Windows High Contrast / forced-colors mode cannot be emulated from a page.",
+      "guide": [
+        "Open the design in its own tab (Open frame).",
+        "Chrome DevTools → ⋮ → More tools → Rendering → Emulate CSS media feature forced-colors: active.",
+        "Check focus indicators, icons drawn with background-image, and borders that relied on box-shadow — those vanish.",
+        "On Windows: Settings → Accessibility → Contrast themes → Aquatic, for a real check."
+      ],
+      "wcag": ["1.4.11"]
+    },
+    {
+      "id": "emulate-media",
+      "label": "Emulate user preferences",
+      "group": "manual",
+      "kind": "guide",
+      "sameOrigin": false,
+      "description": "prefers-reduced-motion, prefers-contrast and prefers-color-scheme can only be emulated by the browser, not by a page.",
+      "guide": [
+        "Open the design in its own tab (Open frame).",
+        "Chrome DevTools → Rendering → Emulate CSS media feature prefers-reduced-motion: reduce. Motion that remains should be essential or under 5 seconds and pausable.",
+        "Same panel: prefers-contrast: more, and prefers-color-scheme: dark.",
+        "Run Media feature support first — if a feature has zero rules, the design ignores that setting."
+      ]
+    },
+    {
+      "id": "screen-reader",
+      "label": "Screen reader pass",
+      "group": "manual",
+      "kind": "guide",
+      "sameOrigin": false,
+      "description": "No automated tool tells you what a screen reader user experiences. Do a short pass on the real thing.",
+      "guide": [
+        "Open the design in its own tab (Open frame).",
+        "macOS: VoiceOver (Cmd+F5). Rotor (VO+U) → Headings and Landmarks: do they describe the page on their own?",
+        "Windows: NVDA (free). H / D to jump headings / landmarks, Tab through controls, listen to each name and state.",
+        "Trigger every dynamic change (carousel, menu, form error) and confirm it is announced once, meaningfully.",
+        "Log what you hear as an observation — that is the evidence."
+      ],
+      "wcag": ["1.3.1", "4.1.2", "4.1.3"]
+    }
+  ]
+}

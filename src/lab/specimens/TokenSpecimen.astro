@@ -1,0 +1,70 @@
+---
+// Every text token on every surface token, rendered with the live custom
+// properties — so design toggles (candidate token values) and the theme
+// switch change it, and the Text contrast check measures each pairing.
+const surfaces = ["background", "card", "muted", "secondary", "popover"]
+const texts = [
+  { token: "foreground", sample: "Body copy" },
+  { token: "muted-foreground", sample: "Caption and meta text" },
+  { token: "accent", sample: "Brand tagline" },
+  { token: "accent-foreground", sample: "Inline link" },
+  { token: "primary", sample: "Primary label" },
+  { token: "destructive", sample: "Error message" },
+]
+---
+
+<div class="specimen">
+  {
+    surfaces.map((s) => (
+      <section style={`background: var(--${s})`} aria-label={`On --${s}`}>
+        <h2 class="brow">--{s}</h2>
+        <ul>
+          {texts.map((t) => (
+            <li>
+              <span class="sample" style={`color: var(--${t.token})`}>
+                {t.sample}
+              </span>
+              <span class="sample sample-lg" style={`color: var(--${t.token})`}>
+                {t.sample}
+              </span>
+              <code>--{t.token}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .specimen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+  section {
+    padding: 1.5rem;
+  }
+  ul {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  li {
+    display: grid;
+    gap: 0.125rem;
+  }
+  .sample {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .sample-lg {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  /* Labels in --foreground so they don't add muted-on-muted noise to the
+     contrast check — the samples are what's under test */
+  code {
+    font-size: 11px;
+    color: var(--foreground);
+  }
+</style>

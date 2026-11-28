@@ -1,0 +1,44 @@
+---
+// One static page per component permutation, framed by the lab.
+import LabShell from "../layouts/LabShell.astro"
+import {
+  COMPONENTS,
+  allPermutations,
+  permutationSlug,
+  type ComponentMeta,
+} from "../registry/components.meta"
+import { COMPONENT_REFS, coerce } from "../registry/components"
+
+export function getStaticPaths() {
+  return COMPONENTS.flatMap((meta) =>
+    allPermutations(meta).map((props) => ({
+      params: { component: meta.id, perm: permutationSlug(meta, props) },
+      props: { meta, props },
+    }))
+  )
+}
+
+interface Props {
+  meta: ComponentMeta
+  props: Record<string, string>
+}
+const { meta, props } = Astro.props
+const Component = COMPONENT_REFS[meta.id]
+const label = Object.entries(props)
+  .map(([k, v]) => `${k}=${v}`)
+  .join(", ")
+---
+
+<LabShell title={`${meta.name}${label ? ` · ${label}` : ""}`}>
+  <main data-lab-component={meta.id} style={`padding: ${meta.padding ?? 24}px`}>
+    {
+      meta.slot ? (
+        <Component {...coerce({ ...meta.defaults, ...props })}>
+          <Fragment set:html={meta.slot} />
+        </Component>
+      ) : (
+        <Component {...coerce({ ...meta.defaults, ...props })} />
+      )
+    }
+  </main>
+</LabShell>

@@ -4,6 +4,10 @@ This is a production-deployed Astro project with React, TypeScript + shadcn/ui (
 
 
 
+## AI Design Lab
+
+AI Design Lab, a design review and accessibility testing app, is hosted from this site at `/aidesignlab` (like `/threshold`). See [`src/lab/README.md`](src/lab/README.md).
+
 ## Adding components
 
 To add components to, run the following command:

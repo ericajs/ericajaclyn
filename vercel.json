@@ -1,5 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/_prod/:path*",
+      "destination": "https://ericajaclyn.com/:path*",
+      "missing": [{ "type": "host", "value": "ericajaclyn.com" }]
+    }
+  ],
   "redirects": [
     { "source": "/naacpldf", "destination": "/uxdesign/naacpldf", "permanent": true },
     { "source": "/morganstanley", "destination": "/uxdesign/morganstanley", "permanent": true },
