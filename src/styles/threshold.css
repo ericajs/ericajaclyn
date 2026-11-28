@@ -292,6 +292,7 @@ html.is-under .nav {
   font: italic 400 clamp(1.25rem, 1rem + 1vw, 1.75rem) / 1.3 var(--serif);
   margin-top: 14px;
   max-width: 26ch;
+  text-wrap: balance;
 }
 .hero-lede {
   margin-top: 24px;
