@@ -7,9 +7,6 @@
 // It deliberately does NOT use the portfolio layout (layouts/main.astro): the
 // illusion depends on it looking like someone else's site. Styling lives in
 // styles/threshold.css, behaviour in the <script> at the bottom.
-import "@fontsource-variable/newsreader/opsz.css"
-import "@fontsource-variable/newsreader/opsz-italic.css"
-import "@fontsource-variable/figtree/index.css"
 import "@/styles/threshold.css"
 import Sign from "@/components/threshold/Sign.astro"
 
@@ -82,6 +79,9 @@ const stars = Array.from({ length: 46 }, () => {
     <script is:inline>
       document.documentElement.classList.add("js")
     </script>
+    {/* Karmina and Karmina Sans from the portfolio's Adobe Fonts kit */}
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="stylesheet" href="https://use.typekit.net/pjj2hzl.css" />
     <title>{title}</title>
     <meta name="description" content={description} />
     {

@@ -17,12 +17,6 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.4
         version: 3.7.4
-      '@fontsource-variable/figtree':
-        specifier: ^5.2.10
-        version: 5.2.10
-      '@fontsource-variable/newsreader':
-        specifier: ^5.3.0
-        version: 5.3.0
       '@fontsource-variable/tasa-explorer':
         specifier: ^5.2.2
         version: 5.2.2
@@ -567,12 +561,6 @@ packages:
 
   '@floating-ui/utils@0.2.11':
     resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
-
-  '@fontsource-variable/figtree@5.2.10':
-    resolution: {integrity: sha512-a5Gumbpy3mdd+Yg31g6Qb7CmjYbrfyutJa3bWfP5q8A4GclIOwX7mI+ZuSHsJnw/mHvW6r9oh1AHJcJTIxK4JA==}
-
-  '@fontsource-variable/newsreader@5.3.0':
-    resolution: {integrity: sha512-rrzYi43qMpbzwuFtf9OkWH8sxAPVPcQQQEwXpPtwaKYeJ8yVg5aLs5kawmo1f2Q1t1M38TLmEKCkGVDsYwgdFw==}
 
   '@fontsource-variable/tasa-explorer@5.2.2':
     resolution: {integrity: sha512-AL36qT/EJfQQtdlsewKaAvgxePSok6A0mffaA1mza83MWck4LEi8EnQTIkmxZ1+Jy7mJDcXARtDiwUoqubPRpQ==}
@@ -5089,10 +5077,6 @@ snapshots:
       react-dom: 19.2.6(react@19.2.6)
 
   '@floating-ui/utils@0.2.11': {}
-
-  '@fontsource-variable/figtree@5.2.10': {}
-
-  '@fontsource-variable/newsreader@5.3.0': {}
 
   '@fontsource-variable/tasa-explorer@5.2.2': {}
 

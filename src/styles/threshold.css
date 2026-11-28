@@ -28,8 +28,8 @@
   --fg-muted: var(--muted);
   --line: color-mix(in oklab, var(--fg) 14%, transparent);
 
-  --serif: "Newsreader Variable", "Iowan Old Style", Georgia, serif;
-  --sans: "Figtree Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: karmina, "Iowan Old Style", Georgia, serif;
+  --sans: karmina-sans, system-ui, -apple-system, "Segoe UI", sans-serif;
   --gutter: clamp(16px, 4vw, 40px);
 
   color-scheme: light;
@@ -226,7 +226,7 @@ html.is-under .nav {
      1.8px below. Measured: sill and baseline coincide. */
   align-items: baseline;
   gap: 10px;
-  font: 600 1.25rem/1 var(--serif);
+  font: 700 1.25rem/1 var(--serif);
   letter-spacing: 0.02em;
   text-decoration: none;
 }
@@ -284,8 +284,7 @@ html.is-under .nav {
   z-index: 1;
 }
 .hero h1 {
-  font: 500 clamp(3.5rem, 2rem + 7vw, 7.5rem) / 0.95 var(--serif);
-  font-variation-settings: "opsz" 72;
+  font: 400 clamp(3.5rem, 2rem + 7vw, 7.5rem) / 0.95 var(--serif);
   letter-spacing: -0.02em;
   margin-top: 18px;
 }
@@ -691,7 +690,7 @@ html.is-under .nav {
   color: transparent;
 }
 .cover-author {
-  font: 500 3.5cqi/1 var(--sans);
+  font: 400 3.5cqi/1 var(--sans);
   letter-spacing: 0.34em;
   margin-right: -0.34em;
   text-transform: uppercase;
@@ -741,8 +740,7 @@ html.is-under .nav {
    spans the same 76% of the board, however far it has spread. */
 .cover-title {
   --track: calc(0.08 + var(--ap-text) * 0.16);
-  font: 500 calc(76cqi / (5.95 + 9 * var(--track))) / 1 var(--serif);
-  font-variation-settings: "opsz" 72;
+  font: 400 calc(76cqi / (5.95 + 9 * var(--track))) / 1 var(--serif);
   letter-spacing: calc(var(--track) * 1em);
   margin-right: calc(var(--track) * -1em);
   text-transform: uppercase;
@@ -1098,7 +1096,7 @@ html:not(.js) .praise-card {
 .about h2,
 .author h2,
 .read h2 {
-  font: 500 clamp(2rem, 1.2rem + 3vw, 3.25rem) / 1.08 var(--serif);
+  font: 400 clamp(2rem, 1.2rem + 3vw, 3.25rem) / 1.08 var(--serif);
   letter-spacing: -0.01em;
   margin-top: 14px;
   max-width: 22ch;
@@ -1134,7 +1132,7 @@ html:not(.js) .praise-card {
 }
 .pillars h3 {
   margin-top: 18px;
-  font: 600 1.375rem/1.2 var(--serif);
+  font: 700 1.375rem/1.2 var(--serif);
 }
 .pillars p {
   margin-top: 10px;
@@ -1154,7 +1152,7 @@ html:not(.js) .praise-card {
   text-align: center;
 }
 .pull blockquote p {
-  font: italic 300 clamp(1.75rem, 1rem + 3vw, 3.25rem) / 1.2 var(--serif);
+  font: italic 400 clamp(1.75rem, 1rem + 3vw, 3.25rem) / 1.2 var(--serif);
   max-width: 24ch;
   margin-inline: auto;
 }
@@ -1191,7 +1189,7 @@ html:not(.js) .praise-card {
   overflow: hidden;
 }
 .portrait span {
-  font: 500 1rem/1 var(--serif);
+  font: 400 1rem/1 var(--serif);
   letter-spacing: 0.3em;
   color: rgb(255 255 255 / 0.85);
 }
@@ -1438,7 +1436,6 @@ html.is-skipped .if-skipped {
 .chapter-head h2 {
   margin-top: 18px;
   font: 400 clamp(2.5rem, 1.5rem + 4vw, 4.5rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 72;
 }
 
 .beat {
@@ -1451,8 +1448,7 @@ html.is-skipped .if-skipped {
 .cap,
 .accept-lede,
 .accept-done {
-  font: 300 clamp(1.625rem, 1.05rem + 2.4vw, 3rem) / 1.3 var(--serif);
-  font-variation-settings: "opsz" 72;
+  font: 400 clamp(1.625rem, 1.05rem + 2.4vw, 3rem) / 1.3 var(--serif);
   letter-spacing: calc(var(--depth) * 0.02em);
   text-align: center;
   text-wrap: balance;
@@ -1502,7 +1498,7 @@ html.is-skipped .if-skipped {
   width: 100%;
   max-width: 26ch;
   min-height: 4.2em;
-  font: 300 clamp(1.5rem, 1rem + 2vw, 2.5rem) / 1.3 var(--serif);
+  font: 400 clamp(1.5rem, 1rem + 2vw, 2.5rem) / 1.3 var(--serif);
 }
 .cap {
   grid-area: 1 / 1;
@@ -1622,7 +1618,7 @@ html:not(.js) .chapter-head {
 }
 .breath-label {
   position: relative;
-  font: italic 300 clamp(1.5rem, 1rem + 2vw, 2.25rem) / 1 var(--serif);
+  font: italic 400 clamp(1.5rem, 1rem + 2vw, 2.25rem) / 1 var(--serif);
   color: var(--night-muted);
 }
 
@@ -1674,8 +1670,7 @@ html:not(.js) .chapter-head {
   gap: 0.2em;
 }
 .count {
-  font: 200 clamp(4.5rem, 3rem + 9vw, 9rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 72;
+  font: 400 clamp(4.5rem, 3rem + 9vw, 9rem) / 1 var(--serif);
   color: var(--fg-muted);
   transition: color 1.2s ease;
 }
@@ -1827,8 +1822,7 @@ html:not(.js) .chapter-head {
 }
 .welcome h2 {
   margin-top: 24px;
-  font: 500 clamp(2.75rem, 1.5rem + 5vw, 5.5rem) / 1 var(--serif);
-  font-variation-settings: "opsz" 72;
+  font: 400 clamp(2.75rem, 1.5rem + 5vw, 5.5rem) / 1 var(--serif);
 }
 .welcome-care {
   margin-top: 20px;
@@ -1862,7 +1856,7 @@ html:not(.js) .chapter-head {
   display: flex;
   align-items: center;
   gap: 10px;
-  font: 600 1rem/1 var(--serif);
+  font: 700 1rem/1 var(--serif);
 }
 
 /* ── Vignette: closes in with depth, more during fixation ─── */
@@ -1915,7 +1909,7 @@ html.is-awake .controls [data-action="wake"] {
   border-radius: 999px;
   background: rgb(7 6 13 / 0.6);
   color: var(--night-muted);
-  font: 500 0.8125rem/1 var(--sans);
+  font: 400 0.8125rem/1 var(--sans);
   cursor: pointer;
   backdrop-filter: blur(6px);
 }
